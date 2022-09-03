@@ -16,8 +16,8 @@ public class Enemy1 : KinematicBody2D
     {
         _health = 10;
         _speed = 25;
-        _strength = 20;
-        _player = GetNode<KinematicBody2D>("../Player");
+        _strength = 10;
+        _player = GetNode<KinematicBody2D>("../../Player");
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _animatedSprite.Play("Walk");
     }
@@ -26,7 +26,7 @@ public class Enemy1 : KinematicBody2D
     public override void _Process(float delta)
     {
         Vector2 velocity = Vector2.Zero;
-        velocity = (_player.Position - Position).Normalized();
+        velocity = (_player.GlobalPosition - GlobalPosition).Normalized();
         if (_animatedSprite.Frame >= 2 && _animatedSprite.Frame <= 4)
         {
             MoveAndSlide(velocity * _speed);

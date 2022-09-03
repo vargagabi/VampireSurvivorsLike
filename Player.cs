@@ -8,13 +8,13 @@ public class Player : KinematicBody2D
     private float _currentHealth;
     private float _maxHealth;
     private float _healthRegen;
-    private int _healthTimer;
+    private int _healthCounter;
     
     private float _speed;
     private float _pickupRange;
 
     private int _immunityTime;
-    private int _damageTimer;
+    private int _damageCounter;
     private float _damageValue;
 
     
@@ -30,8 +30,8 @@ public class Player : KinematicBody2D
         _healthRegen = 1.0f;
         _speed = 100;
         _pickupRange = 10;
-        _immunityTime = 50;
-        _damageTimer = 0;
+        _immunityTime = 25;
+        _damageCounter = 0;
         _damageValue = 0;
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _healthBar = GetNode<TextureProgress>("Node2D/HealthBar");
@@ -51,6 +51,10 @@ public class Player : KinematicBody2D
     //The input related things
     private void Move()
     {
+        if (Input.IsActionPressed("ui_accept"))
+        {
+            GetTree().ReloadCurrentScene();
+        }
         if (Input.IsActionPressed("ui_cancel"))
         {
             GetTree().Quit();
@@ -119,11 +123,11 @@ public class Player : KinematicBody2D
     //Every x seconds take the added damage of the overlapping enemies
     private void TakeDamage()
     {
-        _damageTimer++;
-        if (_damageTimer % _immunityTime == 0)
+        _damageCounter++;
+        if (_damageCounter % _immunityTime == 0)
         {
             GD.Print("Damage taken: " + _damageValue);
-            _damageTimer = 0;
+            _damageCounter = 0;
             _currentHealth = _currentHealth < (int)_damageValue ? 0 : _currentHealth - (int)_damageValue;
             UpdateHealthBar();
         }
@@ -132,11 +136,11 @@ public class Player : KinematicBody2D
     //Every x seconds heal
     private void PassiveHeal()
     {
-        _healthTimer++;
-        if (_healthTimer % _immunityTime == 0)
+        _healthCounter++;
+        if (_healthCounter % _immunityTime == 0)
         {
             GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
-            _healthTimer = 0;
+            _healthCounter = 0;
             _currentHealth = _healthRegen+_currentHealth>_maxHealth?_maxHealth:_healthRegen+_currentHealth;
             UpdateHealthBar();
         }
@@ -147,7 +151,6 @@ public class Player : KinematicBody2D
     {
         // _damageValue += damage;
         GD.Print(body.Get("_strength"));
-        _damageTimer = _immunityTime - 1;
         float dmg = (float)(body.Get("_strength"));
         _damageValue += dmg;
     }
