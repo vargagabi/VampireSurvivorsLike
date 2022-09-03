@@ -4,9 +4,9 @@ using System;
 //Slime monster
 public class Enemy1 : KinematicBody2D
 {
-    private int _health;
+    private int _health ;
     private float _speed;
-    private float _strenght;
+    private float _strength { get; set; }
 
     private KinematicBody2D _player;
     private AnimatedSprite _animatedSprite;
@@ -16,7 +16,7 @@ public class Enemy1 : KinematicBody2D
     {
         _health = 10;
         _speed = 25;
-        _strenght = 2;
+        _strength = 20;
         _player = GetNode<KinematicBody2D>("../Player");
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _animatedSprite.Play("Walk");
