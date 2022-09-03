@@ -9,7 +9,7 @@ public class Player : KinematicBody2D
     private float _maxHealth;
     private float _healthRegen;
     private int _healthCounter;
-    
+
     private float _speed;
     private float _pickupRange;
 
@@ -17,10 +17,16 @@ public class Player : KinematicBody2D
     private int _damageCounter;
     private float _damageValue;
 
-    
+
     private AnimatedSprite _animatedSprite;
     private TextureProgress _healthBar;
     private Texture[] _textures = new Texture[3];
+
+    [Signal]
+    public delegate void GameOver();
+
+    [Signal]
+    public delegate void CurrentHealth(float currentHealth);
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -44,56 +50,59 @@ public class Player : KinematicBody2D
     public override void _Process(float delta)
     {
         Move();
-        TakeDamage();
-        PassiveHeal();
+        if (_damageValue > 0)
+        {
+            TakeDamage();
+        }
+
+        if (_currentHealth < _maxHealth)
+        {
+            PassiveHeal();
+        }
     }
 
     //The input related things
     private void Move()
     {
-        if (Input.IsActionPressed("ui_accept"))
-        {
-            GetTree().ReloadCurrentScene();
-        }
-        if (Input.IsActionPressed("ui_cancel"))
-        {
-            GetTree().Quit();
-        }
-
         Vector2 velocity = Vector2.Zero;
         if (Input.IsActionPressed("ui_down"))
         {
             velocity += Vector2.Down;
+
             // _animatedSprite.Play("Down");
         }
 
         if (Input.IsActionPressed("ui_up"))
         {
             velocity += Vector2.Up;
+
             // _animatedSprite.Play("Up");
         }
 
         if (Input.IsActionPressed("ui_left"))
         {
             velocity += Vector2.Left;
+
             // _animatedSprite.Play("Left");
         }
 
         if (Input.IsActionPressed("ui_right"))
         {
             velocity += Vector2.Right;
+
             // _animatedSprite.Play("Right");
         }
 
         if (velocity.x == 0)
         {
-            _animatedSprite.Play(velocity.y > 0?"Down":"Up");
+            _animatedSprite.Play(velocity.y > 0 ? "Down" : "Up");
         }
         else
         {
-            _animatedSprite.Play(velocity.x > 0?"Right":"Left");
+            _animatedSprite.Play(velocity.x > 0 ? "Right" : "Left");
         }
-        if(velocity == Vector2.Zero)
+
+        if (velocity == Vector2.Zero)
         {
             _animatedSprite.Play("Idle");
         }
@@ -109,6 +118,7 @@ public class Player : KinematicBody2D
         {
             _healthBar.TextureProgress_ = _textures[0];
         }
+
         if (_healthBar.Value < 50)
         {
             _healthBar.TextureProgress_ = _textures[1];
@@ -129,10 +139,17 @@ public class Player : KinematicBody2D
             GD.Print("Damage taken: " + _damageValue);
             _damageCounter = 0;
             _currentHealth = _currentHealth < (int)_damageValue ? 0 : _currentHealth - (int)_damageValue;
+            EmitSignal(nameof(CurrentHealth), _currentHealth);
             UpdateHealthBar();
         }
+
+        if (_currentHealth <= 0)
+        {
+            EmitSignal(nameof(GameOver));
+            GetTree().Paused = true;
+        }
     }
-    
+
     //Every x seconds heal
     private void PassiveHeal()
     {
@@ -141,7 +158,8 @@ public class Player : KinematicBody2D
         {
             GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
             _healthCounter = 0;
-            _currentHealth = _healthRegen+_currentHealth>_maxHealth?_maxHealth:_healthRegen+_currentHealth;
+            _currentHealth = _healthRegen + _currentHealth > _maxHealth ? _maxHealth : _healthRegen + _currentHealth;
+            EmitSignal(nameof(CurrentHealth), _currentHealth);
             UpdateHealthBar();
         }
     }
