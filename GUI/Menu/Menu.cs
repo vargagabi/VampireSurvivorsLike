@@ -3,14 +3,16 @@ using System;
 
 public class Menu : Control
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-
+    private CenterContainer _mainMenu;
+    // private CenterContainer _GameOverScreen;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        ((Button)GetChild(0).GetChild(0)).GrabFocus();
+        _mainMenu = GetNode<CenterContainer>("MainMenu");
+        // _GameOverScreen = GetNode<CenterContainer>("GameOverScreen");
+
+        // _GameOverScreen.Visible = false;
+        ((Button)_mainMenu.GetChild(0).GetChild(0)).GrabFocus();
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

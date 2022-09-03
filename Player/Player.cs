@@ -31,6 +31,7 @@ public class Player : KinematicBody2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+       GD.Print("Player Ready..."); 
         _currentHealth = 200;
         _maxHealth = 200;
         _healthRegen = 1.0f;
@@ -44,6 +45,8 @@ public class Player : KinematicBody2D
         _textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
         _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+        
+        EmitSignal(nameof(CurrentHealth),_currentHealth);
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -145,8 +148,8 @@ public class Player : KinematicBody2D
 
         if (_currentHealth <= 0)
         {
-            EmitSignal(nameof(GameOver));
-            GetTree().Paused = true;
+            // EmitSignal(nameof(GameOver));
+            // GetTree().Paused = true;
         }
     }
 

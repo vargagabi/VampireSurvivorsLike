@@ -7,6 +7,8 @@
 
 [node name="Main" type="Node2D"]
 
+[node name="GUI" parent="." instance=ExtResource( 3 )]
+
 [node name="Icon" type="Sprite" parent="."]
 position = Vector2( 0, -1 )
 scale = Vector2( 2, 2 )
@@ -20,7 +22,5 @@ __meta__ = {
 [node name="MobSpawner" parent="." instance=ExtResource( 4 )]
 position = Vector2( 0, -1 )
 scale = Vector2( 2, 2 )
-
-[node name="GUI" parent="." instance=ExtResource( 3 )]
 
 [connection signal="CurrentHealth" from="Player" to="GUI" method="OnPlayerCurrentHealth"]
