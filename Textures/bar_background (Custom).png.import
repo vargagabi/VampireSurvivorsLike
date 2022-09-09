@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bar_green.png-d689072bc3af0055fcab7a98958f9d68.stex"
+path="res://.import/bar_background (Custom).png-7cc15d13a6b4a3be038533563e09da48.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/bar_green.png"
-dest_files=[ "res://.import/bar_green.png-d689072bc3af0055fcab7a98958f9d68.stex" ]
+source_file="res://Textures/bar_background (Custom).png"
+dest_files=[ "res://.import/bar_background (Custom).png-7cc15d13a6b4a3be038533563e09da48.stex" ]
 
 [params]
 

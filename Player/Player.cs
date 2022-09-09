@@ -12,15 +12,21 @@ public class Player : KinematicBody2D
 
     private float _speed;
     private float _pickupRange;
+    private Vector2 _direction { get; set; }
 
     private int _immunityTime;
     private int _damageCounter;
     private float _damageValue;
 
+    //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
+    private int _experience;
+    private int _currentLevel;
+
 
     private AnimatedSprite _animatedSprite;
     private TextureProgress _healthBar;
     private Texture[] _textures = new Texture[3];
+
 
     [Signal]
     public delegate void GameOver();
@@ -28,25 +34,36 @@ public class Player : KinematicBody2D
     [Signal]
     public delegate void CurrentHealth(float currentHealth);
 
+    [Signal]
+    public delegate void CurrentExperience(float exp, int level);
+
+    [Signal]
+    public delegate void LevelUp(int level);
+
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-       GD.Print("Player Ready..."); 
+        GD.Print("Player Ready...");
         _currentHealth = 200;
         _maxHealth = 200;
         _healthRegen = 1.0f;
         _speed = 100;
         _pickupRange = 10;
         _immunityTime = 25;
+        _currentLevel = 0;
+        _experience = 0;
         _damageCounter = 0;
         _damageValue = 0;
+        _direction = Vector2.Right;
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _healthBar = GetNode<TextureProgress>("Node2D/HealthBar");
         _textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
         _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
-        
-        EmitSignal(nameof(CurrentHealth),_currentHealth);
+
+        EmitSignal(nameof(CurrentHealth), _currentHealth);
+        EmitSignal(nameof(CurrentExperience), _experience, _currentLevel);
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -67,49 +84,44 @@ public class Player : KinematicBody2D
     //The input related things
     private void Move()
     {
+        string animation = "Idle";
+        bool isSpacePressed = Input.IsActionPressed("ui_space");
         Vector2 velocity = Vector2.Zero;
         if (Input.IsActionPressed("ui_down"))
         {
             velocity += Vector2.Down;
-
-            // _animatedSprite.Play("Down");
+            _direction += isSpacePressed ? Vector2.Zero : Vector2.Down;
         }
 
         if (Input.IsActionPressed("ui_up"))
         {
             velocity += Vector2.Up;
-
-            // _animatedSprite.Play("Up");
+            _direction += isSpacePressed ? Vector2.Zero : Vector2.Up;
         }
 
         if (Input.IsActionPressed("ui_left"))
         {
             velocity += Vector2.Left;
-
-            // _animatedSprite.Play("Left");
+            _direction += isSpacePressed ? Vector2.Zero : Vector2.Left;
         }
 
         if (Input.IsActionPressed("ui_right"))
         {
             velocity += Vector2.Right;
-
-            // _animatedSprite.Play("Right");
+            _direction += isSpacePressed ? Vector2.Zero : Vector2.Right;
         }
 
-        if (velocity.x == 0)
+        if (velocity.x == 0 && velocity.y != 0)
         {
-            _animatedSprite.Play(velocity.y > 0 ? "Down" : "Up");
+            animation = (velocity.y > 0 ? "Down" : "Up");
         }
-        else
+        else if (velocity.x != 0)
         {
-            _animatedSprite.Play(velocity.x > 0 ? "Right" : "Left");
+            animation = (velocity.x > 0 ? "Right" : "Left");
         }
 
-        if (velocity == Vector2.Zero)
-        {
-            _animatedSprite.Play("Idle");
-        }
-
+        _direction = _direction.Normalized();
+        _animatedSprite.Play(animation);
         MoveAndSlide(velocity.Normalized() * _speed);
     }
 
@@ -139,7 +151,7 @@ public class Player : KinematicBody2D
         _damageCounter++;
         if (_damageCounter % _immunityTime == 0)
         {
-            GD.Print("Damage taken: " + _damageValue);
+            // GD.Print("Damage taken: " + _damageValue);
             _damageCounter = 0;
             _currentHealth = _currentHealth < (int)_damageValue ? 0 : _currentHealth - (int)_damageValue;
             EmitSignal(nameof(CurrentHealth), _currentHealth);
@@ -159,7 +171,7 @@ public class Player : KinematicBody2D
         _healthCounter++;
         if (_healthCounter % _immunityTime == 0)
         {
-            GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
+            // GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
             _healthCounter = 0;
             _currentHealth = _healthRegen + _currentHealth > _maxHealth ? _maxHealth : _healthRegen + _currentHealth;
             EmitSignal(nameof(CurrentHealth), _currentHealth);
@@ -171,7 +183,6 @@ public class Player : KinematicBody2D
     public void OnBodyEntered(Node body)
     {
         // _damageValue += damage;
-        GD.Print(body.Get("_strength"));
         float dmg = (float)(body.Get("_strength"));
         _damageValue += dmg;
     }
@@ -181,5 +192,34 @@ public class Player : KinematicBody2D
     {
         float dmg = (float)(body.Get("_strength"));
         _damageValue -= dmg;
+    }
+
+    public void OnEnemyKilled(int exp)
+    {
+        _experience += exp;
+        if (_currentLevel < LvlToExp(_experience))
+        {
+            _currentLevel = LvlToExp(_experience);
+            EmitSignal(nameof(LevelUp), _currentLevel);
+        }
+
+        float currentExpInLevel = 100 * (_experience - (float)ExpToLvl(_currentLevel)) /
+                                  ((float)ExpToLvl(_currentLevel + 1) - ExpToLvl(_currentLevel));
+
+        // GD.Print("EXP THIS LEVEL: " + (ExpToLvl(_currentLevel + 1) - ExpToLvl(_currentLevel)));
+        // GD.Print("Level: " + _currentLevel);
+        // GD.Print("Exp: " + _experience);
+        // GD.Print("Current exp: " + currentExpInLevel);
+        EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+    }
+
+    private int ExpToLvl(int lvl)
+    {
+        return (int)Mathf.Pow((lvl) * 5, 2);
+    }
+
+    private int LvlToExp(int exp)
+    {
+        return (int)Mathf.Sqrt(exp) / 5;
     }
 }

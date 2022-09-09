@@ -25,12 +25,16 @@ public class GUI : CanvasLayer
 
     public void OnPlayerCurrentHealth(float currentHealth)
     {
-        // _HPLabel.Text = "HP: " + currentHealth;
         _hud.SetHealthLabel(currentHealth);
         if (currentHealth <= 0)
         {
             GetTree().Paused = true;
            _gameOverScreen.SetScoreLabel(_elapsedTime); 
         }
+    }
+
+    public void OnExpEarned(float exp, int level)
+    {
+        _hud.SetExpbar(exp,level);
     }
 }

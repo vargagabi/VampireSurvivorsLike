@@ -19,6 +19,10 @@ public class PauseScreen : CenterContainer
             GD.Print("STOPPED");
             isPaused = !isPaused;
             GetTree().Paused = isPaused;
+            if (isPaused)
+            {
+                GetNode<Button>("VBoxContainer/ResumeButton").GrabFocus();
+            }
         }
 
         this.Visible = isPaused;
