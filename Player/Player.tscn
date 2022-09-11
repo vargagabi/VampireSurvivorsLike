@@ -1,7 +1,6 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Player/Player.cs" type="Script" id=1]
-[ext_resource path="res://Weapons/Gun/Gun.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Textures/AnimationPlayerTutorialSprites/DemoRpgCharacter.png" type="Texture" id=3]
 [ext_resource path="res://Textures/bar_green_mini.png" type="Texture" id=4]
 [ext_resource path="res://Textures/bar_red_mini.png" type="Texture" id=5]
@@ -143,9 +142,6 @@ rect_scale = Vector2( 0.5, 0.5 )
 value = 100.0
 texture_under = ExtResource( 5 )
 texture_progress = ExtResource( 4 )
-
-[node name="Gun" parent="." instance=ExtResource( 2 )]
-scale = Vector2( 1, 1 )
 
 [connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]
 [connection signal="body_exited" from="Area2D" to="." method="OnBodyExited"]

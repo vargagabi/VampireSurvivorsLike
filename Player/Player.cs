@@ -1,67 +1,83 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using Object = System.Object;
 
 public class Player : KinematicBody2D
 {
     //Player attributes
-    private float _currentHealth;
-    private float _maxHealth;
-    private float _healthRegen;
-    private int _healthCounter;
+    private float _currentHealth = 200;
+    private KeyValuePair<string, float> _maxHealth = new KeyValuePair<string, float>("Increase max health", 200f);
+    private KeyValuePair<string, float> _healthRegen =
+        new KeyValuePair<string, float>("Increase health regeneration", 1.0f);
+    private int _healthCounter = 0;
 
-    private float _speed;
-    private float _pickupRange;
+    private KeyValuePair<string, float> _speed = new KeyValuePair<string, float>("Increase speed", 100.0f);
+    private KeyValuePair<string, float> _pickupRange = new KeyValuePair<string, float>("Increase pickup range", 10.0f);
+    private List<KeyValuePair<string, float>> _upgradeableStats = new List<KeyValuePair<string, float>>();
     private Vector2 _direction { get; set; }
 
-    private int _immunityTime;
-    private int _damageCounter;
-    private float _damageValue;
+    private int _immunityTime = 25;
+    private int _damageCounter = 0;
+    private float _damageValue = 0;
 
     //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
-    private int _experience;
-    private int _currentLevel;
+    private int _experience = 0;
+    private int _currentLevel = 0;
+
+    private enum Rewards
+    {
+        StatBonus, //Add bonus to one stat
+        UpgradeWeapon, //Upgrade one of the equipped weapon
+        ChooseWeapon, //Choose one new weapon if there is slot for it
+        Consumables, //Choose one one-time use bonus, like heal 10 hp, or get 100 coins
+    }
+
+    private enum Stats
+    {
+        Health,
+        Regeneration,
+        Speed,
+        Damage,
+    }
+
+    private List<Node2D> _allWeapons = new List<Node2D>();
+    private int _weaponCount = 4;
+    private List<Node2D> _equippedWeapons = new List<Node2D>();
 
 
     private AnimatedSprite _animatedSprite;
     private TextureProgress _healthBar;
     private Texture[] _textures = new Texture[3];
 
-
-    [Signal]
-    public delegate void GameOver();
-
-    [Signal]
-    public delegate void CurrentHealth(float currentHealth);
-
-    [Signal]
-    public delegate void CurrentExperience(float exp, int level);
-
-    [Signal]
-    public delegate void LevelUp(int level);
+    //Signals
+    [Signal] public delegate void GameOver();
+    [Signal] public delegate void CurrentHealth(float currentHealth);
+    [Signal] public delegate void CurrentExperience(float exp, int level);
+    [Signal] public delegate void ChooseReward(Object options);
 
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GD.Print("Player Ready...");
-        _currentHealth = 200;
-        _maxHealth = 200;
-        _healthRegen = 1.0f;
-        _speed = 100;
-        _pickupRange = 10;
-        _immunityTime = 25;
-        _currentLevel = 0;
-        _experience = 0;
-        _damageCounter = 0;
-        _damageValue = 0;
         _direction = Vector2.Right;
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _healthBar = GetNode<TextureProgress>("Node2D/HealthBar");
         _textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
         _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+        _upgradeableStats.Add(_maxHealth);
+        _upgradeableStats.Add(_healthRegen);
+        _upgradeableStats.Add(_speed);
+        _upgradeableStats.Add(_pickupRange);
 
+        //Add the weapons the player can choose
+        _allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
+
+        EquipWeapon(_allWeapons[0]);
+
+        //Emit signals to set the HUD health and level bars
         EmitSignal(nameof(CurrentHealth), _currentHealth);
         EmitSignal(nameof(CurrentExperience), _experience, _currentLevel);
     }
@@ -75,7 +91,7 @@ public class Player : KinematicBody2D
             TakeDamage();
         }
 
-        if (_currentHealth < _maxHealth)
+        if (_currentHealth < _maxHealth.Value)
         {
             PassiveHeal();
         }
@@ -122,13 +138,13 @@ public class Player : KinematicBody2D
 
         _direction = _direction.Normalized();
         _animatedSprite.Play(animation);
-        MoveAndSlide(velocity.Normalized() * _speed);
+        MoveAndSlide(velocity.Normalized() * _speed.Value);
     }
 
     //Update the health bar depending on the current health
     private void UpdateHealthBar()
     {
-        _healthBar.Value = _currentHealth / _maxHealth * 100;
+        _healthBar.Value = _currentHealth / _maxHealth.Value * 100;
         if (_healthBar.Value < 100)
         {
             _healthBar.TextureProgress_ = _textures[0];
@@ -161,7 +177,7 @@ public class Player : KinematicBody2D
         if (_currentHealth <= 0)
         {
             // EmitSignal(nameof(GameOver));
-            // GetTree().Paused = true;
+            GetTree().Paused = true;
         }
     }
 
@@ -173,7 +189,9 @@ public class Player : KinematicBody2D
         {
             // GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
             _healthCounter = 0;
-            _currentHealth = _healthRegen + _currentHealth > _maxHealth ? _maxHealth : _healthRegen + _currentHealth;
+            _currentHealth = _healthRegen.Value + _currentHealth > _maxHealth.Value
+                ? _maxHealth.Value
+                : _healthRegen.Value + _currentHealth;
             EmitSignal(nameof(CurrentHealth), _currentHealth);
             UpdateHealthBar();
         }
@@ -197,10 +215,12 @@ public class Player : KinematicBody2D
     public void OnEnemyKilled(int exp)
     {
         _experience += exp;
+
+        //If leveled up, choose rewards depending on the number of level ups
         if (_currentLevel < LvlToExp(_experience))
         {
+            SelectRewardOnLevelUp(LvlToExp(_experience) - _currentLevel);
             _currentLevel = LvlToExp(_experience);
-            EmitSignal(nameof(LevelUp), _currentLevel);
         }
 
         float currentExpInLevel = 100 * (_experience - (float)ExpToLvl(_currentLevel)) /
@@ -211,6 +231,80 @@ public class Player : KinematicBody2D
         // GD.Print("Exp: " + _experience);
         // GD.Print("Current exp: " + currentExpInLevel);
         EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+    }
+
+    private void SelectRewardOnLevelUp(int levels)
+    {
+        GD.Print("CONGRATULATIONS YOU LEVELED UP YOU BASTARD :D");
+        for (int i = 0; i < levels; i++)
+        {
+            //For every level the player can choose a reward,
+            //1. Randomly choose the options to the rewards
+            GD.Print("Choose a reward" + i);
+            Object[] options = new Object[4];
+            List<Object> rewards = new List<object>();
+            foreach (var keyValuePair in _upgradeableStats)
+            {
+                rewards.Add(keyValuePair);
+            }
+
+            rewards.AddRange(_equippedWeapons);
+            rewards.AddRange(_allWeapons);
+            GD.Print("Count: " + rewards.Count);
+            foreach (var reward in rewards)
+            {
+                if (reward is KeyValuePair<string, float>)
+                {
+                    GD.Print(((KeyValuePair<string, float>)reward).Key);
+                }
+                else if (reward is Node2D)
+                {
+                    GD.Print(((Node2D)reward).ToString());
+                    ((Gun)reward).Set("NumberOfBullets",5);
+                }
+            }
+
+            GD.Print("\n");
+            //Select 4 options from the rewards list
+            for (int j = 0; j < 4; j++)
+            {
+                int rand = (int)GD.RandRange(0, rewards.Count);
+                options[j] = rewards[rand];
+                rewards.Remove(rewards[rand]);
+            }
+
+            GD.Print("Options: ");
+            foreach (var reward in options)
+            {
+                if (reward is KeyValuePair<string, float>)
+                {
+                    GD.Print(((KeyValuePair<string, float>)reward).Key);
+                }
+                else if (reward is Node2D)
+                {
+                    GD.Print(((Node2D)reward).ToString());
+                }
+            }
+
+            //2. Send the list to the HUD to display it to the player
+            //Wait for the player to choose, pause the game while waiting
+
+            EmitSignal(nameof(ChooseReward), options);
+
+            //3. Get the choosen reward and add it to the character
+        }
+    }
+
+    private string RandomNewWeapon()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void EquipWeapon(Node2D weapon)
+    {
+        AddChild(weapon);
+        _equippedWeapons.Add(weapon);
+        _allWeapons.Remove(weapon);
     }
 
     private int ExpToLvl(int lvl)

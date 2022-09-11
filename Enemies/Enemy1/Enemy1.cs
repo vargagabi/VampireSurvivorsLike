@@ -24,7 +24,7 @@ public class Enemy1 : KinematicBody2D
         _player = GetNode<KinematicBody2D>("../../Player");
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _animatedSprite.Play("Walk");
-        _expValue = 10;
+        _expValue = 1000;
         this.Connect(nameof(OnDeath), _player, "OnEnemyKilled");
     }
 
