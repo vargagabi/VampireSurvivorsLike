@@ -1,18 +1,22 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public class GUI : CanvasLayer
 {
     private HUD _hud;
     private GameOverScreen _gameOverScreen;
     private float _elapsedTime;
+    private LevelUpScreen _levelUpScreen;
 
+    [Signal] public delegate void RewardSelected(int index);
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         GD.Print("GUI Ready...");
         _hud = GetNode<HUD>("Control/HUD");
         _gameOverScreen = GetNode<GameOverScreen>("Control/GameOverScreen");
+        _levelUpScreen = GetNode<LevelUpScreen>("Control/LevelUpScreen");
         _elapsedTime = 0;
     }
 
@@ -36,5 +40,16 @@ public class GUI : CanvasLayer
     public void OnExpEarned(float exp, int level)
     {
         _hud.SetExpbar(exp,level);
+    }
+
+    public void OnPlayerChooseReward(string opt0,string opt1,  string opt2, string opt3)
+    {
+       _levelUpScreen.SetRewards(new string[]{opt0,opt1,opt2,opt3}); 
+    }
+
+    public void OnRewardSelected(int index)
+    {
+        _levelUpScreen.Visible = false;
+        EmitSignal(nameof(RewardSelected),index);
     }
 }

@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using VampireSurvivorsLike.Weapons;
 
-public class Gun : Node2D
+public class Gun : Item 
 {
     private KinematicBody2D _player;
     private int _counter;
@@ -47,7 +48,7 @@ public class Gun : Node2D
         }
     }
 
-    public void Upgrade()
+    public override void Upgrade()
     {
         _level++;
         NumberOfBullets++;

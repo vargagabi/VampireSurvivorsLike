@@ -15,6 +15,7 @@
 
 [node name="MobSpawner" parent="." instance=ExtResource( 4 )]
 
+[connection signal="RewardSelected" from="GUI" to="Player" method="OnRewardSelected"]
+[connection signal="ChooseReward" from="Player" to="GUI" method="OnPlayerChooseReward"]
 [connection signal="CurrentExperience" from="Player" to="GUI" method="OnExpEarned"]
 [connection signal="CurrentHealth" from="Player" to="GUI" method="OnPlayerCurrentHealth"]
-[connection signal="LevelUp" from="Player" to="GUI" method="OnPlayerLevelUp"]
