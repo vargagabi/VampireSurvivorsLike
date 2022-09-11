@@ -4,20 +4,26 @@ using Object = System.Object;
 
 public class LevelUpScreen : CenterContainer
 {
-    private OptionButton _optionButton;
+    private ItemList _itemList;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
 
-        _optionButton = GetChild(1).GetChild<OptionButton>(1);
+        // _optionButton = GetChild(1).GetChild<OptionButton>(1);
+        _itemList = GetChild(1).GetChild<ItemList>(1);
+        
     }
 
     public async void SetRewards(string[] options)
     {
-        _optionButton.Clear();
+        // _optionButton.Clear();
+        _itemList.Clear();
+        _itemList.GrabFocus();
         for (int i = 0; i < options.Length; i++)
         {
-            _optionButton.AddItem(options[i],i);
+            // _optionButton.AddItem(options[i],i);
+            _itemList.AddItem(options[i]);
             GD.Print(i + ", " + options[i]);
         }
         Visible = true;

@@ -248,7 +248,7 @@ public class Player : KinematicBody2D
                 }
                 else if (options[_rewardIndex] is KeyVal)
                 {
-                    var keyValuePair = (KeyVal)options[_rewardIndex];
+                    ((KeyVal)options[_rewardIndex]).Increase();
                 }
 
                 GetTree().Paused = false;

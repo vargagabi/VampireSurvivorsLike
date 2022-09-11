@@ -162,14 +162,14 @@ rect_min_size = Vector2( 500, 500 )
 color = Color( 0.141176, 0.0941176, 0.196078, 0.690196 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/LevelUpScreen"]
-margin_left = 150.0
-margin_top = 209.0
-margin_right = 350.0
-margin_bottom = 290.0
+margin_left = 100.0
+margin_top = 172.0
+margin_right = 400.0
+margin_bottom = 328.0
 custom_constants/separation = 16
 
 [node name="Label" type="Label" parent="Control/LevelUpScreen/VBoxContainer"]
-margin_right = 200.0
+margin_right = 300.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 40 )
 text = "Select a Reward"
@@ -177,12 +177,13 @@ align = 1
 valign = 1
 uppercase = true
 
-[node name="OptionButton" type="OptionButton" parent="Control/LevelUpScreen/VBoxContainer"]
+[node name="ItemList" type="ItemList" parent="Control/LevelUpScreen/VBoxContainer"]
 margin_top = 56.0
-margin_right = 200.0
-margin_bottom = 81.0
+margin_right = 300.0
+margin_bottom = 156.0
+rect_min_size = Vector2( 300, 100 )
 
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="OnResumeButtonPressed"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]
 [connection signal="pressed" from="Control/GameOverScreen/VBoxContainer/MenuButton" to="Control/GameOverScreen" method="OnMenuButtonPressed"]
-[connection signal="item_selected" from="Control/LevelUpScreen/VBoxContainer/OptionButton" to="." method="OnRewardSelected"]
+[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="." method="OnRewardSelected"]

@@ -42,11 +42,13 @@ public class GUI : CanvasLayer
         _hud.SetExpbar(exp,level);
     }
 
+    //Signal from the Player to set up the HUD for the rewards
     public void OnPlayerChooseReward(string opt0,string opt1,  string opt2, string opt3)
     {
        _levelUpScreen.SetRewards(new string[]{opt0,opt1,opt2,opt3}); 
     }
 
+    //Signal from the HUD
     public void OnRewardSelected(int index)
     {
         _levelUpScreen.Visible = false;

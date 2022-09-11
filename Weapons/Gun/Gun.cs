@@ -58,6 +58,6 @@ public class Gun : Item
 
     public override string ToString()
     {
-        return "This is a shotgun, deals basic damage.";
+        return "This is a shotgun,\n deals basic damage.";
     }
 }
