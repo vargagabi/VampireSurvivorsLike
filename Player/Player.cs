@@ -15,23 +15,25 @@ class KeyVal
     {
         this.Message = msg;
         this.Value = val;
-        BonusModifier = (100f+modify)/100f;
+        BonusModifier = (100f + modify) / 100f;
     }
 
     public float GetValue()
     {
         return Value;
     }
+
     public void Increase()
     {
         Value *= BonusModifier;
     }
 }
+
 public class Player : KinematicBody2D
 {
     //Player attributes
     private float _currentHealth = 200;
-    private KeyVal _maxHealth = new KeyVal("Increase max health",200f,10f);
+    private KeyVal _maxHealth = new KeyVal("Increase max health", 200f, 10f);
     private KeyVal _healthRegen =
         new KeyVal("Increase health regeneration", 1.0f, 10f);
     private int _healthCounter = 0;
@@ -226,13 +228,25 @@ public class Player : KinematicBody2D
     public async void OnEnemyKilled(int exp)
     {
         _experience += exp;
+        GD.Print("-------------------------------");
+        GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
+        GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
+        GD.Print("Level: " + _currentLevel);
+        GD.Print("All Exp: " + _experience); 
+        //If leveled up, choose rewards depending on the number of level ups
+        float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
+                                  ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
+
+
+        GD.Print("Current exp in %: " + currentExpInLevel);
+        EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
     }
 
     private async void CheckLevelUp()
     {
-        if (LvlToExp(_experience) > _currentLevel)
+        if (ExpToLvl(_experience) > _currentLevel)
         {
-            for (int i = 0; i < LvlToExp(_experience) - _currentLevel; i++)
+            for (int i = 0; i < ExpToLvl(_experience) - _currentLevel; i++)
             {
                 GetTree().Paused = true;
                 Object[] options = new object[4];
@@ -254,17 +268,7 @@ public class Player : KinematicBody2D
                 GetTree().Paused = false;
             }
 
-            _currentLevel = LvlToExp(_experience);
-
-            //If leveled up, choose rewards depending on the number of level ups
-            float currentExpInLevel = 100 * (_experience - (float)ExpToLvl(_currentLevel)) /
-                                      ((float)ExpToLvl(_currentLevel + 1) - ExpToLvl(_currentLevel));
-
-            // GD.Print("EXP THIS LEVEL: " + (ExpToLvl(_currentLevel + 1) - ExpToLvl(_currentLevel)));
-            // GD.Print("Level: " + _currentLevel);
-            // GD.Print("Exp: " + _experience);
-            // GD.Print("Current exp: " + currentExpInLevel);
-            EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+            _currentLevel = ExpToLvl(_experience);
         }
     }
 
@@ -322,14 +326,14 @@ public class Player : KinematicBody2D
         _allWeapons.Remove(weapon);
     }
 
-    private int ExpToLvl(int lvl)
+    private int ExpToLvl(int exp)
     {
-        return (int)Mathf.Pow((lvl) * 5, 2);
+        return (int)(Math.Sqrt(exp + 4) - 2);
     }
 
-    private int LvlToExp(int exp)
+    private int LvlToExp(int lvl)
     {
-        return (int)Mathf.Sqrt(exp) / 5;
+        return (int)(4 * lvl + Math.Pow(lvl, 2));
     }
 
     //Signal receiver method

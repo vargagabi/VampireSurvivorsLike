@@ -4,9 +4,9 @@ using System;
 //Slime monster
 public class Enemy1 : KinematicBody2D
 {
-    private float _health ;
-    private float _speed;
-    private int _expValue;
+    private float _health = 10 ;
+    private float _speed = 50;
+    private int _expValue = 1;
     private float _strength { get; set; }
 
     private KinematicBody2D _player;
@@ -18,13 +18,10 @@ public class Enemy1 : KinematicBody2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _health = 10;
-        _speed = 50;
         _strength = 10;
-        _player = GetNode<KinematicBody2D>("../../Player");
+        _player = GetNode<KinematicBody2D>("../../../Player");
         _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
         _animatedSprite.Play("Walk");
-        _expValue = 1000;
         this.Connect(nameof(OnDeath), _player, "OnEnemyKilled");
     }
 
@@ -37,7 +34,7 @@ public class Enemy1 : KinematicBody2D
         {
             MoveAndSlide(velocity * _speed);
         }
-        
+
         _animatedSprite.FlipH = velocity.x < 0;
     }
 

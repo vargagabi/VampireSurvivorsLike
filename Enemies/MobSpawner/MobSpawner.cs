@@ -4,22 +4,21 @@ using System.Drawing.Imaging;
 
 public class MobSpawner : Node2D
 {
-    private int _spawnCounter;
-    private int _spawnRate;
+    private int _spawnCounter = 0;
+    private int _spawnRate= 100;
     private KinematicBody2D _player;
     private PackedScene[] _mobs = new PackedScene[1];
-    private int _spawnDistance;
+    private YSort _ySort;
+    private int _spawnDistance = 500;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         // _player = GetNode<KinematicBody2D>("Player");
         GD.Randomize();
-        _spawnRate = 100;
-        _spawnCounter = 0;
-        _spawnDistance = 100;
         _player = GetNode<KinematicBody2D>("../Player");
         _mobs[0] = GD.Load<PackedScene>("res://Enemies/Enemy1/Enemy1.tscn");
+        _ySort = GetChild<YSort>(0);
         Position = Vector2.Zero;
         GlobalPosition = Vector2.Zero;
     }
@@ -40,7 +39,7 @@ public class MobSpawner : Node2D
             float rand = GD.Randf()*delta;
             ((KinematicBody2D)enemyInstance).GlobalPosition =
                 _player.GlobalPosition + new Vector2(_spawnDistance,0).Rotated((float)GD.RandRange(0,Mathf.Tau));
-            AddChild(enemyInstance);
+            _ySort.AddChild(enemyInstance);
         }
         
     }

@@ -3,19 +3,16 @@ using System;
 
 public class Bullet : Node2D
 {
-    private Vector2 _direction { set; get; }
-    private float _speed;
-    private float _damage;
-    private int _counter;
-    private int _lifeSpan;
+    private Vector2 Direction { set; get; }
+    private float _speed = 200;
+    private float _damage = 5;
+    private int _counter = 0;
+    private int _lifeSpan = 500;
+    private int _piercing = 1;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _speed = 200;
-        _counter = 0;
-        _lifeSpan = 500;
-        _damage = 5;
     }
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,7 +25,7 @@ public class Bullet : Node2D
             return;
         }
 
-        GlobalPosition += _direction * _speed * delta;
+        GlobalPosition += Direction * _speed * delta;
     }
 
     public void OnBodyEntered(Node body)
@@ -36,6 +33,12 @@ public class Bullet : Node2D
         if (body.HasMethod("OnHit") && body.GetClass() == "KinematicBody2D")
         {
             ((Enemy1)body).OnHit(_damage);
+            _piercing--;
+        }
+
+        if (_piercing <= 0)
+        {
+            QueueFree();
         }
     }
 }
