@@ -60,6 +60,7 @@ public class Player : KinematicBody2D
     private AnimatedSprite _animatedSprite;
     private TextureProgress _healthBar;
     private Texture[] _textures = new Texture[3];
+    private Sprite _directionArrow;
     private int _rewardIndex = -1;
 
     //Signals
@@ -79,6 +80,7 @@ public class Player : KinematicBody2D
         _textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
         _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+        _directionArrow = GetNode<Sprite>("Arrow");
         _upgradeableStats.Add(_maxHealth);
         _upgradeableStats.Add(_healthRegen);
         _upgradeableStats.Add(_speed);
@@ -149,6 +151,8 @@ public class Player : KinematicBody2D
             animation = (velocity.x > 0 ? "Right" : "Left");
         }
 
+        _directionArrow.Rotation = _direction.Normalized().Angle();
+        _directionArrow.Position = _direction.Normalized() * 15;
         _direction = _direction.Normalized();
         _animatedSprite.Play(animation);
         MoveAndSlide(velocity.Normalized() * _speed.GetValue());
