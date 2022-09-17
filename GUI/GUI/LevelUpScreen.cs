@@ -24,7 +24,7 @@ public class LevelUpScreen : CenterContainer
         {
             // _optionButton.AddItem(options[i],i);
             _itemList.AddItem(options[i]);
-            GD.Print(i + ", " + options[i]);
+            // GD.Print(i + ", " + options[i]);
         }
         Visible = true;
         

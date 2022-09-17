@@ -10,7 +10,8 @@ class KeyVal
     public string Message { get; }
     public float Value { get; set; } = -1;
     public CircleShape2D Shape { get; set; }
-    private float BonusModifier { get; }
+    private float BonusModifier { get; set; }
+    private int level = 0;
 
     public KeyVal(string msg, float val, float modify)
     {
@@ -19,28 +20,29 @@ class KeyVal
         BonusModifier = (100f + modify) / 100f;
     }
 
-    public KeyVal(string msg, CircleShape2D val, float modify)
+    public KeyVal(string msg, float defVal, CircleShape2D val, float modify)
     {
         this.Message = msg;
         this.Shape = val;
-        BonusModifier = (100f + modify) / 100f;
+        Shape.Radius = defVal;
+        this.Value = defVal;
+        BonusModifier =  modify / 100f;
+        GD.Print(BonusModifier);
     }
 
     public float GetValue()
     {
-        return Value;
+        return Value + Value * BonusModifier * level;
     }
 
     public void Increase()
     {
-        if (Value > -1)
+        level++;
+        if (Shape != null)
         {
-            Value *= BonusModifier;
-        }
-        else if (Shape != null)
-        {
-            GD.Print("SHAPEEEE");
-            Shape.Radius *= BonusModifier;
+            Shape.Radius = Value + Value * BonusModifier*level;
+            GD.Print("Radius: " + Shape.Radius);
+            GD.Print("MOdifier " + BonusModifier);
         }
     }
 }
@@ -54,8 +56,8 @@ public class Player : KinematicBody2D
         new KeyVal("Increase health regeneration", 1.0f, 10f);
     private int _healthCounter = 0;
 
-    private KeyVal _speed = new KeyVal("Increase speed", 100.0f, 100f);
-    private KeyVal _pickupRange; 
+    private KeyVal _speed = new KeyVal("Increase speed", 100.0f, 20f);
+    private KeyVal _pickupRange;
     private List<KeyVal> _upgradeableStats = new List<KeyVal>();
     private Vector2 _direction { get; set; }
 
@@ -99,8 +101,7 @@ public class Player : KinematicBody2D
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
         _directionArrow = GetNode<Sprite>("Arrow");
         _pickupArea = GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
-        _pickupRange = new KeyVal("test", _pickupArea, 30.0f);
-        GD.Print(_pickupRange.Shape);
+        _pickupRange = new KeyVal("test", _pickupArea.Radius, _pickupArea, 50.0f);
         _upgradeableStats.Add(_maxHealth);
         _upgradeableStats.Add(_healthRegen);
         _upgradeableStats.Add(_speed);
@@ -278,9 +279,6 @@ public class Player : KinematicBody2D
                 _rewardIndex = -1;
                 SelectRewardOnLevelUp(options);
                 await ToSignal(GetNode("../GUI"), "RewardSelected");
-                GD.Print("------------------");
-                GD.Print(_rewardIndex);
-                GD.Print(options[_rewardIndex]);
                 if (options[_rewardIndex] is Item)
                 {
                     ((Item)options[_rewardIndex]).Upgrade();
@@ -303,7 +301,6 @@ public class Player : KinematicBody2D
     //Makee a list of rewards for the player to choose
     private void SelectRewardOnLevelUp(Object[] options)
     {
-        GD.Print("SelectRewardOnLevelUp()");
 
         List<Object> rewards = new List<object>();
         foreach (var keyValuePair in _upgradeableStats)
@@ -373,19 +370,18 @@ public class Player : KinematicBody2D
 
     public void OnPickUp(int exp)
     {
-        GD.Print(exp);
         _experience += exp;
-        GD.Print("-------------------------------");
-        GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
-        GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
-        GD.Print("Level: " + _currentLevel);
-        GD.Print("All Exp: " + _experience);
+        // GD.Print("-------------------------------");
+        // GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
+        // GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
+        // GD.Print("Level: " + _currentLevel);
+        // GD.Print("All Exp: " + _experience);
 
         float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
                                   ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
 
 
-        GD.Print("Current exp in %: " + currentExpInLevel);
+        // GD.Print("Current exp in %: " + currentExpInLevel);
         EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
     }
 }
