@@ -229,22 +229,23 @@ public class Player : KinematicBody2D
         _damageValue -= dmg;
     }
 
-    public async void OnEnemyKilled(int exp)
-    {
-        _experience += exp;
-        GD.Print("-------------------------------");
-        GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
-        GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
-        GD.Print("Level: " + _currentLevel);
-        GD.Print("All Exp: " + _experience); 
-        //If leveled up, choose rewards depending on the number of level ups
-        float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
-                                  ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
-
-
-        GD.Print("Current exp in %: " + currentExpInLevel);
-        EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
-    }
+    // public async void OnEnemyKilled(int exp)
+    // {
+    //     _experience += exp;
+    //     GD.Print("-------------------------------");
+    //     GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
+    //     GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
+    //     GD.Print("Level: " + _currentLevel);
+    //     GD.Print("All Exp: " + _experience);
+    //
+    //     //If leveled up, choose rewards depending on the number of level ups
+    //     float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
+    //                               ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
+    //
+    //
+    //     GD.Print("Current exp in %: " + currentExpInLevel);
+    //     EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+    // }
 
     private async void CheckLevelUp()
     {
@@ -345,5 +346,24 @@ public class Player : KinematicBody2D
     {
         // GetTree().Paused = false;
         _rewardIndex = index;
+    }
+
+    public void OnPickUp(int exp)
+    {
+        GD.Print(exp);
+        _experience += exp;
+        GD.Print("-------------------------------");
+        GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
+        GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
+        GD.Print("Level: " + _currentLevel);
+        GD.Print("All Exp: " + _experience);
+
+        //If leveled up, choose rewards depending on the number of level ups
+        float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
+                                  ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
+
+
+        GD.Print("Current exp in %: " + currentExpInLevel);
+        EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
     }
 }
