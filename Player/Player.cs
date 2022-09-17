@@ -8,13 +8,21 @@ using Object = System.Object;
 class KeyVal
 {
     public string Message { get; }
-    public float Value { get; private set; }
+    public float Value { get; set; } = -1;
+    public CircleShape2D Shape { get; set; }
     private float BonusModifier { get; }
 
     public KeyVal(string msg, float val, float modify)
     {
         this.Message = msg;
         this.Value = val;
+        BonusModifier = (100f + modify) / 100f;
+    }
+
+    public KeyVal(string msg, CircleShape2D val, float modify)
+    {
+        this.Message = msg;
+        this.Shape = val;
         BonusModifier = (100f + modify) / 100f;
     }
 
@@ -25,7 +33,15 @@ class KeyVal
 
     public void Increase()
     {
-        Value *= BonusModifier;
+        if (Value > -1)
+        {
+            Value *= BonusModifier;
+        }
+        else if (Shape != null)
+        {
+            GD.Print("SHAPEEEE");
+            Shape.Radius *= BonusModifier;
+        }
     }
 }
 
@@ -38,8 +54,8 @@ public class Player : KinematicBody2D
         new KeyVal("Increase health regeneration", 1.0f, 10f);
     private int _healthCounter = 0;
 
-    private KeyVal _speed = new KeyVal("Increase speed", 100.0f, 10f);
-    private KeyVal _pickupRange = new KeyVal("Increase pickup range", 10.0f, 10f);
+    private KeyVal _speed = new KeyVal("Increase speed", 100.0f, 100f);
+    private KeyVal _pickupRange; 
     private List<KeyVal> _upgradeableStats = new List<KeyVal>();
     private Vector2 _direction { get; set; }
 
@@ -59,6 +75,7 @@ public class Player : KinematicBody2D
 
     private AnimatedSprite _animatedSprite;
     private TextureProgress _healthBar;
+    private CircleShape2D _pickupArea;
     private Texture[] _textures = new Texture[3];
     private Sprite _directionArrow;
     private int _rewardIndex = -1;
@@ -81,6 +98,9 @@ public class Player : KinematicBody2D
         _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
         _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
         _directionArrow = GetNode<Sprite>("Arrow");
+        _pickupArea = GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
+        _pickupRange = new KeyVal("test", _pickupArea, 30.0f);
+        GD.Print(_pickupRange.Shape);
         _upgradeableStats.Add(_maxHealth);
         _upgradeableStats.Add(_healthRegen);
         _upgradeableStats.Add(_speed);
@@ -274,6 +294,9 @@ public class Player : KinematicBody2D
             }
 
             _currentLevel = ExpToLvl(_experience);
+            float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
+                                      ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
+            EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
         }
     }
 
@@ -358,7 +381,6 @@ public class Player : KinematicBody2D
         GD.Print("Level: " + _currentLevel);
         GD.Print("All Exp: " + _experience);
 
-        //If leveled up, choose rewards depending on the number of level ups
         float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
                                   ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
 

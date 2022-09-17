@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://GUI/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://GUI/GUI/HUD.cs" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://GUI/GUI/GameOverScreen.cs" type="Script" id=4]
 [ext_resource path="res://Textures/bar_yellow.png" type="Texture" id=5]
 [ext_resource path="res://GUI/GUI/LevelUpScreen.cs" type="Script" id=6]
+[ext_resource path="res://Textures/bar_red.png" type="Texture" id=7]
 
 [node name="GUI" type="CanvasLayer"]
 layer = 10
@@ -49,15 +50,14 @@ align = 1
 valign = 1
 
 [node name="ExpBar" type="TextureProgress" parent="Control/HUD"]
-anchor_top = 0.948
+anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 150.0
-margin_top = -3.05176e-05
-margin_right = -150.0
-rect_min_size = Vector2( 200, 26 )
-rect_scale = Vector2( 2.5, 1 )
-rect_pivot_offset = Vector2( 100, 13 )
+margin_left = -200.0
+margin_top = -26.0
+value = 50.0
+texture_under = ExtResource( 7 )
 texture_progress = ExtResource( 5 )
 
 [node name="LevelLabel" type="Label" parent="Control/HUD"]
