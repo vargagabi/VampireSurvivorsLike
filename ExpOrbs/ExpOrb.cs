@@ -36,6 +36,7 @@ public class ExpOrb : Node2D
         if (_move)
         {
             GlobalPosition += (_player.GlobalPosition - GlobalPosition).Normalized() * _speed * delta;
+            _speed += 1;
             if (_player.GlobalPosition.DistanceTo(GlobalPosition) <= 10)
             {
                 EmitSignal(nameof(PickedUp), Experience);
