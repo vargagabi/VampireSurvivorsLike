@@ -20,11 +20,10 @@ class KeyVal {
         this.bonusModifier = modify / 100f;
     }
 
-    public KeyVal(string message, float initialValue, CircleShape2D shape, float modifier) {
+    public KeyVal(string message, CircleShape2D shape, float modifier) {
         this.Message = message;
         this.shape = shape;
-        this.shape.Radius = initialValue;
-        this.initialValue = initialValue;
+        this.initialValue = shape.Radius;
         this.bonusModifier = modifier / 100f;
     }
 
@@ -91,7 +90,7 @@ public class Player : KinematicBody2D {
         this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
         this.directionArrow = this.GetNode<Sprite>("Arrow");
         this.pickupArea = this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
-        this.pickupRange = new KeyVal("test", this.pickupArea.Radius, this.pickupArea, 50.0f);
+        this.pickupRange = new KeyVal("Increase the pickup range by 10%",  this.pickupArea, 10.0f);
         this.upgradeableStats.Add(this.maxHealth);
         this.upgradeableStats.Add(this.healthRegen);
         this.upgradeableStats.Add(this.speed);
@@ -100,7 +99,7 @@ public class Player : KinematicBody2D {
         //Add the weapons the player can choose
         this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
 
-        // this.EquipWeapon(this.allWeapons[0]);
+        this.EquipWeapon(this.allWeapons[0]);
 
         //Emit signals to set the HUD health and level bars
         this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
