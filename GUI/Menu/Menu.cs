@@ -1,16 +1,12 @@
+using System;
 using Godot;
 
-public class Menu : Control
-{
+public class Menu : Control {
     private CenterContainer _mainMenu;
-    // private CenterContainer _GameOverScreen;
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        _mainMenu = GetNode<CenterContainer>("MainMenu");
-        // _GameOverScreen = GetNode<CenterContainer>("GameOverScreen");
 
-        // _GameOverScreen.Visible = false;
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready() {
+        _mainMenu = GetNode<CenterContainer>("MainMenu");
         ((Button)_mainMenu.GetChild(0).GetChild(0)).GrabFocus();
     }
 
@@ -19,8 +15,16 @@ public class Menu : Control
     //  {
     //      
     //  }
-    public void OnStartButtonPressed()
-    {
+
+    public void OnStartButtonPressed() {
         GetTree().ChangeScene("res://Main/Main.tscn");
+    }
+
+    public void OnQuitButtonPressed() {
+        GetTree().Quit();
+    }
+
+    public void OnSettingsButtonPressed() {
+        Console.WriteLine("Settings button pressed");
     }
 }

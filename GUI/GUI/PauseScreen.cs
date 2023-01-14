@@ -3,7 +3,7 @@ using Godot;
 public class PauseScreen : CenterContainer
 {
     private bool isPaused;
-    private ColorRect _colorRect;
+    private ColorRect colorRect;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -32,7 +32,7 @@ public class PauseScreen : CenterContainer
     {
         isPaused = false;
         GetTree().Paused = isPaused;
-        Visible = false;
+        Visible = this.isPaused;
     }
 
     public void OnQuitButtonPressed()

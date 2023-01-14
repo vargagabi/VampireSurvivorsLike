@@ -1,55 +1,56 @@
 using Godot;
 
-public class GUI : CanvasLayer
-{
-    private HUD _hud;
-    private GameOverScreen _gameOverScreen;
-    private float _elapsedTime;
-    private LevelUpScreen _levelUpScreen;
+public class GUI : CanvasLayer {
+    private HUD hud;
+    private GameOverScreen gameOverScreen;
+    private float elapsedTime;
+    private LevelUpScreen levelUpScreen;
 
     [Signal] public delegate void RewardSelected(int index);
+
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
+    public override void _Ready() {
         GD.Print("GUI Ready...");
-        _hud = GetNode<HUD>("Control/HUD");
-        _gameOverScreen = GetNode<GameOverScreen>("Control/GameOverScreen");
-        _levelUpScreen = GetNode<LevelUpScreen>("Control/LevelUpScreen");
-        _elapsedTime = 0;
+        this.hud = GetNode<HUD>("Control/HUD");
+        this.gameOverScreen = GetNode<GameOverScreen>("Control/GameOverScreen");
+        this.levelUpScreen = GetNode<LevelUpScreen>("Control/LevelUpScreen");
+        this.elapsedTime = 0;
     }
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(float delta)
-    {
-        _elapsedTime += delta;
-        _hud.SetTimeLabel(_elapsedTime);
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(float delta) {
+        this.elapsedTime += delta;
+        this.hud.SetTimeLabel(this.elapsedTime);
     }
 
-    public void OnPlayerCurrentHealth(float currentHealth)
-    {
-        _hud.SetHealthLabel(currentHealth);
-        if (currentHealth <= 0)
-        {
+    /*
+     * Sets the current health when receiving the value.
+     * If the health is less than or equals 0 show the Game Over screen and pause the game
+     */
+    public void OnPlayerCurrentHealth(float currentHealth) {
+        this.hud.SetHealthLabel(currentHealth);
+        if (currentHealth <= 0) {
             GetTree().Paused = true;
-            _gameOverScreen.SetScoreLabel(_elapsedTime);
+            this.gameOverScreen.SetScoreLabel(this.elapsedTime);
         }
     }
 
-    public void OnExpEarned(float exp, int level)
-    {
-        _hud.SetExpbar(exp, level);
+    public void OnExpEarned(float exp, int level) {
+        this.hud.SetExpBar(exp, level);
     }
 
-    //Signal from the Player to set up the HUD for the rewards
-    public void OnPlayerChooseReward(string opt0, string opt1, string opt2, string opt3)
-    {
-        _levelUpScreen.SetRewards(new string[] { opt0, opt1, opt2, opt3 });
+    /*
+     * Sets up the rewards the player can choose on level up
+     */
+    public void OnPlayerChooseReward(string opt0, string opt1, string opt2, string opt3) {
+        this.levelUpScreen.SetRewards(new string[] { opt0, opt1, opt2, opt3 });
     }
 
-    //Signal from the HUD
-    public void OnRewardSelected(int index)
-    {
-        _levelUpScreen.Visible = false;
+    /*
+     * Emits a signal of the index of the chosen reward to the Player.
+     */
+    public void OnRewardSelected(int index) {
+        this.levelUpScreen.Visible = false;
         EmitSignal(nameof(RewardSelected), index);
     }
 }

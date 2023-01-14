@@ -44,3 +44,5 @@ rect_min_size = Vector2( 200, 40 )
 text = "Quit"
 
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/QuitButton" to="." method="OnQuitButtonPressed"]

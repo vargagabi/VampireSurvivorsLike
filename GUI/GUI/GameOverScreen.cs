@@ -1,13 +1,11 @@
 using Godot;
 
-public class GameOverScreen : CenterContainer
-{
-    private Label _scoreLabel;
+public class GameOverScreen : CenterContainer {
+    private Label scoreLabel;
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        _scoreLabel = GetChild(1).GetChild<Label>(0);
+    public override void _Ready() {
+        this.scoreLabel = GetChild(1).GetChild<Label>(0);
         Visible = false;
     }
 
@@ -16,15 +14,14 @@ public class GameOverScreen : CenterContainer
     //  {
     //      
     //  }
-    public void SetScoreLabel(float score)
-    {
+
+    public void SetScoreLabel(float score) {
         Visible = true;
-        _scoreLabel.Text = "Your Score: " + (int)score;
+        this.scoreLabel.Text = "Your Score: " + (int)score;
     }
 
-    public void OnMenuButtonPressed()
-    {
+    public void OnMenuButtonPressed() {
+        GetTree().Paused = false;
         GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
     }
-
 }

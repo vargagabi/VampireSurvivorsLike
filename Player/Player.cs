@@ -1,318 +1,283 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using VampireSurvivorsLike.Enums;
 using VampireSurvivorsLike.Weapons;
 using Object = System.Object;
 
-class KeyVal
-{
+class KeyVal {
     public string Message { get; }
     public float Value { get; set; } = -1;
     public CircleShape2D Shape { get; set; }
     private float BonusModifier { get; set; }
-    private int level = 0;
+    private int level;
 
-    public KeyVal(string msg, float val, float modify)
-    {
+    public KeyVal(string msg, float val, float modify) {
         this.Message = msg;
         this.Value = val;
-        BonusModifier = (100f + modify) / 100f;
+        this.BonusModifier = (100f + modify) / 100f;
     }
 
-    public KeyVal(string msg, float defVal, CircleShape2D val, float modify)
-    {
+    public KeyVal(string msg, float defVal, CircleShape2D val, float modify) {
         this.Message = msg;
         this.Shape = val;
-        Shape.Radius = defVal;
+        this.Shape.Radius = defVal;
         this.Value = defVal;
-        BonusModifier = modify / 100f;
-        GD.Print(BonusModifier);
+        this.BonusModifier = modify / 100f;
+        GD.Print(this.BonusModifier);
     }
 
-    public float GetValue()
-    {
-        return Value + Value * BonusModifier * level;
+    public float GetValue() {
+        return this.Value + this.Value * this.BonusModifier * this.level;
     }
 
-    public void Increase()
-    {
-        level++;
-        if (Shape != null)
-        {
-            Shape.Radius = Value + Value * BonusModifier * level;
-            GD.Print("Radius: " + Shape.Radius);
-            GD.Print("MOdifier " + BonusModifier);
+    public void Increase() {
+        this.level++;
+        if (this.Shape != null) {
+            this.Shape.Radius = this.Value + this.Value * this.BonusModifier * this.level;
+            GD.Print("Radius: " + this.Shape.Radius);
+            GD.Print("Modifier " + this.BonusModifier);
         }
     }
 }
 
-public class Player : KinematicBody2D
-{
+public class Player : KinematicBody2D {
     //Player attributes
-    private float _currentHealth = 200;
-    private KeyVal _maxHealth = new KeyVal("Increase max health", 200f, 10f);
-    private KeyVal _healthRegen =
+    private float currentHealth = 200;
+    private KeyVal maxHealth = new KeyVal("Increase max health", 200f, 10f);
+    private KeyVal healthRegen =
         new KeyVal("Increase health regeneration", 1.0f, 10f);
-    private int _healthCounter = 0;
+    private int healthCounter = 0;
 
-    private KeyVal _speed = new KeyVal("Increase speed", 100.0f, 20f);
-    private KeyVal _pickupRange;
-    private List<KeyVal> _upgradeableStats = new List<KeyVal>();
-    private Vector2 _direction { get; set; }
+    private KeyVal speed = new KeyVal("Increase speed", 100.0f, 20f);
+    private KeyVal pickupRange;
+    private List<KeyVal> upgradeableStats = new List<KeyVal>();
+    private Vector2 Direction { get; set; }
 
-    private int _immunityTime = 25;
-    private int _damageCounter = 0;
-    private float _damageValue = 0;
+    private const int ImmunityTime = 25;
+    private int damageCounter = 0;
+    private float takenDamageValue = 0;
 
     //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
-    private int _experience = 0;
-    private int _currentLevel = 0;
+    private int experience = 0;
+    private int currentLevel = 0;
 
 
-    private List<Node2D> _allWeapons = new List<Node2D>();
-    private int _weaponCount = 4;
-    private List<Node2D> _equippedWeapons = new List<Node2D>();
+    private List<Node2D> allWeapons = new List<Node2D>();
+    private int weaponCount = 4;
+    private List<Node2D> equippedWeapons = new List<Node2D>();
 
 
-    private AnimatedSprite _animatedSprite;
-    private TextureProgress _healthBar;
-    private CircleShape2D _pickupArea;
-    private Texture[] _textures = new Texture[3];
-    private Sprite _directionArrow;
-    private int _rewardIndex = -1;
+    private AnimatedSprite animatedSprite;
+    private TextureProgress healthBar;
+    private CircleShape2D pickupArea;
+    private Texture[] textures = new Texture[3];
+    private Sprite directionArrow;
+    private int rewardIndex = -1;
 
     //Signals
-    [Signal] public delegate void GameOver();
+    // [Signal] public delegate void GameOver();
+
     [Signal] public delegate void CurrentHealth(float currentHealth);
     [Signal] public delegate void CurrentExperience(float exp, int level);
     [Signal] public delegate void ChooseReward(string opt0, string opt1, string opt2, string opt3);
 
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
+    public override void _Ready() {
         GD.Print("Player Ready...");
-        _direction = Vector2.Right;
-        _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
-        _healthBar = GetNode<TextureProgress>("Node2D/HealthBar");
-        _textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
-        _textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
-        _textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
-        _directionArrow = GetNode<Sprite>("Arrow");
-        _pickupArea = GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
-        _pickupRange = new KeyVal("test", _pickupArea.Radius, _pickupArea, 50.0f);
-        _upgradeableStats.Add(_maxHealth);
-        _upgradeableStats.Add(_healthRegen);
-        _upgradeableStats.Add(_speed);
-        _upgradeableStats.Add(_pickupRange);
+        this.Direction = Vector2.Right;
+        this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
+        this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
+        this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
+        this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
+        this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+        this.directionArrow = this.GetNode<Sprite>("Arrow");
+        this.pickupArea = this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
+        this.pickupRange = new KeyVal("test", this.pickupArea.Radius, this.pickupArea, 50.0f);
+        this.upgradeableStats.Add(this.maxHealth);
+        this.upgradeableStats.Add(this.healthRegen);
+        this.upgradeableStats.Add(this.speed);
+        this.upgradeableStats.Add(this.pickupRange);
 
         //Add the weapons the player can choose
-        _allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
+        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
 
-        EquipWeapon(_allWeapons[0]);
+        this.EquipWeapon(this.allWeapons[0]);
 
         //Emit signals to set the HUD health and level bars
-        EmitSignal(nameof(CurrentHealth), _currentHealth);
-        EmitSignal(nameof(CurrentExperience), _experience, _currentLevel);
+        this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
+        this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
     }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(float delta)
-    {
-        Move();
-        CheckLevelUp();
-        if (_damageValue > 0)
-        {
-            TakeDamage();
+    public override void _Process(float delta) {
+        this.Move();
+        this.CheckLevelUp();
+        if (this.takenDamageValue > 0) {
+            this.TakeDamage();
         }
 
-        if (_currentHealth < _maxHealth.Value)
-        {
-            PassiveHeal();
+        if (this.currentHealth < this.maxHealth.Value) {
+            this.PassiveHeal();
         }
     }
 
-    //The input related things
-    private void Move()
-    {
-        string animation = "Idle";
+    /*
+     * Get the movement direction from the keyboard and set the velocity and animation
+     * according to the direction.
+     */
+    private void Move() {
+        AnimationsEnum animation = AnimationsEnum.Idle;
         bool isSpacePressed = Input.IsActionPressed("ui_space");
         Vector2 velocity = Vector2.Zero;
-        if (Input.IsActionPressed("ui_down"))
-        {
+        if (Input.IsActionPressed("ui_down")) {
             velocity += Vector2.Down;
-            _direction += isSpacePressed ? Vector2.Zero : Vector2.Down;
+            this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Down;
         }
-
-        if (Input.IsActionPressed("ui_up"))
-        {
+        if (Input.IsActionPressed("ui_up")) {
             velocity += Vector2.Up;
-            _direction += isSpacePressed ? Vector2.Zero : Vector2.Up;
+            this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Up;
         }
-
-        if (Input.IsActionPressed("ui_left"))
-        {
+        if (Input.IsActionPressed("ui_left")) {
             velocity += Vector2.Left;
-            _direction += isSpacePressed ? Vector2.Zero : Vector2.Left;
+            this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Left;
         }
-
-        if (Input.IsActionPressed("ui_right"))
-        {
+        if (Input.IsActionPressed("ui_right")) {
             velocity += Vector2.Right;
-            _direction += isSpacePressed ? Vector2.Zero : Vector2.Right;
+            this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Right;
+        }
+        if (velocity.x == 0 && velocity.y != 0) {
+            animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
+        }
+        else if (velocity.x != 0) {
+            animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
         }
 
-        if (velocity.x == 0 && velocity.y != 0)
-        {
-            animation = (velocity.y > 0 ? "Down" : "Up");
-        }
-        else if (velocity.x != 0)
-        {
-            animation = (velocity.x > 0 ? "Right" : "Left");
-        }
-
-        _directionArrow.Rotation = _direction.Normalized().Angle();
-        _directionArrow.Position = _direction.Normalized() * 15;
-        _direction = _direction.Normalized();
-        _animatedSprite.Play(animation);
-        MoveAndSlide(velocity.Normalized() * _speed.GetValue());
+        this.directionArrow.Rotation = this.Direction.Normalized().Angle();
+        this.directionArrow.Position = this.Direction.Normalized() * 15;
+        this.Direction = this.Direction.Normalized();
+        this.animatedSprite.Play(animation.ToString());
+        this.MoveAndSlide(velocity.Normalized() * this.speed.GetValue());
     }
 
-    //Update the health bar depending on the current health
-    private void UpdateHealthBar()
-    {
-        _healthBar.Value = _currentHealth / _maxHealth.Value * 100;
-        if (_healthBar.Value < 100)
-        {
-            _healthBar.TextureProgress_ = _textures[0];
+    /*
+     * Update the health bar depending on the current health
+     * Change the health bar color according to its value
+     */
+    private void UpdateHealthBar() {
+        this.healthBar.Value = this.currentHealth / this.maxHealth.Value * 100;
+        if (this.healthBar.Value < 100) {
+            this.healthBar.TextureProgress_ = this.textures[0];
         }
-
-        if (_healthBar.Value < 50)
-        {
-            _healthBar.TextureProgress_ = _textures[1];
+        if (this.healthBar.Value < 50) {
+            this.healthBar.TextureProgress_ = this.textures[1];
         }
-
-        if (_healthBar.Value < 25)
-        {
-            _healthBar.TextureProgress_ = _textures[2];
+        if (this.healthBar.Value < 25) {
+            this.healthBar.TextureProgress_ = this.textures[2];
         }
     }
 
-    //Every x seconds take the added damage of the overlapping enemies
-    private void TakeDamage()
-    {
-        _damageCounter++;
-        if (_damageCounter % _immunityTime == 0)
-        {
-            // GD.Print("Damage taken: " + _damageValue);
-            _damageCounter = 0;
-            _currentHealth = _currentHealth < (int)_damageValue ? 0 : _currentHealth - (int)_damageValue;
-            EmitSignal(nameof(CurrentHealth), _currentHealth);
-            UpdateHealthBar();
+    /*
+     * If an enemy overlaps with the player the enemy's damage value is removed from
+     * the player's health. If there are multiple enemies their damage values are added
+     * together.
+     * Emits a signal to refresh the Health Counter using [CurrentHealth] and updates the
+     * Health Bar
+     */
+    private void TakeDamage() {
+        this.damageCounter++;
+        if (this.damageCounter % ImmunityTime == 0) {
+            this.damageCounter = 0;
+            this.currentHealth = Math.Max(0,this.currentHealth - (int)this.takenDamageValue);
+            this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
+            this.UpdateHealthBar();
         }
 
-        if (_currentHealth <= 0)
-        {
-            // EmitSignal(nameof(GameOver));
-            GetTree().Paused = true;
+        if (this.currentHealth <= 0) {
+            this.GetTree().Paused = true;
         }
     }
 
-    //Every x seconds heal
-    private void PassiveHeal()
-    {
-        _healthCounter++;
-        if (_healthCounter % _immunityTime == 0)
-        {
+    /*
+     * After every ImmunityTime seconds increase the Health by HealthRegen value while
+     * the MaxHealth is higher than the CurrentHealth.
+     */
+    private void PassiveHeal() {
+        this.healthCounter++;
+        if (this.healthCounter % ImmunityTime == 0) {
             // GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
-            _healthCounter = 0;
-            _currentHealth = _healthRegen.Value + _currentHealth > _maxHealth.Value
-                ? _maxHealth.Value
-                : _healthRegen.Value + _currentHealth;
-            EmitSignal(nameof(CurrentHealth), _currentHealth);
-            UpdateHealthBar();
+            this.healthCounter = 0;
+            this.currentHealth = Math.Min(this.maxHealth.Value, this.healthRegen.Value + this.currentHealth);
+            this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
+            this.UpdateHealthBar();
         }
     }
 
-    //When an enemy overlaps with the player, the _strength of the enemy is added to the damage received by the player
-    public void OnBodyEntered(Node body)
-    {
-        // _damageValue += damage;
-        float dmg = (float)(body.Get("_strength"));
-        _damageValue += dmg;
+    /*
+     * When an enemy overlaps with the player, the Strength value of the enemy is added to the TakenDamageValue field.
+     * This field's value is then subtracted from the player's health, thus hurting the player.
+     */
+    public void OnBodyEntered(Node body) {
+        float dmg = (float)(body.Get("Strength"));
+        this.takenDamageValue += dmg;
     }
 
-    //When an enemy leave the player, its _strength is substracted from the damage taken by the player
-    public void OnBodyExited(Node body)
-    {
-        float dmg = (float)(body.Get("_strength"));
-        _damageValue -= dmg;
+    /*
+     * When an enemy leave the player, its Strength value is subtracted from the TakenDamageValue field.
+     */
+    public void OnBodyExited(Node body) {
+        float dmg = (float)(body.Get("Strength"));
+        this.takenDamageValue -= dmg;
     }
 
-    // public async void OnEnemyKilled(int exp)
-    // {
-    //     _experience += exp;
-    //     GD.Print("-------------------------------");
-    //     GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
-    //     GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
-    //     GD.Print("Level: " + _currentLevel);
-    //     GD.Print("All Exp: " + _experience);
-    //
-    //     //If leveled up, choose rewards depending on the number of level ups
-    //     float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
-    //                               ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
-    //
-    //
-    //     GD.Print("Current exp in %: " + currentExpInLevel);
-    //     EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
-    // }
-
-    private async void CheckLevelUp()
-    {
-        if (ExpToLvl(_experience) > _currentLevel)
-        {
-            for (int i = 0; i < ExpToLvl(_experience) - _currentLevel; i++)
-            {
-                GetTree().Paused = true;
+    /*
+     * This method checks if a new level is reached. If the Player gains enough experience to level multiple
+     * times the level's rewards are given after each other. The Player can select between two types of rewards
+     * Either upgrade a weapon or increase one Status.
+     * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
+     */
+    private async void CheckLevelUp() {
+        if (this.ExpToLvl(this.experience) > this.currentLevel) {
+            for (int i = 0; i < this.ExpToLvl(this.experience) - this.currentLevel; i++) {
+                this.GetTree().Paused = true;
                 Object[] options = new object[4];
-                _rewardIndex = -1;
-                SelectRewardOnLevelUp(options);
-                await ToSignal(GetNode("../GUI"), "RewardSelected");
-                if (options[_rewardIndex] is Item)
-                {
-                    ((Item)options[_rewardIndex]).Upgrade();
+                this.rewardIndex = -1;
+                this.SelectRewardOnLevelUp(options);
+                await this.ToSignal(this.GetNode("../GUI"), "RewardSelected");
+                if (options[this.rewardIndex] is Item) {
+                    ((Item)options[this.rewardIndex]).Upgrade();
                 }
-                else if (options[_rewardIndex] is KeyVal)
-                {
-                    ((KeyVal)options[_rewardIndex]).Increase();
+                else if (options[this.rewardIndex] is KeyVal) {
+                    ((KeyVal)options[this.rewardIndex]).Increase();
                 }
 
-                GetTree().Paused = false;
+                this.GetTree().Paused = false;
             }
 
-            _currentLevel = ExpToLvl(_experience);
-            float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
-                                      ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
-            EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+            this.currentLevel = this.ExpToLvl(this.experience);
+            float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
+                                      ((float)this.LvlToExp(this.currentLevel + 1) -
+                                       this.LvlToExp(this.currentLevel));
+            this.EmitSignal(nameof(CurrentExperience), currentExpInLevel, this.currentLevel);
         }
     }
 
-    //Makee a list of rewards for the player to choose
-    private void SelectRewardOnLevelUp(Object[] options)
-    {
-
+    /*
+     * Generates 4 reward options from the UpgradeableStats + EquippedWeapons + AllWeapons.
+     * The two weapon lists do not have overlapping items.
+     * After selecting 4 options the options string value is sent to the GUI screen via [ChooseReward]
+     */
+    private void SelectRewardOnLevelUp(Object[] options) {
         List<Object> rewards = new List<object>();
-        foreach (var keyValuePair in _upgradeableStats)
-        {
+        foreach (KeyVal keyValuePair in this.upgradeableStats) {
             rewards.Add(keyValuePair);
         }
-
-        rewards.AddRange(_equippedWeapons);
-        rewards.AddRange(_allWeapons);
+        rewards.AddRange(this.equippedWeapons);
+        rewards.AddRange(this.allWeapons);
 
         //Select 4 options from the rewards list
-        for (int j = 0; j < 4; j++)
-        {
+        for (int j = 0; j < 4; j++) {
             int rand = (int)GD.RandRange(0, rewards.Count);
             options[j] = rewards[rand];
             rewards.Remove(rewards[rand]);
@@ -320,67 +285,59 @@ public class Player : KinematicBody2D
 
         // GD.Print("Options: ");
         string[] optionsString = new string[4];
-        for (int j = 0; j < 4; j++)
-        {
-            if (options[j] is KeyVal)
-            {
+        for (int j = 0; j < 4; j++) {
+            if (options[j] is KeyVal) {
                 // GD.Print(((KeyValuePair<string, float>)options[j]).Key);
                 optionsString[j] = ((KeyVal)options[j]).Message;
             }
-            else if (options[j] is Node2D)
-            {
+            else if (options[j] is Node2D) {
                 // GD.Print(((Node2D)options[j]).ToString());
                 optionsString[j] = ((Node2D)options[j]).ToString();
             }
         }
-
-        //2. Send the list to the HUD to display it to the player
-        //Wait for the player to choose, pause the game while waiting
-
-        EmitSignal(nameof(ChooseReward), optionsString[0], optionsString[1], optionsString[2], optionsString[3]);
-
-        //3. Get the chosen reward and add it to the character
+        this.EmitSignal(nameof(ChooseReward), optionsString[0], optionsString[1], optionsString[2], optionsString[3]);
     }
 
-    //Equips the given weapon, removes it from the _allWeapons and adds it to the _equippedWeapon so it doesn't appear twice in the rewards list
-    private void EquipWeapon(Node2D weapon)
-    {
-        AddChild(weapon);
-        _equippedWeapons.Add(weapon);
-        _allWeapons.Remove(weapon);
+    /*
+     * Equips the given weapon, removes it from the AllWeapons and adds it to the EquippedWeapon so it doesn't appear twice in the rewards list.
+     * Also appends the Node to the Player node as a child node.
+     */
+    private void EquipWeapon(Node2D weapon) {
+        this.AddChild(weapon);
+        this.equippedWeapons.Add(weapon);
+        this.allWeapons.Remove(weapon);
     }
 
-    private int ExpToLvl(int exp)
-    {
+    /*
+     * Calculates the current level depending on the experience.
+     */
+    private int ExpToLvl(int exp) {
         return (int)(Math.Sqrt(exp + 4) - 2);
     }
 
-    private int LvlToExp(int lvl)
-    {
+    /*
+     * Calculates the experience required to reach the level.
+     */
+    private int LvlToExp(int lvl) {
         return (int)(4 * lvl + Math.Pow(lvl, 2));
     }
 
-    //Signal receiver method
-    public void OnRewardSelected(int index)
-    {
+    /*
+     * After the player choose a reward sets the chosen rewardIndex. 
+     */
+    public void OnRewardSelected(int index) {
         // GetTree().Paused = false;
-        _rewardIndex = index;
+        this.rewardIndex = index;
     }
 
-    public void OnPickUp(int exp)
-    {
-        _experience += exp;
-        // GD.Print("-------------------------------");
-        // GD.Print("EXP REQUIRED THIS LEVEL: " + (LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel)));
-        // GD.Print("EXP REQUIRED TO NEXT LEVEL" + LvlToExp(_currentLevel + 1));
-        // GD.Print("Level: " + _currentLevel);
-        // GD.Print("All Exp: " + _experience);
-
-        float currentExpInLevel = 100 * (_experience - (float)LvlToExp(_currentLevel)) /
-                                  ((float)LvlToExp(_currentLevel + 1) - LvlToExp(_currentLevel));
-
-
-        // GD.Print("Current exp in %: " + currentExpInLevel);
-        EmitSignal(nameof(CurrentExperience), currentExpInLevel, _currentLevel);
+    /*
+     * After picking up an ExpOrb the xp of the orb is added to the player's xp.
+     * Refreshes the xp using [CurrentExperience]
+     */
+    public void OnPickUp(int exp) {
+        this.experience += exp;
+        float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
+                                  ((float)this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel));
+        this.EmitSignal(nameof(CurrentExperience), currentExpInLevel, this.currentLevel);
     }
 }

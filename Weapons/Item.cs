@@ -4,9 +4,9 @@ namespace VampireSurvivorsLike.Weapons
 {
     public abstract class Item : Node2D
     {
-        private int _counter;
-        private int _attackSpeed;
-        private int _level;
+        protected int counter;
+        protected int attackSpeed;
+        protected int level;
 
         public abstract void Upgrade();
     }
