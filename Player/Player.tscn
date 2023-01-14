@@ -4,7 +4,7 @@
 [ext_resource path="res://Textures/direction_arrow.png" type="Texture" id=2]
 [ext_resource path="res://Textures/AnimationPlayerTutorialSprites/DemoRpgCharacter.png" type="Texture" id=3]
 [ext_resource path="res://Textures/bar_green_mini.png" type="Texture" id=4]
-[ext_resource path="res://Textures/bar_red_mini.png" type="Texture" id=5]
+[ext_resource path="res://Textures/bar_background.png" type="Texture" id=5]
 
 [sub_resource type="CircleShape2D" id=22]
 radius = 32.249

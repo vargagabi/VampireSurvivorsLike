@@ -7,76 +7,73 @@ using Object = System.Object;
 
 class KeyVal {
     public string Message { get; }
-    public float Value { get; set; } = -1;
-    public CircleShape2D Shape { get; set; }
-    private float BonusModifier { get; set; }
+    private readonly float initialValue;
+    private CircleShape2D shape;
+    private readonly float bonusModifier;
     private int level;
 
-    public KeyVal(string msg, float val, float modify) {
-        this.Message = msg;
-        this.Value = val;
-        this.BonusModifier = (100f + modify) / 100f;
+    public KeyVal(string message, float initialValue, float modify) {
+        this.Message = message;
+        this.initialValue = initialValue;
+
+        // this.bonusModifier = (100f + modify) / 100f;
+        this.bonusModifier = modify / 100f;
     }
 
-    public KeyVal(string msg, float defVal, CircleShape2D val, float modify) {
-        this.Message = msg;
-        this.Shape = val;
-        this.Shape.Radius = defVal;
-        this.Value = defVal;
-        this.BonusModifier = modify / 100f;
-        GD.Print(this.BonusModifier);
+    public KeyVal(string message, float initialValue, CircleShape2D shape, float modifier) {
+        this.Message = message;
+        this.shape = shape;
+        this.shape.Radius = initialValue;
+        this.initialValue = initialValue;
+        this.bonusModifier = modifier / 100f;
     }
 
-    public float GetValue() {
-        return this.Value + this.Value * this.BonusModifier * this.level;
+    public float GetCurrentValue() {
+        return this.initialValue + (this.initialValue * this.bonusModifier) * this.level;
     }
 
     public void Increase() {
         this.level++;
-        if (this.Shape != null) {
-            this.Shape.Radius = this.Value + this.Value * this.BonusModifier * this.level;
-            GD.Print("Radius: " + this.Shape.Radius);
-            GD.Print("Modifier " + this.BonusModifier);
+        if (this.shape != null) {
+            this.shape.Radius = this.initialValue + this.initialValue * this.bonusModifier * this.level;
+            GD.Print("Radius: " + this.shape.Radius);
+            GD.Print("Modifier " + this.bonusModifier);
         }
     }
 }
 
 public class Player : KinematicBody2D {
     //Player attributes
-    private float currentHealth = 200;
     private KeyVal maxHealth = new KeyVal("Increase max health", 200f, 10f);
-    private KeyVal healthRegen =
-        new KeyVal("Increase health regeneration", 1.0f, 10f);
-    private int healthCounter = 0;
-
+    private KeyVal healthRegen = new KeyVal("Increase health regeneration", 1.0f, 10f);
     private KeyVal speed = new KeyVal("Increase speed", 100.0f, 20f);
     private KeyVal pickupRange;
     private List<KeyVal> upgradeableStats = new List<KeyVal>();
-    private Vector2 Direction { get; set; }
-
-    private const int ImmunityTime = 25;
+    private float currentHealth = 200;
+    
+    //Counters
+    private int healthCounter = 0;
     private int damageCounter = 0;
+    private const int ImmunityTime = 25;
+    private Vector2 Direction { get; set; }
     private float takenDamageValue = 0;
 
     //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
     private int experience = 0;
     private int currentLevel = 0;
-
-
+    
+    //Weapons
     private List<Node2D> allWeapons = new List<Node2D>();
-    private int weaponCount = 4;
     private List<Node2D> equippedWeapons = new List<Node2D>();
-
+    private int weaponCount = 4;
+    private int rewardIndex = -1;
 
     private AnimatedSprite animatedSprite;
     private TextureProgress healthBar;
     private CircleShape2D pickupArea;
     private Texture[] textures = new Texture[3];
     private Sprite directionArrow;
-    private int rewardIndex = -1;
 
-    //Signals
-    // [Signal] public delegate void GameOver();
 
     [Signal] public delegate void CurrentHealth(float currentHealth);
     [Signal] public delegate void CurrentExperience(float exp, int level);
@@ -103,7 +100,7 @@ public class Player : KinematicBody2D {
         //Add the weapons the player can choose
         this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
 
-        this.EquipWeapon(this.allWeapons[0]);
+        // this.EquipWeapon(this.allWeapons[0]);
 
         //Emit signals to set the HUD health and level bars
         this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -118,7 +115,7 @@ public class Player : KinematicBody2D {
             this.TakeDamage();
         }
 
-        if (this.currentHealth < this.maxHealth.Value) {
+        if (this.currentHealth < this.maxHealth.GetCurrentValue()) {
             this.PassiveHeal();
         }
     }
@@ -158,7 +155,7 @@ public class Player : KinematicBody2D {
         this.directionArrow.Position = this.Direction.Normalized() * 15;
         this.Direction = this.Direction.Normalized();
         this.animatedSprite.Play(animation.ToString());
-        this.MoveAndSlide(velocity.Normalized() * this.speed.GetValue());
+        this.MoveAndSlide(velocity.Normalized() * this.speed.GetCurrentValue());
     }
 
     /*
@@ -166,14 +163,14 @@ public class Player : KinematicBody2D {
      * Change the health bar color according to its value
      */
     private void UpdateHealthBar() {
-        this.healthBar.Value = this.currentHealth / this.maxHealth.Value * 100;
-        if (this.healthBar.Value < 100) {
+        this.healthBar.Value = (this.currentHealth / this.maxHealth.GetCurrentValue()) * 100;
+        if (this.healthBar.Value < 100 && this.healthBar.TextureProgress_ != this.textures[0]) {
             this.healthBar.TextureProgress_ = this.textures[0];
         }
-        if (this.healthBar.Value < 50) {
+        if (this.healthBar.Value < 50 && this.healthBar.TextureProgress_ != this.textures[1]) {
             this.healthBar.TextureProgress_ = this.textures[1];
         }
-        if (this.healthBar.Value < 25) {
+        if (this.healthBar.Value < 25 && this.healthBar.TextureProgress_ != this.textures[2]) {
             this.healthBar.TextureProgress_ = this.textures[2];
         }
     }
@@ -189,7 +186,7 @@ public class Player : KinematicBody2D {
         this.damageCounter++;
         if (this.damageCounter % ImmunityTime == 0) {
             this.damageCounter = 0;
-            this.currentHealth = Math.Max(0,this.currentHealth - (int)this.takenDamageValue);
+            this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
             this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
             this.UpdateHealthBar();
         }
@@ -206,9 +203,12 @@ public class Player : KinematicBody2D {
     private void PassiveHeal() {
         this.healthCounter++;
         if (this.healthCounter % ImmunityTime == 0) {
+            GD.Print("Max Health: " + this.maxHealth.GetCurrentValue());
+
             // GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
             this.healthCounter = 0;
-            this.currentHealth = Math.Min(this.maxHealth.Value, this.healthRegen.Value + this.currentHealth);
+            this.currentHealth = Math.Min(this.maxHealth.GetCurrentValue(),
+                this.healthRegen.GetCurrentValue() + this.currentHealth);
             this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
             this.UpdateHealthBar();
         }
