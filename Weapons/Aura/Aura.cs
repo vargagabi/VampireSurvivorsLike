@@ -18,8 +18,7 @@ public class Aura : Weapon {
         this.Level = 0;
         this.MaxLevel = 2;
         this.Counter = 0;
-        // this.AttackSpeed = 5;
-        this.AttackSpeed = 2;
+        this.AttackSpeed = 5;
         this.BonusExperience = 0f;
         this.CollisionShape = this.GetNode<Area2D>("Area2D").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
         this.AuraTexture = this.GetNode<Sprite>("AuraTexture");

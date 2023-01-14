@@ -12,4 +12,12 @@ Fixed:
 New Feature:
 	-New Weapon: Aura
 
+Future plans:
+	-New monster
+	-Create Boss monster
+	-Music, Sounds
+	-Damage indicator on mobs and player
+	-Fix menu, add settings, save progress, etc...
+	
+
 
