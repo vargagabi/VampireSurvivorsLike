@@ -1,11 +1,13 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VampireSurvivorsLike.Enums;
 using VampireSurvivorsLike.Weapons;
 using Object = System.Object;
 
 class KeyVal {
+
     public string Message { get; }
     private readonly float initialValue;
     private CircleShape2D shape;
@@ -39,9 +41,11 @@ class KeyVal {
             GD.Print("Modifier " + this.bonusModifier);
         }
     }
+
 }
 
 public class Player : KinematicBody2D {
+
     //Player attributes
     private KeyVal maxHealth = new KeyVal("Increase max health", 200f, 10f);
     private KeyVal healthRegen = new KeyVal("Increase health regeneration", 1.0f, 10f);
@@ -49,7 +53,7 @@ public class Player : KinematicBody2D {
     private KeyVal pickupRange;
     private List<KeyVal> upgradeableStats = new List<KeyVal>();
     private float currentHealth = 200;
-    
+
     //Counters
     private int healthCounter = 0;
     private int damageCounter = 0;
@@ -58,12 +62,12 @@ public class Player : KinematicBody2D {
     private float takenDamageValue = 0;
 
     //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
-    private int experience = 0;
+    private float experience = 0;
     private int currentLevel = 0;
-    
+
     //Weapons
-    private List<Node2D> allWeapons = new List<Node2D>();
-    private List<Node2D> equippedWeapons = new List<Node2D>();
+    private List<Weapon> allWeapons = new List<Weapon>();
+    private List<Weapon> equippedWeapons = new List<Weapon>();
     private int weaponCount = 4;
     private int rewardIndex = -1;
 
@@ -90,16 +94,17 @@ public class Player : KinematicBody2D {
         this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
         this.directionArrow = this.GetNode<Sprite>("Arrow");
         this.pickupArea = this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
-        this.pickupRange = new KeyVal("Increase the pickup range by 10%",  this.pickupArea, 10.0f);
+        this.pickupRange = new KeyVal("Increase the pickup range by 10%", this.pickupArea, 10.0f);
         this.upgradeableStats.Add(this.maxHealth);
         this.upgradeableStats.Add(this.healthRegen);
         this.upgradeableStats.Add(this.speed);
         this.upgradeableStats.Add(this.pickupRange);
 
         //Add the weapons the player can choose
-        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Node2D);
+        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Weapon);
+        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Aura/Aura.tscn")).Instance() as Weapon);
 
-        this.EquipWeapon(this.allWeapons[0]);
+        this.EquipWeapon(this.allWeapons[1]);
 
         //Emit signals to set the HUD health and level bars
         this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -244,8 +249,13 @@ public class Player : KinematicBody2D {
                 this.rewardIndex = -1;
                 this.SelectRewardOnLevelUp(options);
                 await this.ToSignal(this.GetNode("../GUI"), "RewardSelected");
-                if (options[this.rewardIndex] is Item) {
-                    ((Item)options[this.rewardIndex]).Upgrade();
+                if (options[this.rewardIndex] is Weapon) {
+                    if (!this.equippedWeapons.Contains(options[this.rewardIndex] as Weapon)) {
+                        this.EquipWeapon((Weapon)options[this.rewardIndex]);
+                    }
+                    else {
+                        ((Weapon)options[this.rewardIndex]).Upgrade();
+                    }
                 }
                 else if (options[this.rewardIndex] is KeyVal) {
                     ((KeyVal)options[this.rewardIndex]).Increase();
@@ -272,7 +282,11 @@ public class Player : KinematicBody2D {
         foreach (KeyVal keyValuePair in this.upgradeableStats) {
             rewards.Add(keyValuePair);
         }
-        rewards.AddRange(this.equippedWeapons);
+        IEnumerable<Weapon> equipped =
+            from weapon in this.equippedWeapons
+            where weapon.Level < weapon.MaxLevel
+            select weapon;
+        rewards.AddRange(equipped.ToList());
         rewards.AddRange(this.allWeapons);
 
         //Select 4 options from the rewards list
@@ -281,17 +295,13 @@ public class Player : KinematicBody2D {
             options[j] = rewards[rand];
             rewards.Remove(rewards[rand]);
         }
-
-        // GD.Print("Options: ");
         string[] optionsString = new string[4];
         for (int j = 0; j < 4; j++) {
             if (options[j] is KeyVal) {
-                // GD.Print(((KeyValuePair<string, float>)options[j]).Key);
                 optionsString[j] = ((KeyVal)options[j]).Message;
             }
-            else if (options[j] is Node2D) {
-                // GD.Print(((Node2D)options[j]).ToString());
-                optionsString[j] = ((Node2D)options[j]).ToString();
+            else if (options[j] is Weapon) {
+                optionsString[j] = ((Weapon)options[j]).UpgradeMessage();
             }
         }
         this.EmitSignal(nameof(ChooseReward), optionsString[0], optionsString[1], optionsString[2], optionsString[3]);
@@ -301,8 +311,9 @@ public class Player : KinematicBody2D {
      * Equips the given weapon, removes it from the AllWeapons and adds it to the EquippedWeapon so it doesn't appear twice in the rewards list.
      * Also appends the Node to the Player node as a child node.
      */
-    private void EquipWeapon(Node2D weapon) {
+    private void EquipWeapon(Weapon weapon) {
         this.AddChild(weapon);
+        weapon.Upgrade();
         this.equippedWeapons.Add(weapon);
         this.allWeapons.Remove(weapon);
     }
@@ -310,15 +321,15 @@ public class Player : KinematicBody2D {
     /*
      * Calculates the current level depending on the experience.
      */
-    private int ExpToLvl(int exp) {
+    private int ExpToLvl(float exp) {
         return (int)(Math.Sqrt(exp + 4) - 2);
     }
 
     /*
      * Calculates the experience required to reach the level.
      */
-    private int LvlToExp(int lvl) {
-        return (int)(4 * lvl + Math.Pow(lvl, 2));
+    private float LvlToExp(int lvl) {
+        return (float)(4 * lvl + Math.Pow(lvl, 2));
     }
 
     /*
@@ -333,10 +344,11 @@ public class Player : KinematicBody2D {
      * After picking up an ExpOrb the xp of the orb is added to the player's xp.
      * Refreshes the xp using [CurrentExperience]
      */
-    public void OnPickUp(int exp) {
+    public void OnPickUp(float exp) {
         this.experience += exp;
         float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
                                   ((float)this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel));
         this.EmitSignal(nameof(CurrentExperience), currentExpInLevel, this.currentLevel);
     }
+
 }

@@ -1,35 +1,40 @@
 using Godot;
+using VampireSurvivorsLike.Weapons;
 
 public class Bullet : Node2D {
+
     private Vector2 Direction { set; get; }
-    private float speed = 200;
-    private float damage = 5;
-    private int counter = 0;
-    private int lifeSpan = 500;
-    private int piercing = 1;
+    private float Speed { get; set; }
+    private float Damage { get; set; }
+    private int Counter { get; set; }
+    private int LifeSpan { get; set; }
+    private int Piercing { get; set; }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        this.Speed = 200;
+        this.Counter = 0;
+        this.LifeSpan = 500;
     }
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta) {
-        this.counter++;
-        if (this.counter % this.lifeSpan == 0) {
+        this.Counter++;
+        if (this.Counter % this.LifeSpan == 0) {
             QueueFree();
             return;
         }
-
-        GlobalPosition += Direction * this.speed * delta;
+        GlobalPosition += Direction * this.Speed * delta;
     }
 
-    public void OnBodyEntered(Node body) {
+    public void OnBodyEntered(Node2D body) {
         if (body.HasMethod("OnHit") && body.GetClass() == "KinematicBody2D") {
-            ((Enemy1)body).OnHit(this.damage);
-            this.piercing--;
+            ((Enemy1)body).OnHit(this.Damage, this.GetParent<Weapon>());
+            this.Piercing--;
         }
-        if (this.piercing <= 0) {
+        if (this.Piercing <= 0) {
             QueueFree();
         }
     }
+
 }
