@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using Object = System.Object;
 
 public class LevelUpScreen : CenterContainer
 {
@@ -12,10 +10,10 @@ public class LevelUpScreen : CenterContainer
 
         // _optionButton = GetChild(1).GetChild<OptionButton>(1);
         _itemList = GetChild(1).GetChild<ItemList>(1);
-        
+
     }
 
-    public async void SetRewards(string[] options)
+    public void SetRewards(string[] options)
     {
         // _optionButton.Clear();
         _itemList.Clear();
@@ -27,7 +25,7 @@ public class LevelUpScreen : CenterContainer
             // GD.Print(i + ", " + options[i]);
         }
         Visible = true;
-        
+
     }
 
     // public void OnSelected(int index)
@@ -35,9 +33,9 @@ public class LevelUpScreen : CenterContainer
     //     // Visible = false;
     // }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  public override void _Process(float delta)
+    //  {
+    //      
+    //  }
 }

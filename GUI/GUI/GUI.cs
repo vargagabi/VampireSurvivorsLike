@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Threading.Tasks;
 
 public class GUI : CanvasLayer
 {
@@ -20,7 +18,7 @@ public class GUI : CanvasLayer
         _elapsedTime = 0;
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         _elapsedTime += delta;
@@ -33,25 +31,25 @@ public class GUI : CanvasLayer
         if (currentHealth <= 0)
         {
             GetTree().Paused = true;
-           _gameOverScreen.SetScoreLabel(_elapsedTime); 
+            _gameOverScreen.SetScoreLabel(_elapsedTime);
         }
     }
 
     public void OnExpEarned(float exp, int level)
     {
-        _hud.SetExpbar(exp,level);
+        _hud.SetExpbar(exp, level);
     }
 
     //Signal from the Player to set up the HUD for the rewards
-    public void OnPlayerChooseReward(string opt0,string opt1,  string opt2, string opt3)
+    public void OnPlayerChooseReward(string opt0, string opt1, string opt2, string opt3)
     {
-       _levelUpScreen.SetRewards(new string[]{opt0,opt1,opt2,opt3}); 
+        _levelUpScreen.SetRewards(new string[] { opt0, opt1, opt2, opt3 });
     }
 
     //Signal from the HUD
     public void OnRewardSelected(int index)
     {
         _levelUpScreen.Visible = false;
-        EmitSignal(nameof(RewardSelected),index);
+        EmitSignal(nameof(RewardSelected), index);
     }
 }

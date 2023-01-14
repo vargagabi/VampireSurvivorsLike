@@ -7,7 +7,7 @@
 [ext_resource path="res://Textures/bar_red_mini.png" type="Texture" id=5]
 
 [sub_resource type="CircleShape2D" id=22]
-radius = 84.0
+radius = 32.249
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 3 )

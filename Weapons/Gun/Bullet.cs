@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class Bullet : Node2D
 {
@@ -15,7 +14,7 @@ public class Bullet : Node2D
     {
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         _counter++;

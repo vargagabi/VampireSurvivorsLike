@@ -1,8 +1,7 @@
 using Godot;
-using System;
 using VampireSurvivorsLike.Weapons;
 
-public class Gun : Item 
+public class Gun : Item
 {
     private KinematicBody2D _player;
     private int _counter = 0;
@@ -21,10 +20,10 @@ public class Gun : Item
         NumberOfBullets = 1;
         _bullet = (PackedScene)ResourceLoader.Load("res://Weapons/Gun/Bullet.tscn");
         _bulletNode = _bullet.Instance<Bullet>();
-        
+
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         _counter++;
@@ -39,12 +38,12 @@ public class Gun : Item
         for (int i = 0; i < NumberOfBullets; i++)
         {
             Bullet bulletInst = (Bullet)_bullet.Instance();
-            bulletInst.Set("_piercing",_piercing);
+            bulletInst.Set("_piercing", _piercing);
             bulletInst.Set("Direction",
                 ((Vector2)_player.Get("_direction"))
-                .Rotated((i * Mathf.Pi / 12) -  (Mathf.Pi /12)*(NumberOfBullets-1)/2.0f).Normalized());
+                .Rotated((i * Mathf.Pi / 12) - (Mathf.Pi / 12) * (NumberOfBullets - 1) / 2.0f).Normalized());
             bulletInst.GlobalPosition =
-                _player.GlobalPosition + ((Vector2)_player.Get("_direction") ).Normalized() * 10;
+                _player.GlobalPosition + ((Vector2)_player.Get("_direction")).Normalized() * 10;
             bulletInst.Visible = true;
             AddChild(bulletInst);
             bulletInst.SetAsToplevel(true);
@@ -56,30 +55,30 @@ public class Gun : Item
         _level++;
         switch (_level)
         {
-           case 1:
-               _attackSpeed -= 20;
-               break;
-           case 2:
-               NumberOfBullets++;
-               break;
-           case 3:
-               _piercing++;
-               break;
-           case 4:
-               _bulletSpeed += 50;
-               break;
-           case 5:
-               NumberOfBullets++;
-               break;
-           case 6:
-               _piercing++;
-               break;
-           case 7:
-               _attackSpeed -= 10;
-               break;
-           default:
-               NumberOfBullets++;
-               break;
+            case 1:
+                _attackSpeed -= 20;
+                break;
+            case 2:
+                NumberOfBullets++;
+                break;
+            case 3:
+                _piercing++;
+                break;
+            case 4:
+                _bulletSpeed += 50;
+                break;
+            case 5:
+                NumberOfBullets++;
+                break;
+            case 6:
+                _piercing++;
+                break;
+            case 7:
+                _attackSpeed -= 10;
+                break;
+            default:
+                NumberOfBullets++;
+                break;
         }
     }
 

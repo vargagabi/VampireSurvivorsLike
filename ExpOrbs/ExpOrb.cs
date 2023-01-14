@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class ExpOrb : Node2D
 {
@@ -10,7 +9,7 @@ public class ExpOrb : Node2D
     private int _speed = 100;
     [Signal] public delegate void PickedUp(int exp);
 
-// Called when the node enters the scene tree for the first time.
+    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
@@ -30,7 +29,7 @@ public class ExpOrb : Node2D
         }
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         if (_move)

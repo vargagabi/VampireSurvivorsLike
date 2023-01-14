@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 //Slime monster
 public class Enemy1 : KinematicBody2D
@@ -27,7 +26,7 @@ public class Enemy1 : KinematicBody2D
         // this.Connect(nameof(OnDeath), _player, "OnEnemyKilled");
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         Vector2 velocity = Vector2.Zero;
@@ -52,7 +51,7 @@ public class Enemy1 : KinematicBody2D
 
             Node2D expOrb = _expOrb.Instance<Node2D>();
             expOrb.GlobalPosition = GlobalPosition;
-            expOrb.Set("Experience",_expValue);
+            expOrb.Set("Experience", _expValue);
             var viewport = GetTree().Root.GetChild(0);
             viewport.CallDeferred("add_child", expOrb);
         }

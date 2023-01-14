@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class Map : Node2D
 {
@@ -29,7 +28,7 @@ public class Map : Node2D
         _player = GetNode<KinematicBody2D>("../Player");
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         GenerateTiles();
@@ -59,11 +58,11 @@ public class Map : Node2D
 
                 _ground.SetCell(posX, posY, 0, false, false, false,
                     new Vector2((int)GD.RandRange(0, 8), (int)GD.RandRange(0, 4)));
-            
+
                 if (GD.Randf() < 0.01 && noise < -0.4 && noise > -0.6)
                     _props.SetCell(posX, posY, (int)GD.RandRange(0, 14));
 
-}
+            }
         }
 
         // _ground.UpdateBitmaskRegion();

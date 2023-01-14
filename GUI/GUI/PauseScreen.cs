@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class PauseScreen : CenterContainer
 {
@@ -12,7 +11,7 @@ public class PauseScreen : CenterContainer
         isPaused = false;
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         if (Input.IsActionJustReleased("ui_cancel"))
@@ -38,9 +37,9 @@ public class PauseScreen : CenterContainer
 
     public void OnQuitButtonPressed()
     {
-        GetTree().Paused = false;        
+        GetTree().Paused = false;
         GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
-        
+
     }
-    
+
 }

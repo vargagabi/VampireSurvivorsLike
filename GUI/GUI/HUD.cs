@@ -20,7 +20,7 @@ public class HUD : Control
         _levelLabel = GetChild<Label>(3);
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         // _elapsedTime += delta;
@@ -36,7 +36,7 @@ public class HUD : Control
         _timeLabel.Text = TimeSpan.FromSeconds(elapsedTime).ToString("hh':'mm':'ss");
     }
 
-    public void SetExpbar(float value,int level)
+    public void SetExpbar(float value, int level)
     {
         _expBar.Value = value;
         _levelLabel.Text = "Lvl: " + level;

@@ -1,11 +1,9 @@
 using Godot;
-using System;
-using System.Drawing.Imaging;
 
 public class MobSpawner : Node2D
 {
     private int _spawnCounter = 0;
-    private int _spawnRate= 100;
+    private int _spawnRate = 100;
     private KinematicBody2D _player;
     private PackedScene[] _mobs = new PackedScene[1];
     private YSort _ySort;
@@ -23,7 +21,7 @@ public class MobSpawner : Node2D
         GlobalPosition = Vector2.Zero;
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         SpawnEnemy(delta);
@@ -36,11 +34,11 @@ public class MobSpawner : Node2D
         {
             KinematicBody2D enemyInstance = (KinematicBody2D)_mobs[0].Instance();
             enemyInstance.Scale *= (float)GD.RandRange(1, 3);
-            float rand = GD.Randf()*delta;
+            float rand = GD.Randf() * delta;
             ((KinematicBody2D)enemyInstance).GlobalPosition =
-                _player.GlobalPosition + new Vector2(_spawnDistance,0).Rotated((float)GD.RandRange(0,Mathf.Tau));
+                _player.GlobalPosition + new Vector2(_spawnDistance, 0).Rotated((float)GD.RandRange(0, Mathf.Tau));
             _ySort.AddChild(enemyInstance);
         }
-        
+
     }
 }

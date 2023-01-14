@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using VampireSurvivorsLike.Weapons;
 using Object = System.Object;
 
@@ -26,7 +25,7 @@ class KeyVal
         this.Shape = val;
         Shape.Radius = defVal;
         this.Value = defVal;
-        BonusModifier =  modify / 100f;
+        BonusModifier = modify / 100f;
         GD.Print(BonusModifier);
     }
 
@@ -40,7 +39,7 @@ class KeyVal
         level++;
         if (Shape != null)
         {
-            Shape.Radius = Value + Value * BonusModifier*level;
+            Shape.Radius = Value + Value * BonusModifier * level;
             GD.Print("Radius: " + Shape.Radius);
             GD.Print("MOdifier " + BonusModifier);
         }
@@ -90,7 +89,7 @@ public class Player : KinematicBody2D
 
 
     // Called when the node enters the scene tree for the first time.
-    public override async void _Ready()
+    public override void _Ready()
     {
         GD.Print("Player Ready...");
         _direction = Vector2.Right;
@@ -117,7 +116,7 @@ public class Player : KinematicBody2D
         EmitSignal(nameof(CurrentExperience), _experience, _currentLevel);
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         Move();
