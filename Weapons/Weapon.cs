@@ -7,9 +7,9 @@ namespace VampireSurvivorsLike.Weapons {
     
         protected int Counter { get; set; }
         protected int AttackSpeed { get; set; }
-        protected int Level { get; set; }
+        public int Level { get; protected set; }
         protected float Damage {get; set; }
-        protected int MaxLevel {get; set; }
+        public int MaxLevel {get; protected set; }
 
         public abstract void Upgrade();
         public abstract string UpgradeMessage();

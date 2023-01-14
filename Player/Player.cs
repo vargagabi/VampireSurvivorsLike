@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VampireSurvivorsLike.Enums;
 using VampireSurvivorsLike.Weapons;
 using Object = System.Object;
@@ -61,7 +62,7 @@ public class Player : KinematicBody2D {
     private float takenDamageValue = 0;
 
     //The function to calculate the required xp between levels: f(x) = 200x , where x->the level
-    private int experience = 0;
+    private float experience = 0;
     private int currentLevel = 0;
 
     //Weapons
@@ -281,7 +282,11 @@ public class Player : KinematicBody2D {
         foreach (KeyVal keyValuePair in this.upgradeableStats) {
             rewards.Add(keyValuePair);
         }
-        rewards.AddRange(this.equippedWeapons);
+        IEnumerable<Weapon> equipped =
+            from weapon in this.equippedWeapons
+            where weapon.Level < weapon.MaxLevel
+            select weapon;
+        rewards.AddRange(equipped.ToList());
         rewards.AddRange(this.allWeapons);
 
         //Select 4 options from the rewards list
@@ -316,15 +321,15 @@ public class Player : KinematicBody2D {
     /*
      * Calculates the current level depending on the experience.
      */
-    private int ExpToLvl(int exp) {
+    private int ExpToLvl(float exp) {
         return (int)(Math.Sqrt(exp + 4) - 2);
     }
 
     /*
      * Calculates the experience required to reach the level.
      */
-    private int LvlToExp(int lvl) {
-        return (int)(4 * lvl + Math.Pow(lvl, 2));
+    private float LvlToExp(int lvl) {
+        return (float)(4 * lvl + Math.Pow(lvl, 2));
     }
 
     /*
@@ -339,7 +344,7 @@ public class Player : KinematicBody2D {
      * After picking up an ExpOrb the xp of the orb is added to the player's xp.
      * Refreshes the xp using [CurrentExperience]
      */
-    public void OnPickUp(int exp) {
+    public void OnPickUp(float exp) {
         this.experience += exp;
         float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
                                   ((float)this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel));

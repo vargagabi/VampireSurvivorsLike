@@ -13,6 +13,7 @@ public class Gun : Weapon {
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
         this.Level = 0;
+        this.MaxLevel = 8;
         this.Counter = 0;
         this.AttackSpeed = 100;
         this.Damage = 5;
@@ -70,23 +71,20 @@ public class Gun : Weapon {
             case 8:
                 this.AttackSpeed -= 10;
                 break;
-            default:
-                this.NumberOfBullets++;
-                break;
         }
     }
 
     public override string UpgradeMessage() {
         switch (this.Level) {
             case 0: return "Gun: a gun that at higher levels can shoot multiple bullets piercing multiple enemies";
-            case 1: return "Increase Attack Speed Of Gun";
-            case 2: return "Increase Number Of Bullets Of Gun By 1";
-            case 3: return "Increase Piercing Of Bullets By 1";
-            case 4: return "Increase Bullet Speed";
-            case 5: return "Increase Number Of Bullets By 1";
-            case 6: return "Increase Piercing Of Bullets By 1";
-            case 7: return "Increase Attack Speed And Number Of Bullets";
-            default: return "Upgrade A Random Attribute Of The Gun";
+            case 1: return "Gun: Increase Attack Speed Of Gun";
+            case 2: return "Gun: Increase Number Of Bullets Of Gun By 1";
+            case 3: return "Gun: Increase Piercing Of Bullets By 1";
+            case 4: return "Gun: Increase Bullet Speed";
+            case 5: return "Gun: Increase Number Of Bullets By 1";
+            case 6: return "Gun: Increase Piercing Of Bullets By 1";
+            case 7: return "Gun: Increase Attack Speed And Number Of Bullets";
+            default: return "Gun: No more upgrades.";
         }
     }
 

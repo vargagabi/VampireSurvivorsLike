@@ -1,7 +1,7 @@
 using Godot;
 
 public class ExpOrb : Node2D {
-    private int Experience { get; set; }
+    private float Experience { get; set; }
     private AnimationPlayer animationPlayer;
     private Node2D player;
     private bool isMoving = false;
@@ -12,6 +12,7 @@ public class ExpOrb : Node2D {
     public override void _Ready() {
         this.animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         this.animationPlayer.Play("Hover");
+        GD.Print("Exp value: " + this.Experience);
     }
 
     /*
