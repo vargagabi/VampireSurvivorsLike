@@ -1,9 +1,0 @@
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\bin\Debug\VampireSurvivorsLike.dll
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\bin\Debug\VampireSurvivorsLike.pdb
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.csproj.AssemblyReference.cache
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.AssemblyInfoInputs.cache
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.AssemblyInfo.cs
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.csproj.CoreCompileInputs.cache
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.dll
-C:\Users\Gabor\GodotProjects\VampireSurvivorsLike\.mono\temp\obj\Debug\VampireSurvivorsLike.pdb
