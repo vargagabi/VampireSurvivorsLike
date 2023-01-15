@@ -70,13 +70,13 @@ public class Player : KinematicBody2D {
     private List<Weapon> equippedWeapons = new List<Weapon>();
     private int weaponCount = 4;
     private int rewardIndex = -1;
+    private bool IsRewardSelection { get; set; }
 
     private AnimatedSprite animatedSprite;
     private TextureProgress healthBar;
     private CircleShape2D pickupArea;
     private Texture[] textures = new Texture[3];
     private Sprite directionArrow;
-
 
     [Signal] public delegate void CurrentHealth(float currentHealth);
     [Signal] public delegate void CurrentExperience(float exp, int level);
@@ -86,6 +86,7 @@ public class Player : KinematicBody2D {
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
         GD.Print("Player Ready...");
+        this.IsRewardSelection = false;
         this.Direction = Vector2.Right;
         this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
         this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
@@ -113,8 +114,11 @@ public class Player : KinematicBody2D {
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta) {
+        if (this.IsRewardSelection) {
+            this.GetTree().Paused = true;
+        }
         this.Move();
-        this.CheckLevelUp();
+        // this.CheckLevelUp();
         if (this.takenDamageValue > 0) {
             this.TakeDamage();
         }
@@ -150,8 +154,7 @@ public class Player : KinematicBody2D {
         }
         if (velocity.x == 0 && velocity.y != 0) {
             animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
-        }
-        else if (velocity.x != 0) {
+        } else if (velocity.x != 0) {
             animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
         }
 
@@ -240,6 +243,7 @@ public class Player : KinematicBody2D {
      */
     private async void CheckLevelUp() {
         if (this.ExpToLvl(this.experience) > this.currentLevel) {
+            this.IsRewardSelection = true;
             for (int i = 0; i < this.ExpToLvl(this.experience) - this.currentLevel; i++) {
                 this.GetTree().Paused = true;
                 Object[] options = new object[4];
@@ -249,15 +253,13 @@ public class Player : KinematicBody2D {
                 if (options[this.rewardIndex] is Weapon) {
                     if (!this.equippedWeapons.Contains(options[this.rewardIndex] as Weapon)) {
                         this.EquipWeapon((Weapon)options[this.rewardIndex]);
-                    }
-                    else {
+                    } else {
                         ((Weapon)options[this.rewardIndex]).Upgrade();
                     }
-                }
-                else if (options[this.rewardIndex] is KeyVal) {
+                } else if (options[this.rewardIndex] is KeyVal) {
                     ((KeyVal)options[this.rewardIndex]).Increase();
                 }
-
+                this.IsRewardSelection = false;
                 this.GetTree().Paused = false;
             }
 
@@ -296,8 +298,7 @@ public class Player : KinematicBody2D {
         for (int j = 0; j < 4; j++) {
             if (options[j] is KeyVal) {
                 optionsString[j] = ((KeyVal)options[j]).Message;
-            }
-            else if (options[j] is Weapon) {
+            } else if (options[j] is Weapon) {
                 optionsString[j] = ((Weapon)options[j]).UpgradeMessage();
             }
         }
@@ -333,7 +334,6 @@ public class Player : KinematicBody2D {
      * After the player choose a reward sets the chosen rewardIndex. 
      */
     public void OnRewardSelected(int index) {
-        // GetTree().Paused = false;
         this.rewardIndex = index;
     }
 
@@ -343,6 +343,7 @@ public class Player : KinematicBody2D {
      */
     public void OnPickUp(float exp) {
         this.experience += exp;
+        this.CheckLevelUp();
         float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
                                   ((float)this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel));
         this.EmitSignal(nameof(CurrentExperience), currentExpInLevel, this.currentLevel);

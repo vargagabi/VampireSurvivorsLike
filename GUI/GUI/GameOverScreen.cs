@@ -1,6 +1,8 @@
 using Godot;
+using Godot.Collections;
 
 public class GameOverScreen : CenterContainer {
+
     private Label scoreLabel;
 
     // Called when the node enters the scene tree for the first time.
@@ -9,19 +11,15 @@ public class GameOverScreen : CenterContainer {
         Visible = false;
     }
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    //  }
-
     public void SetScoreLabel(float score) {
         Visible = true;
         this.scoreLabel.Text = "Your Score: " + (int)score;
+        this.GetNode<Button>("VBoxContainer/MenuButton").GrabFocus();
     }
 
     public void OnMenuButtonPressed() {
         GetTree().Paused = false;
         GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
     }
+
 }

@@ -1,10 +1,11 @@
 using Godot;
 
 public class GUI : CanvasLayer {
+
     private HUD hud;
     private GameOverScreen gameOverScreen;
-    private float elapsedTime;
     private LevelUpScreen levelUpScreen;
+    private PauseScreen pauseScreen;
 
     [Signal] public delegate void RewardSelected(int index);
 
@@ -14,13 +15,11 @@ public class GUI : CanvasLayer {
         this.hud = GetNode<HUD>("Control/HUD");
         this.gameOverScreen = GetNode<GameOverScreen>("Control/GameOverScreen");
         this.levelUpScreen = GetNode<LevelUpScreen>("Control/LevelUpScreen");
-        this.elapsedTime = 0;
+        this.pauseScreen = GetNode<PauseScreen>("Control/PauseScreen");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta) {
-        this.elapsedTime += delta;
-        this.hud.SetTimeLabel(this.elapsedTime);
     }
 
     /*
@@ -31,7 +30,8 @@ public class GUI : CanvasLayer {
         this.hud.SetHealthLabel(currentHealth);
         if (currentHealth <= 0) {
             GetTree().Paused = true;
-            this.gameOverScreen.SetScoreLabel(this.elapsedTime);
+            this.gameOverScreen.SetScoreLabel(this.hud.ElapsedTime);
+            this.pauseScreen.IsPlaying = false;
         }
     }
 
@@ -50,7 +50,7 @@ public class GUI : CanvasLayer {
      * Emits a signal of the index of the chosen reward to the Player.
      */
     public void OnRewardSelected(int index) {
-        this.levelUpScreen.Visible = false;
+        this.levelUpScreen.ChangeVisibility();
         EmitSignal(nameof(RewardSelected), index);
     }
 }

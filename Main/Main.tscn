@@ -8,12 +8,14 @@
 [node name="Main" type="Node2D"]
 
 [node name="Map" parent="." instance=ExtResource( 5 )]
+pause_mode = 1
 
 [node name="GUI" parent="." instance=ExtResource( 3 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
 [node name="MobSpawner" parent="." instance=ExtResource( 4 )]
+pause_mode = 1
 
 [connection signal="RewardSelected" from="GUI" to="Player" method="OnRewardSelected"]
 [connection signal="ChooseReward" from="Player" to="GUI" method="OnPlayerChooseReward"]
