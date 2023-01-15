@@ -14,7 +14,7 @@ public class MobSpawner : Node2D {
         GD.Randomize();
         this.Player = this.GetNode<KinematicBody2D>("../Player");
         this.SpawnCounter = 0;
-        // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
+        this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
         this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
         this.ySort = this.GetChild<YSort>(0);
         this.Position = Vector2.Zero;

@@ -16,7 +16,7 @@ public class Aura : Weapon {
     public override void _Ready() {
         this.Damage = 0.1f;
         this.Level = 0;
-        this.MaxLevel = 2;
+        this.MaxLevel = 7;
         this.Counter = 0;
         this.AttackSpeed = 5;
         this.BonusExperience = 0f;
