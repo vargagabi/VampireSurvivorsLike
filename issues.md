@@ -20,4 +20,7 @@ Future plans:
 	-Fix menu, add settings, save progress, etc...
 	
 
-
+2023.01.15
+Found:
+	-Pause screen issue still
+	-

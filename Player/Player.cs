@@ -207,9 +207,6 @@ public class Player : KinematicBody2D {
     private void PassiveHeal() {
         this.healthCounter++;
         if (this.healthCounter % ImmunityTime == 0) {
-            GD.Print("Max Health: " + this.maxHealth.GetCurrentValue());
-
-            // GD.Print("Healed: " + _healthRegen + ", current: " + _currentHealth);
             this.healthCounter = 0;
             this.currentHealth = Math.Min(this.maxHealth.GetCurrentValue(),
                 this.healthRegen.GetCurrentValue() + this.currentHealth);

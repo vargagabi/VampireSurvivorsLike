@@ -1,4 +1,5 @@
 using Godot;
+using VampireSurvivorsLike.Enemies;
 using VampireSurvivorsLike.Weapons;
 
 public class Bullet : Node2D {
@@ -29,7 +30,7 @@ public class Bullet : Node2D {
 
     public void OnBodyEntered(Node2D body) {
         if (body.HasMethod("OnHit") && body.GetClass() == "KinematicBody2D") {
-            ((Enemy1)body).OnHit(this.Damage, this.GetParent<Weapon>());
+            ((Enemy)body).OnHit(this.Damage, this.GetParent<Weapon>());
             this.Piercing--;
         }
         if (this.Piercing <= 0) {
