@@ -52,7 +52,7 @@ public class Player : KinematicBody2D {
     private KeyVal speed = new KeyVal("Increase speed", 100.0f, 20f);
     private KeyVal pickupRange;
     private List<KeyVal> upgradeableStats = new List<KeyVal>();
-    private float currentHealth = 200;
+    private float currentHealth;
 
     //Counters
     private int healthCounter = 0;
@@ -87,6 +87,7 @@ public class Player : KinematicBody2D {
     public override void _Ready() {
         GD.Print("Player Ready...");
         this.IsRewardSelection = false;
+        this.currentHealth = this.maxHealth.GetCurrentValue();
         this.Direction = Vector2.Right;
         this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
         this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");

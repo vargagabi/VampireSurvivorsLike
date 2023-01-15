@@ -9,7 +9,7 @@ public class Slime : Enemy {
     public override void _Ready() {
         base._Ready();
         this.Player = this.GetNode<KinematicBody2D>("../../../Player");
-        this.Scale *= (float)GD.RandRange(1,3);
+        this.Scale *= (float)GD.RandRange(1, 3);
     }
 
     public Slime() {
@@ -19,7 +19,7 @@ public class Slime : Enemy {
         this.Speed = 50;
         this.SpawnRate = 222;
         this.SpawnDistance = 500;
-        this.SpawnTime = new Vector2(0f,60f);
+        this.SpawnTime = new Vector2(0f, 60f);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,10 +28,14 @@ public class Slime : Enemy {
             return;
         }
         Vector2 velocity = ((this.Player.GlobalPosition + Vector2.Down * 15) - this.GlobalPosition).Normalized();
-        if (this.AnimatedSprite.Frame >= 2 && this.AnimatedSprite.Frame <= 4) {
+        if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) < 20) {
+            this.AnimationPlay(EnemyAnimationsEnum.Attack);
+            
+        } else if (this.AnimatedSprite.Frame >= 2 && this.AnimatedSprite.Frame <= 4) {
+            this.AnimatedSprite.FlipH = velocity.x < 0;
+            this.AnimationPlay(EnemyAnimationsEnum.Walk);
             this.MoveAndSlide(velocity * this.Speed);
         }
-        this.AnimatedSprite.FlipH = velocity.x < 0;
     }
 
 }
