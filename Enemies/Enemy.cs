@@ -25,11 +25,12 @@ namespace VampireSurvivorsLike.Enemies {
 
         public override void _Ready() {
             base._Ready();
+            GD.Randomize();
             this.AnimatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
             this.AnimatedSprite.Connect("animation_finished", this, "OnDeath");
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
         }
-        
+
         public void OnDeath() {
             if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
                 this.QueueFree();

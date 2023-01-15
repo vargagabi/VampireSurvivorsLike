@@ -9,6 +9,7 @@ public class Slime : Enemy {
     public override void _Ready() {
         base._Ready();
         this.Player = this.GetNode<KinematicBody2D>("../../../Player");
+        this.Scale *= (float)GD.RandRange(1,3);
     }
 
     public Slime() {
@@ -16,7 +17,7 @@ public class Slime : Enemy {
         this.Strength = 5;
         this.ExpValue = 1;
         this.Speed = 50;
-        this.SpawnRate = 100;
+        this.SpawnRate = 222;
         this.SpawnDistance = 500;
         this.SpawnTime = new Vector2(0f,60f);
     }

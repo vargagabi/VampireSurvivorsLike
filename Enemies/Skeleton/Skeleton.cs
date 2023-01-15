@@ -16,8 +16,8 @@ public class Skeleton : Enemy {
         this.Strength = 10;
         this.ExpValue = 5;
         this.Speed = 50;
-        this.SpawnRate = 90;
-        this.SpawnDistance = 250;
+        this.SpawnRate = 188;
+        this.SpawnDistance = 300;
         this.SpawnTime = new Vector2(60f, 300f);
     }
 
