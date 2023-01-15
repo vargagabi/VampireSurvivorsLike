@@ -23,4 +23,9 @@ Future plans:
 2023.01.15
 Found:
 	-Pause screen issue still
-	-
+Fixed:
+
+New Feature:
+	-New Monster: Skeleton
+
+

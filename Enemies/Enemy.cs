@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.Collections.Specialized;
+using Godot;
 using Godot.Collections;
 using VampireSurvivorsLike.Enums;
 using VampireSurvivorsLike.Weapons;
@@ -27,7 +28,7 @@ namespace VampireSurvivorsLike.Enemies {
             base._Ready();
             GD.Randomize();
             this.AnimatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
-            this.AnimatedSprite.Connect("animation_finished", this, "OnDeath");
+            this.AnimatedSprite.Connect("animation_finished", this, nameof(this.OnDeath));
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
         }
 

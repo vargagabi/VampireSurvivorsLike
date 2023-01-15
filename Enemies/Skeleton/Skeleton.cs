@@ -27,11 +27,11 @@ public class Skeleton : Enemy {
             return;
         }
         Vector2 velocity = ((this.Player.GlobalPosition + Vector2.Down * 15) - this.GlobalPosition).Normalized();
-        if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) > 25f) {
+        if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 25f) {
+            this.AnimationPlay(EnemyAnimationsEnum.Attack);
+        } else {
             this.MoveAndSlide(velocity * this.Speed);
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
-        } else {
-            this.AnimationPlay(EnemyAnimationsEnum.Attack);
         }
         this.AnimatedSprite.FlipH = velocity.x < 0;
     }
