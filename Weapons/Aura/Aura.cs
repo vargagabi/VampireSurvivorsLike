@@ -14,11 +14,11 @@ public class Aura : Weapon {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
-        this.Damage = 0.1f;
+        this.Damage = 1f;
         this.Level = 0;
         this.MaxLevel = 7;
         this.Counter = 0;
-        this.AttackSpeed = 5;
+        this.AttackSpeed = 50;
         this.BonusExperience = 0f;
         this.CollisionShape = this.GetNode<Area2D>("Area2D").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
         this.AuraTexture = this.GetNode<Sprite>("AuraTexture");

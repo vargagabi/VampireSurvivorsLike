@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://GUI/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://GUI/GUI/HUD.cs" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Textures/bar_yellow.png" type="Texture" id=5]
 [ext_resource path="res://GUI/GUI/LevelUpScreen.cs" type="Script" id=6]
 [ext_resource path="res://Textures/bar_red.png" type="Texture" id=7]
+[ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=8]
 
 [node name="GUI" type="CanvasLayer"]
 pause_mode = 2
@@ -19,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -29,17 +31,28 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
 
-[node name="HPLabel" type="Label" parent="Control/HUD"]
+[node name="HpLabel" type="Label" parent="Control/HUD"]
 pause_mode = 1
-anchor_right = 0.2
-anchor_bottom = 0.08
-text = "HP:"
-align = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -836.0
+margin_bottom = -436.0
+text = "HP: "
+align = 2
 valign = 1
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": true
-}
+
+[node name="HpNumber" type="Label" parent="Control/HUD"]
+anchor_right = 1.004
+anchor_bottom = 1.0
+margin_left = 64.0
+margin_right = -775.6
+margin_bottom = -436.0
+text = "100"
+align = 1
+valign = 1
+percent_visible = -0.333333
+max_lines_visible = 1
 
 [node name="TimeLabel" type="Label" parent="Control/HUD"]
 pause_mode = 1
@@ -65,13 +78,23 @@ texture_progress = ExtResource( 5 )
 
 [node name="LevelLabel" type="Label" parent="Control/HUD"]
 pause_mode = 1
-anchor_left = 0.8
 anchor_right = 1.0
-anchor_bottom = 0.08
+anchor_bottom = 1.0
+margin_left = 768.0
+margin_right = -68.0
+margin_bottom = -436.0
 text = "Lvl: "
 align = 1
 valign = 1
 uppercase = true
+
+[node name="LevelNumber" type="Label" parent="Control/HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 832.0
+margin_bottom = -436.0
+text = "1"
+valign = 1
 
 [node name="GameOverScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2
@@ -110,6 +133,15 @@ margin_right = 200.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 200, 40 )
 text = "Main Menu"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Control/HSplitContainer"]
+margin_right = 900.0
+margin_bottom = 500.0
 
 [node name="LevelUpScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2

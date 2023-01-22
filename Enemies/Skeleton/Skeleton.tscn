@@ -195,16 +195,15 @@ radius = 13.0
 height = 6.0
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
-position = Vector2( 0, -16 )
 collision_mask = 2
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -18 )
 frames = SubResource( 29 )
 animation = "Attack"
+frame = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -17 )
 shape = SubResource( 30 )

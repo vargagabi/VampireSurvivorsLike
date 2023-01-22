@@ -3,9 +3,9 @@ using System;
 
 public class HUD : Control {
     private Label timeLabel;
-    private Label HPLabel;
+    private Label HpNumber {get; set;}
     private TextureProgress expBar;
-    private Label levelLabel;
+    private Label LevelNumber {get; set;}
     internal float ElapsedTime {get; set;}
     
     // Called when the node enters the scene tree for the first time.
@@ -13,9 +13,9 @@ public class HUD : Control {
         GD.Print("HUD Ready...");
         this.ElapsedTime = 0;
         this.timeLabel = GetNode<Label>("TimeLabel");
-        this.HPLabel = GetNode<Label>("HPLabel");
-        this.expBar = GetChild<TextureProgress>(2);
-        this.levelLabel = GetChild<Label>(3);
+        this.HpNumber = GetNode<Label>("HpNumber");
+        this.LevelNumber = GetNode<Label>("LevelNumber");
+        this.expBar = GetNode<TextureProgress>("ExpBar");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -25,11 +25,11 @@ public class HUD : Control {
     }
 
     public void SetHealthLabel(float currentHealth) {
-        this.HPLabel.Text = "HP: " + currentHealth;
+        this.HpNumber.Text = currentHealth.ToString();
     }
 
     public void SetExpBar(float value, int level) {
         this.expBar.Value = value;
-        this.levelLabel.Text = "Lvl: " + level;
+        this.LevelNumber.Text = level.ToString();
     }
 }

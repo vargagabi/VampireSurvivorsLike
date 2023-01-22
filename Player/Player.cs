@@ -48,7 +48,7 @@ public class Player : KinematicBody2D {
 
     //Player attributes
     private KeyVal maxHealth = new KeyVal("Increase max health", 200f, 10f);
-    private KeyVal healthRegen = new KeyVal("Increase health regeneration", 1.0f, 10f);
+    private KeyVal healthRegen = new KeyVal("Increase health regeneration", 5.0f, 10f);
     private KeyVal speed = new KeyVal("Increase speed", 100.0f, 20f);
     private KeyVal pickupRange;
     private List<KeyVal> upgradeableStats = new List<KeyVal>();
@@ -58,6 +58,7 @@ public class Player : KinematicBody2D {
     private int healthCounter = 0;
     private int damageCounter = 0;
     private const int ImmunityTime = 25;
+    private const int PassiveHealTime = 100;
     private Vector2 Direction { get; set; }
     private float takenDamageValue = 0;
 
@@ -77,6 +78,7 @@ public class Player : KinematicBody2D {
     private CircleShape2D pickupArea;
     private Texture[] textures = new Texture[3];
     private Sprite directionArrow;
+    private PackedScene FloatingValue { get; set; }
 
     [Signal] public delegate void CurrentHealth(float currentHealth);
     [Signal] public delegate void CurrentExperience(float exp, int level);
@@ -97,6 +99,7 @@ public class Player : KinematicBody2D {
         this.directionArrow = this.GetNode<Sprite>("Arrow");
         this.pickupArea = this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
         this.pickupRange = new KeyVal("Increase the pickup range by 10%", this.pickupArea, 10.0f);
+        this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
         this.upgradeableStats.Add(this.maxHealth);
         this.upgradeableStats.Add(this.healthRegen);
         this.upgradeableStats.Add(this.speed);
@@ -119,6 +122,7 @@ public class Player : KinematicBody2D {
             this.GetTree().Paused = true;
         }
         this.Move();
+
         // this.CheckLevelUp();
         if (this.takenDamageValue > 0) {
             this.TakeDamage();
@@ -193,6 +197,9 @@ public class Player : KinematicBody2D {
     private void TakeDamage() {
         this.damageCounter++;
         if (this.damageCounter % ImmunityTime == 0) {
+            FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
+            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)this.takenDamageValue);
+            this.GetTree().Root.GetChild(0).CallDeferred("add_child", damageInd);
             this.damageCounter = 0;
             this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
             this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -210,7 +217,10 @@ public class Player : KinematicBody2D {
      */
     private void PassiveHeal() {
         this.healthCounter++;
-        if (this.healthCounter % ImmunityTime == 0) {
+        if (this.healthCounter % PassiveHealTime == 0) {
+            FloatingValue healingInd = this.FloatingValue.Instance<FloatingValue>();
+            healingInd.SetValues(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f, 1f), (int)this.healthRegen.GetCurrentValue());
+            this.GetTree().Root.GetChild(0).CallDeferred("add_child", healingInd);
             this.healthCounter = 0;
             this.currentHealth = Math.Min(this.maxHealth.GetCurrentValue(),
                 this.healthRegen.GetCurrentValue() + this.currentHealth);

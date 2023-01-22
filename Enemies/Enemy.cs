@@ -18,10 +18,12 @@ namespace VampireSurvivorsLike.Enemies {
         protected KinematicBody2D Player { get; set; }
         private PackedScene ExpOrb { get; set; }
         protected AnimatedSprite AnimatedSprite { get; set; }
+        private PackedScene DamageIndicator { get; set; }
 
 
         protected Enemy() {
             this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ExpOrbs/ExpOrb.tscn");
+            this.DamageIndicator = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
         }
 
         public override void _Ready() {
@@ -52,6 +54,10 @@ namespace VampireSurvivorsLike.Enemies {
             if (this.Health <= 0) {
                 return;
             }
+            FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
+            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
+            this.GetTree().Root.GetChild(0).CallDeferred("add_child", damageInd);
+            
             this.Health -= damage;
             if (this.Health <= 0) {
                 if (weapon is Aura aura) {

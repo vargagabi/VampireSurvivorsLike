@@ -9,11 +9,10 @@ Fixed:
 New Feature:
 	-New Weapon: Aura
 	-New Monster: Skeleton
+	-Damage indicator on mobs and player
 
 Future plans:
-	-New monster
 	-Create Boss monster
 	-Music, Sounds
-	-Damage indicator on mobs and player
 	-Fix menu, add settings, save progress, etc...
 	
