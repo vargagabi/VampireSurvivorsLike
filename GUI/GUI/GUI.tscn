@@ -1,13 +1,17 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://GUI/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://GUI/GUI/HUD.cs" type="Script" id=2]
 [ext_resource path="res://GUI/GUI/PauseScreen.cs" type="Script" id=3]
 [ext_resource path="res://GUI/GUI/GameOverScreen.cs" type="Script" id=4]
-[ext_resource path="res://Textures/bar_yellow.png" type="Texture" id=5]
+[ext_resource path="res://MyPixelArts/images/HealthBarBack.png" type="Texture" id=5]
 [ext_resource path="res://GUI/GUI/LevelUpScreen.cs" type="Script" id=6]
-[ext_resource path="res://Textures/bar_red.png" type="Texture" id=7]
+[ext_resource path="res://MyPixelArts/images/HealthBarOver.png" type="Texture" id=7]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=8]
+[ext_resource path="res://MyPixelArts/images/SingleItemFrame.png" type="Texture" id=9]
+[ext_resource path="res://MyPixelArts/images/HealthBarFill.png" type="Texture" id=10]
+[ext_resource path="res://MyPixelArts/images/TimerSign.png" type="Texture" id=11]
+[ext_resource path="res://MyPixelArts/images/OneSidedSign.png" type="Texture" id=12]
 
 [node name="GUI" type="CanvasLayer"]
 pause_mode = 2
@@ -31,69 +35,205 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
 
-[node name="HpLabel" type="Label" parent="Control/HUD"]
+[node name="ExpBar" type="TextureProgress" parent="Control/HUD"]
 pause_mode = 1
+anchor_left = 0.716
+anchor_top = 0.924
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -836.0
-margin_bottom = -436.0
-text = "HP: "
-align = 2
-valign = 1
-uppercase = true
+margin_left = -0.400024
+value = 50.0
+texture_under = ExtResource( 5 )
+texture_over = ExtResource( 7 )
+texture_progress = ExtResource( 10 )
 
-[node name="HpNumber" type="Label" parent="Control/HUD"]
-anchor_right = 1.004
+[node name="ItemFramesControl" type="HBoxContainer" parent="Control/HUD"]
+anchor_top = 0.872
+anchor_right = 0.449
 anchor_bottom = 1.0
-margin_left = 64.0
-margin_right = -775.6
-margin_bottom = -436.0
-text = "100"
-align = 1
-valign = 1
-percent_visible = -0.333333
-max_lines_visible = 1
+margin_top = -3.05176e-05
+margin_right = -20.1
+custom_constants/separation = 0
 
-[node name="TimeLabel" type="Label" parent="Control/HUD"]
+[node name="Item1" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+
+[node name="Item2" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_left = 64.0
+margin_right = 128.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+flip_h = true
+flip_v = true
+
+[node name="Item3" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_left = 128.0
+margin_right = 192.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+flip_h = true
+
+[node name="Item4" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_left = 192.0
+margin_right = 256.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+flip_v = true
+
+[node name="Item5" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_left = 256.0
+margin_right = 320.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+flip_h = true
+flip_v = true
+
+[node name="Item6" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
+margin_left = 320.0
+margin_right = 384.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+
+[node name="ItemControl" type="HBoxContainer" parent="Control/HUD"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -64.0
+margin_right = 384.0
+custom_constants/separation = 0
+
+[node name="Item1" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+
+[node name="Item2" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+flip_h = true
+flip_v = true
+
+[node name="Item3" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+flip_h = true
+
+[node name="Item4" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+flip_v = true
+
+[node name="Item5" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+flip_h = true
+flip_v = true
+
+[node name="Item6" type="TextureRect" parent="Control/HUD/ItemControl"]
+margin_bottom = 64.0
+
+[node name="TimerControl" type="Control" parent="Control/HUD"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+
+[node name="TextureRect" type="TextureRect" parent="Control/HUD/TimerControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -32.0
+margin_right = 64.0
+margin_bottom = 32.0
+texture = ExtResource( 11 )
+
+[node name="TimeLabel" type="Label" parent="Control/HUD/TimerControl"]
 pause_mode = 1
-anchor_left = 0.4
-anchor_right = 0.6
-anchor_bottom = 0.08
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -32.0
+margin_right = 64.0
+margin_bottom = 32.0
 rect_min_size = Vector2( 100, 40 )
 text = "00:00:00"
 align = 1
 valign = 1
 
-[node name="ExpBar" type="TextureProgress" parent="Control/HUD"]
-pause_mode = 1
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -26.0
-value = 50.0
-texture_under = ExtResource( 7 )
-texture_progress = ExtResource( 5 )
+[node name="HpControl" type="Control" parent="Control/HUD"]
+anchor_right = 0.142
+anchor_bottom = 0.128
+margin_right = 0.199997
 
-[node name="LevelLabel" type="Label" parent="Control/HUD"]
+[node name="TextureRect" type="TextureRect" parent="Control/HUD/HpControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -32.0
+margin_right = 64.0
+margin_bottom = 32.0
+texture = ExtResource( 12 )
+
+[node name="HpLabel" type="Label" parent="Control/HUD/HpControl"]
 pause_mode = 1
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 768.0
-margin_right = -68.0
-margin_bottom = -436.0
-text = "Lvl: "
-align = 1
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -32.0
+margin_right = 64.0
+margin_bottom = 32.0
+text = "HP: "
+align = 2
 valign = 1
 uppercase = true
 
-[node name="LevelNumber" type="Label" parent="Control/HUD"]
+[node name="HpNumber" type="Label" parent="Control/HUD/HpControl"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -32.0
+margin_bottom = 32.0
+text = "100"
+valign = 1
+max_lines_visible = 1
+
+[node name="LevelControl" type="Control" parent="Control/HUD"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -128.0
+margin_bottom = 64.0
+
+[node name="TextureRect" type="TextureRect" parent="Control/HUD/LevelControl"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -32.0
+margin_right = 64.0
+margin_bottom = 32.0
+texture = ExtResource( 12 )
+flip_h = true
+
+[node name="LevelLabel" type="Label" parent="Control/HUD/LevelControl"]
+pause_mode = 1
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 832.0
-margin_bottom = -436.0
+margin_right = -64.0
+text = "Lvl: "
+align = 2
+valign = 1
+uppercase = true
+
+[node name="LevelNumber" type="Label" parent="Control/HUD/LevelControl"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 64.0
 text = "1"
+align = 1
 valign = 1
 
 [node name="GameOverScreen" type="CenterContainer" parent="Control"]

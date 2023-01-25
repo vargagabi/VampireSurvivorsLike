@@ -12,9 +12,9 @@ public class HUD : Control {
     public override void _Ready() {
         GD.Print("HUD Ready...");
         this.ElapsedTime = 0;
-        this.timeLabel = GetNode<Label>("TimeLabel");
-        this.HpNumber = GetNode<Label>("HpNumber");
-        this.LevelNumber = GetNode<Label>("LevelNumber");
+        this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
+        this.HpNumber = GetNode<Label>("HpControl/HpNumber");
+        this.LevelNumber = GetNode<Label>("LevelControl/LevelNumber");
         this.expBar = GetNode<TextureProgress>("ExpBar");
     }
 

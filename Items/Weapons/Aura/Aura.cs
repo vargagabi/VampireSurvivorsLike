@@ -14,6 +14,7 @@ public class Aura : Weapon {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        this.SetIcon();
         this.Damage = 1f;
         this.Level = 0;
         this.MaxLevel = 7;
@@ -63,6 +64,10 @@ public class Aura : Weapon {
             case 6: return "Aura: Increase Aura radius by 10%";
         }
         return "No more upgrades for Aura";
+    }
+
+    public override void SetIcon() {
+        // this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon") as Texture;
     }
 
 

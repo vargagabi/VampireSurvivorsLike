@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VampireSurvivorsLike.Enums;
+using VampireSurvivorsLike.Items;
 using VampireSurvivorsLike.Weapons;
 using Object = System.Object;
 
@@ -66,10 +67,10 @@ public class Player : KinematicBody2D {
     private float experience = 0;
     private int currentLevel = 0;
 
-    //Weapons
-    private List<Weapon> allWeapons = new List<Weapon>();
-    private List<Weapon> equippedWeapons = new List<Weapon>();
-    private int weaponCount = 4;
+    //Items
+    private List<Item> allItems = new List<Item>();
+    private List<Item> equippedItems = new List<Item>();
+    private int itemCount = 6;
     private int rewardIndex = -1;
     private bool IsRewardSelection { get; set; }
 
@@ -105,11 +106,11 @@ public class Player : KinematicBody2D {
         this.upgradeableStats.Add(this.speed);
         this.upgradeableStats.Add(this.pickupRange);
 
-        //Add the weapons the player can choose
-        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Gun/Gun.tscn")).Instance() as Weapon);
-        this.allWeapons.Add((ResourceLoader.Load<PackedScene>("res://Weapons/Aura/Aura.tscn")).Instance() as Weapon);
+        //Add the items the player can choose
+        this.allItems.Add((ResourceLoader.Load<PackedScene>("res://Items/Weapons/Gun/Gun.tscn")).Instance() as Weapon);
+        this.allItems.Add((ResourceLoader.Load<PackedScene>("res://Items/Weapons/Aura/Aura.tscn")).Instance() as Weapon);
 
-        this.EquipWeapon(this.allWeapons[1]);
+        this.EquipItem(this.allItems[1]);
 
         //Emit signals to set the HUD health and level bars
         this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -249,7 +250,7 @@ public class Player : KinematicBody2D {
     /*
      * This method checks if a new level is reached. If the Player gains enough experience to level multiple
      * times the level's rewards are given after each other. The Player can select between two types of rewards
-     * Either upgrade a weapon or increase one Status.
+     * Either upgrade an item or increase one Status.
      * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
      */
     private async void CheckLevelUp() {
@@ -262,8 +263,8 @@ public class Player : KinematicBody2D {
                 this.SelectRewardOnLevelUp(options);
                 await this.ToSignal(this.GetNode("../GUI"), "RewardSelected");
                 if (options[this.rewardIndex] is Weapon) {
-                    if (!this.equippedWeapons.Contains(options[this.rewardIndex] as Weapon)) {
-                        this.EquipWeapon((Weapon)options[this.rewardIndex]);
+                    if (!this.equippedItems.Contains(options[this.rewardIndex] as Weapon)) {
+                        this.EquipItem((Weapon)options[this.rewardIndex]);
                     } else {
                         ((Weapon)options[this.rewardIndex]).Upgrade();
                     }
@@ -284,7 +285,7 @@ public class Player : KinematicBody2D {
 
     /*
      * Generates 4 reward options from the UpgradeableStats + EquippedWeapons + AllWeapons.
-     * The two weapon lists do not have overlapping items.
+     * The two item lists do not have overlapping items.
      * After selecting 4 options the options string value is sent to the GUI screen via [ChooseReward]
      */
     private void SelectRewardOnLevelUp(Object[] options) {
@@ -292,12 +293,12 @@ public class Player : KinematicBody2D {
         foreach (KeyVal keyValuePair in this.upgradeableStats) {
             rewards.Add(keyValuePair);
         }
-        IEnumerable<Weapon> equipped =
-            from weapon in this.equippedWeapons
-            where weapon.Level < weapon.MaxLevel
-            select weapon;
+        IEnumerable<Item> equipped =
+            from item in this.equippedItems
+            where item.Level < item.MaxLevel
+            select item;
         rewards.AddRange(equipped.ToList());
-        rewards.AddRange(this.allWeapons);
+        rewards.AddRange(this.allItems);
 
         //Select 4 options from the rewards list
         for (int j = 0; j < 4; j++) {
@@ -317,14 +318,15 @@ public class Player : KinematicBody2D {
     }
 
     /*
-     * Equips the given weapon, removes it from the AllWeapons and adds it to the EquippedWeapon so it doesn't appear twice in the rewards list.
+     * Equips the given item, removes it from the AllWeapons and adds it to the EquippedWeapon so it doesn't appear twice in the rewards list.
      * Also appends the Node to the Player node as a child node.
      */
-    private void EquipWeapon(Weapon weapon) {
-        this.AddChild(weapon);
-        weapon.Upgrade();
-        this.equippedWeapons.Add(weapon);
-        this.allWeapons.Remove(weapon);
+    private void EquipItem(Item item) {
+        this.AddChild(item);
+        item.Upgrade();
+        this.equippedItems.Add(item);
+        this.allItems.Remove(item);
+        
     }
 
     /*

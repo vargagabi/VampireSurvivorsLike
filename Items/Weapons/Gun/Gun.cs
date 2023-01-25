@@ -12,6 +12,7 @@ public class Gun : Weapon {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
+        this.SetIcon();
         this.Level = 0;
         this.MaxLevel = 8;
         this.Counter = 0;
@@ -19,7 +20,7 @@ public class Gun : Weapon {
         this.Damage = 5;
         this.player = GetNode<KinematicBody2D>("../../Player");
         this.NumberOfBullets = 1;
-        this.bullet = (PackedScene)ResourceLoader.Load("res://Weapons/Gun/Bullet.tscn");
+        this.bullet = (PackedScene)ResourceLoader.Load("res://Items/Weapons/Gun/Bullet.tscn");
         this.bulletNode = this.bullet.Instance<Bullet>();
     }
 
@@ -86,6 +87,10 @@ public class Gun : Weapon {
             case 7: return "Gun: Increase Attack Speed And Number Of Bullets";
             default: return "Gun: No more upgrades.";
         }
+    }
+
+    public override void SetIcon() {
+        this.Icon = ResourceLoader.Load("res://MyPixelArts/images/GunIcon.png") as Texture;
     }
 
 }
