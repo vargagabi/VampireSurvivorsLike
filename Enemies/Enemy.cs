@@ -40,7 +40,7 @@ namespace VampireSurvivorsLike.Enemies {
                 Node2D expOrb = this.ExpOrb.Instance<Node2D>();
                 expOrb.GlobalPosition = this.GlobalPosition;
                 expOrb.Set("Experience", this.ExpValue);
-                Node viewport = this.GetTree().Root.GetChild(0);
+                Node viewport = this.GetTree().Root.GetNode("Main");
                 viewport.CallDeferred("add_child", expOrb);
             }
         }
@@ -56,7 +56,7 @@ namespace VampireSurvivorsLike.Enemies {
             }
             FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
             damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
-            this.GetTree().Root.GetChild(0).CallDeferred("add_child", damageInd);
+            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
             
             this.Health -= damage;
             if (this.Health <= 0) {
