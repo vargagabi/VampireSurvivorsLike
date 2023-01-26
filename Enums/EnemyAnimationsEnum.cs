@@ -1,10 +1,12 @@
-namespace VampireSurvivorsLike.Enums {
+namespace VampireSurvivorsLike {
 
     public enum EnemyAnimationsEnum {
-            Walk,
-            Death,
-            Hit,
-            Attack
+
+        Walk,
+        Death,
+        Hit,
+        Attack
+
     }
 
 }

@@ -1,4 +1,6 @@
 Issues:
+	-Skeletons don't reach player from above, decrease stop distance
+	-Refactor player Attribute to a standalone class
 
 Fixed:
 	-Maximum healt not updating when selecting reward to increase max health.

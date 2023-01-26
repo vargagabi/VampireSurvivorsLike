@@ -1,7 +1,6 @@
 ﻿using Godot;
-using VampireSurvivorsLike.Items;
 
-namespace VampireSurvivorsLike.Weapons {
+namespace VampireSurvivorsLike {
 
     //Level 0 weapon => not equipped yet.
     public abstract class Weapon : Item {

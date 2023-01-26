@@ -1,10 +1,6 @@
-﻿using System.Collections.Specialized;
-using Godot;
-using Godot.Collections;
-using VampireSurvivorsLike.Enums;
-using VampireSurvivorsLike.Weapons;
+﻿using Godot;
 
-namespace VampireSurvivorsLike.Enemies {
+namespace VampireSurvivorsLike {
 
     public class Enemy : KinematicBody2D {
 
@@ -57,7 +53,7 @@ namespace VampireSurvivorsLike.Enemies {
             FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
             damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
             this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
-            
+
             this.Health -= damage;
             if (this.Health <= 0) {
                 if (weapon is Aura aura) {

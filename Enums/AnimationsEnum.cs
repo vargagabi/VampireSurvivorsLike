@@ -1,11 +1,13 @@
-﻿namespace VampireSurvivorsLike.Enums
-{
-    public enum AnimationsEnum
-    {
+﻿namespace VampireSurvivorsLike {
+
+    public enum AnimationsEnum {
+
         Idle,
         Up,
         Down,
         Right,
         Left
+
     }
+
 }

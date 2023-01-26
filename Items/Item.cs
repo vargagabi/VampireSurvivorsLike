@@ -1,6 +1,6 @@
 using Godot;
 
-namespace VampireSurvivorsLike.Items {
+namespace VampireSurvivorsLike {
 
     public abstract class Item : Node2D {
 

@@ -274,15 +274,6 @@ margin_bottom = 84.0
 rect_min_size = Vector2( 200, 40 )
 text = "Main Menu"
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Control"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Control/HSplitContainer"]
-margin_right = 900.0
-margin_bottom = 500.0
-
 [node name="LevelUpScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2
 visible = false
