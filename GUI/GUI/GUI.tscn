@@ -363,6 +363,7 @@ rect_min_size = Vector2( 200, 40 )
 text = "Quit"
 
 [connection signal="pressed" from="Control/GameOverScreen/VBoxContainer/MenuButton" to="Control/GameOverScreen" method="OnMenuButtonPressed"]
-[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="." method="OnRewardSelected"]
+[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="Control/HUD" method="OnRewardSelected"]
+[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="Control/LevelUpScreen" method="OnRewardSelected"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="PauseGame"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]

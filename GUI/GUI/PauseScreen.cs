@@ -34,13 +34,10 @@ namespace VampireSurvivorsLike {
 
         public void PauseGame() {
             this.IsPaused = !this.IsPaused;
-            GetTree().Paused = this.IsPaused;
             if (this.levelUpScreen.IsCurrentlyVisible) {
-                if (this.IsPaused) {
-                    this.levelUpScreen.Visible = false;
-                } else {
-                    this.levelUpScreen.Visible = true;
-                }
+                this.levelUpScreen.Visible = !this.IsPaused;
+            } else {
+                GetTree().Paused = this.IsPaused;
             }
             this.Visible = this.IsPaused;
         }

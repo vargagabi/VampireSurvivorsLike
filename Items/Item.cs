@@ -12,6 +12,8 @@ namespace VampireSurvivorsLike {
         public abstract string UpgradeMessage();
 
         public abstract void SetIcon();
+        
+        public abstract override string ToString();
     }
 
 }

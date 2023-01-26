@@ -14,11 +14,14 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("HUD Ready...");
+            LevelUpManagerSingleton.Instance.Hud = this;
             this.ElapsedTime = 0;
             this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
             this.HpNumber = GetNode<Label>("HpControl/HpNumber");
             this.LevelNumber = GetNode<Label>("LevelControl/LevelNumber");
             this.expBar = GetNode<TextureProgress>("ExpBar");
+            this.expBar.Value = 0;
+            this.LevelNumber.Text = "0"; 
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,9 +34,16 @@ namespace VampireSurvivorsLike {
             this.HpNumber.Text = currentHealth.ToString();
         }
 
-        public void SetExpBar(float value, int level) {
-            this.expBar.Value = value;
-            this.LevelNumber.Text = level.ToString();
+        public void SetExpBar(int percent) {
+            this.expBar.Value = percent;
+        }
+
+        private void IncreaseLevel(int? value) {
+            this.LevelNumber.Text = value == null ? (int.Parse(this.LevelNumber.Text)+1).ToString() : value.ToString();
+        }
+
+        public void OnRewardSelected(int index) {
+           this.IncreaseLevel(null); 
         }
 
     }

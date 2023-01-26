@@ -14,7 +14,7 @@ namespace VampireSurvivorsLike {
         public Skeleton() {
             this.Health = 20;
             this.Strength = 10;
-            this.ExpValue = 5;
+            this.ExpValue = 500;
             this.Speed = 50;
             this.SpawnRate = 188;
             this.SpawnDistance = 300;

@@ -2,9 +2,9 @@ using Godot;
 
 namespace VampireSurvivorsLike {
 
-      public class Attribute {
+    public class Attribute {
 
-        public string Message { get; }
+        private string Message { get; set;}
         private readonly float initialValue;
         private CircleShape2D shape;
         private readonly float bonusModifier;
@@ -32,6 +32,10 @@ namespace VampireSurvivorsLike {
             if (this.shape != null) {
                 this.shape.Radius = this.initialValue + this.initialValue * this.bonusModifier * this.level;
             }
+        }
+
+        public override string ToString() {
+            return this.Message + " " + this.bonusModifier*100 + "%";
         }
 
     }

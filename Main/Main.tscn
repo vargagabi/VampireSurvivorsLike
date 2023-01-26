@@ -18,6 +18,5 @@ pause_mode = 1
 pause_mode = 1
 
 [connection signal="RewardSelected" from="GUI" to="Player" method="OnRewardSelected"]
-[connection signal="ChooseReward" from="Player" to="GUI" method="OnPlayerChooseReward"]
-[connection signal="CurrentExperience" from="Player" to="GUI" method="OnExpEarned"]
 [connection signal="CurrentHealth" from="Player" to="GUI" method="OnPlayerCurrentHealth"]
+[connection signal="ExperienceInPercent" from="Player" to="GUI" method="OnExperienceEarned"]

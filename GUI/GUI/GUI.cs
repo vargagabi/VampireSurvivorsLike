@@ -6,7 +6,6 @@ namespace VampireSurvivorsLike {
 
         private HUD hud;
         private GameOverScreen gameOverScreen;
-        private LevelUpScreen levelUpScreen;
         private PauseScreen pauseScreen;
 
         [Signal] public delegate void RewardSelected(int index);
@@ -14,15 +13,11 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("GUI Ready...");
-            this.hud = GetNode<HUD>("Control/HUD");
-            this.gameOverScreen = GetNode<GameOverScreen>("Control/GameOverScreen");
-            this.levelUpScreen = GetNode<LevelUpScreen>("Control/LevelUpScreen");
-            this.pauseScreen = GetNode<PauseScreen>("Control/PauseScreen");
+            this.hud = this.GetNode<HUD>("Control/HUD");
+            this.gameOverScreen = this.GetNode<GameOverScreen>("Control/GameOverScreen");
+            this.pauseScreen = this.GetNode<PauseScreen>("Control/PauseScreen");
         }
 
-        // Called every frame. 'delta' is the elapsed time since the previous frame.
-        public override void _Process(float delta) {
-        }
 
         /*
          * Sets the current health when receiving the value.
@@ -31,29 +26,18 @@ namespace VampireSurvivorsLike {
         public void OnPlayerCurrentHealth(float currentHealth) {
             this.hud.SetHealthLabel(currentHealth);
             if (currentHealth <= 0) {
-                GetTree().Paused = true;
+                this.GetTree().Paused = true;
                 this.gameOverScreen.SetScoreLabel(this.hud.ElapsedTime);
                 this.pauseScreen.IsPlaying = false;
             }
         }
 
-        public void OnExpEarned(float exp, int level) {
-            this.hud.SetExpBar(exp, level);
-        }
+        // public void OnExpEarned(float exp, int level) {
+            // this.hud.SetExpBar(exp, level);
+        // }
 
-        /*
-         * Sets up the rewards the player can choose on level up
-         */
-        public void OnPlayerChooseReward(string opt0, string opt1, string opt2, string opt3) {
-            this.levelUpScreen.SetRewards(new string[] { opt0, opt1, opt2, opt3 });
-        }
-
-        /*
-         * Emits a signal of the index of the chosen reward to the Player.
-         */
-        public void OnRewardSelected(int index) {
-            this.levelUpScreen.ChangeVisibility();
-            EmitSignal(nameof(RewardSelected), index);
+        public void OnExperienceEarned(int percent) {
+           this.hud.SetExpBar(percent); 
         }
 
     }

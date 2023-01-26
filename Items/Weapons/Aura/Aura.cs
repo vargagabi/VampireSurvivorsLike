@@ -87,7 +87,7 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        //  // Called every frame. 'delta' is the elapsed time since the previous frame.
+        // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
             if (++this.Counter % this.AttackSpeed == 0) {
                 this.Counter = 0;
@@ -96,6 +96,19 @@ namespace VampireSurvivorsLike {
                     enemy.OnHit(this.Damage, this);
                 }
             }
+        }
+
+        public override string ToString() {
+            switch (this.Level) {
+                case 0: return "Aura: an ability to damage enemies around you.";
+                case 1: return "Aura: Increase Aura radius by 10%.";
+                case 2: return "Aura: Increase damage by 0.1.";
+                case 3: return "Aura: Increase attack speed.";
+                case 4: return "Aura: Increase Aura radius by 10%.";
+                case 5: return "Aura: Increase experience dropped by enemies killed by Aura.";
+                case 6: return "Aura: Increase Aura radius by 10%";
+            }
+            return "No more upgrades for Aura";
         }
 
     }

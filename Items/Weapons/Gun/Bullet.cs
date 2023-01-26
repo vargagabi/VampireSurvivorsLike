@@ -4,12 +4,12 @@ namespace VampireSurvivorsLike {
 
     public class Bullet : Node2D {
 
-        private Vector2 Direction { set; get; }
-        private float Speed { get; set; }
-        private float Damage { get; set; }
+        public Vector2 Direction { set; get; }
+        public float Speed { get; set; }
+        public float Damage { get; set; }
         private int Counter { get; set; }
         private int LifeSpan { get; set; }
-        private int Piercing { get; set; }
+        public int Piercing { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
