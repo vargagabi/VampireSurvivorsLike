@@ -14,7 +14,7 @@ namespace VampireSurvivorsLike {
         public Skeleton() {
             this.Health = 20;
             this.Strength = 10;
-            this.ExpValue = 500;
+            this.ExpValue = 5;
             this.Speed = 50;
             this.SpawnRate = 188;
             this.SpawnDistance = 300;
@@ -27,7 +27,7 @@ namespace VampireSurvivorsLike {
                 return;
             }
             Vector2 velocity = ((this.Player.GlobalPosition + Vector2.Down * 15) - this.GlobalPosition).Normalized();
-            if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 25f) {
+            if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 15f) {
                 this.AnimationPlay(EnemyAnimationsEnum.Attack);
             } else {
                 this.MoveAndSlide(velocity * this.Speed);

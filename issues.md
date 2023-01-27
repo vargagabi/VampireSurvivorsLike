@@ -1,6 +1,7 @@
 Issues:
 	-Skeletons don't reach player from above, decrease stop distance
 	-No icon for direction pointer
+	-Item level not showing correctly
 
 Fixed:
 	-Maximum healt not updating when selecting reward to increase max health.
@@ -9,6 +10,7 @@ Fixed:
 	-Enemy spins fast when on player
 	-Fix aura is over the player, and the rectangle shows
 	-Refactor player Attribute to a standalone class
+	-Exp bar not filling correctyl when picking up xp
 
 New Feature:
 	-New Weapon: Aura
@@ -21,5 +23,5 @@ Future plans/ideas:
 	-Fix menu, add settings, save progress, etc...
 	-Night time
 	-Item that disables tree collision?
-	
+	-chibi anime characters as compainons	
 	

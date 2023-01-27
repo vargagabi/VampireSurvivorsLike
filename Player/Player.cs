@@ -32,9 +32,9 @@ namespace VampireSurvivorsLike {
 
         [Signal] public delegate void CurrentHealth(float currentHealth);
         [Signal] public delegate void CurrentExperience(float exp, int level);
-        
-        [Signal]public delegate void ExperienceInPercent(int percent);
-        
+
+        [Signal] public delegate void ExperienceInPercent(int percent);
+
         // [Signal] public delegate void ChooseReward(string opt0, string opt1, string opt2, string opt3);
 
         //New ItemManager methods
@@ -60,6 +60,7 @@ namespace VampireSurvivorsLike {
             this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
             ItemManagerSingleton.Instance.Player = this;
+            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
             ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
 
             //Emit signals to set the HUD health and level bars
@@ -109,7 +110,7 @@ namespace VampireSurvivorsLike {
             }
 
             this.directionArrow.Rotation = this.Direction.Normalized().Angle();
-            this.directionArrow.Position = this.Direction.Normalized() * 15;
+            this.directionArrow.Position = new Vector2(0f,-6f) + this.Direction.Normalized() * 15;
             this.Direction = this.Direction.Normalized();
             this.animatedSprite.Play(animation.ToString());
             this.MoveAndSlide(velocity.Normalized() * AttributeManagerSingleton.Instance.Speed.GetCurrentValue());
@@ -203,19 +204,18 @@ namespace VampireSurvivorsLike {
             if (this.ExpToLvl(this.experience) > this.currentLevel) {
                 int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
                 this.GetTree().Paused = true;
-                
+
                 await LevelUpManagerSingleton.Instance.OnLevelUp(levelIncrease);
                 this.currentLevel += levelIncrease;
-                
-                float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
-                                          ((float)this.LvlToExp(this.currentLevel + 1) -
-                                           this.LvlToExp(this.currentLevel));
-                this.EmitSignal(nameof(ExperienceInPercent), currentExpInLevel);
-                GD.Print("exp percent: " + currentExpInLevel);
-                GD.Print("Exp: " + this.experience);
-                
+
                 this.GetTree().Paused = false;
             }
+            float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
+                                      ((float)this.LvlToExp(this.currentLevel + 1) -
+                                       this.LvlToExp(this.currentLevel));
+            this.EmitSignal(nameof(ExperienceInPercent), currentExpInLevel);
+            GD.Print("exp percent: " + currentExpInLevel);
+            GD.Print("Exp: " + this.experience);
         }
 
         /*
