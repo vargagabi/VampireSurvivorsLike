@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/HealthBarOver.png-18160d0d7201e70c686296ab82eca623.stex"
+path="res://.import/AuraIcon.png-90e721bd1c7f3ca7cf89c0b7689b46ad.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://MyPixelArts/images/HealthBarOver.png"
-dest_files=[ "res://.import/HealthBarOver.png-18160d0d7201e70c686296ab82eca623.stex" ]
+source_file="res://MyPixelArts/images/AuraIcon.png"
+dest_files=[ "res://.import/AuraIcon.png-90e721bd1c7f3ca7cf89c0b7689b46ad.stex" ]
 
 [params]
 

@@ -1,17 +1,24 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://GUI/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://GUI/GUI/HUD.cs" type="Script" id=2]
 [ext_resource path="res://GUI/GUI/PauseScreen.cs" type="Script" id=3]
 [ext_resource path="res://GUI/GUI/GameOverScreen.cs" type="Script" id=4]
-[ext_resource path="res://MyPixelArts/images/HealthBarBack.png" type="Texture" id=5]
+[ext_resource path="res://MyPixelArts/images/ExpBarFill.png" type="Texture" id=5]
 [ext_resource path="res://GUI/GUI/LevelUpScreen.cs" type="Script" id=6]
-[ext_resource path="res://MyPixelArts/images/HealthBarOver.png" type="Texture" id=7]
+[ext_resource path="res://MyPixelArts/images/ExpBarOver.png" type="Texture" id=7]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=8]
 [ext_resource path="res://MyPixelArts/images/SingleItemFrame.png" type="Texture" id=9]
-[ext_resource path="res://MyPixelArts/images/HealthBarFill.png" type="Texture" id=10]
+[ext_resource path="res://MyPixelArts/images/ExpBarBack.png" type="Texture" id=10]
 [ext_resource path="res://MyPixelArts/images/TimerSign.png" type="Texture" id=11]
 [ext_resource path="res://MyPixelArts/images/OneSidedSign.png" type="Texture" id=12]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://Fonts/ALGER.TTF"
+
+[sub_resource type="DynamicFont" id=2]
+size = 27
+font_data = SubResource( 1 )
 
 [node name="GUI" type="CanvasLayer"]
 pause_mode = 2
@@ -43,9 +50,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -0.400024
 value = 50.0
-texture_under = ExtResource( 5 )
+texture_under = ExtResource( 10 )
 texture_over = ExtResource( 7 )
-texture_progress = ExtResource( 10 )
+texture_progress = ExtResource( 5 )
 
 [node name="ItemFramesControl" type="HBoxContainer" parent="Control/HUD"]
 anchor_top = 0.872
@@ -103,29 +110,184 @@ margin_top = -64.0
 margin_right = 384.0
 custom_constants/separation = 0
 
-[node name="Item1" type="TextureRect" parent="Control/HUD/ItemControl"]
+[node name="Item1" type="Control" parent="Control/HUD/ItemControl"]
+margin_right = 64.0
 margin_bottom = 64.0
+size_flags_horizontal = 3
 
-[node name="Item2" type="TextureRect" parent="Control/HUD/ItemControl"]
-margin_bottom = 64.0
-flip_h = true
-flip_v = true
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item1"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
 
-[node name="Item3" type="TextureRect" parent="Control/HUD/ItemControl"]
-margin_bottom = 64.0
-flip_h = true
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item1"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
 
-[node name="Item4" type="TextureRect" parent="Control/HUD/ItemControl"]
+[node name="Item2" type="Control" parent="Control/HUD/ItemControl"]
+margin_left = 64.0
+margin_right = 128.0
 margin_bottom = 64.0
-flip_v = true
+size_flags_horizontal = 3
 
-[node name="Item5" type="TextureRect" parent="Control/HUD/ItemControl"]
-margin_bottom = 64.0
-flip_h = true
-flip_v = true
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item2"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
 
-[node name="Item6" type="TextureRect" parent="Control/HUD/ItemControl"]
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item2"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
+
+[node name="Item3" type="Control" parent="Control/HUD/ItemControl"]
+margin_left = 128.0
+margin_right = 192.0
 margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item3"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item3"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
+
+[node name="Item4" type="Control" parent="Control/HUD/ItemControl"]
+margin_left = 192.0
+margin_right = 256.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item4"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item4"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
+
+[node name="Item5" type="Control" parent="Control/HUD/ItemControl"]
+margin_left = 256.0
+margin_right = 320.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item5"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item5"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
+
+[node name="Item6" type="Control" parent="Control/HUD/ItemControl"]
+margin_left = 320.0
+margin_right = 384.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item6"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+
+[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item6"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 2 )
+align = 1
+valign = 1
 
 [node name="TimerControl" type="Control" parent="Control/HUD"]
 anchor_left = 0.5

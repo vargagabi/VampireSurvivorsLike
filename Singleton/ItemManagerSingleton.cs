@@ -13,7 +13,9 @@ namespace VampireSurvivorsLike {
         };
         private readonly List<Item> unequippedItems = new List<Item>();
         private const int maximumItemCount = 6;
+        public int EquippedItemCount { get; set; }
         private List<Item> equippedItems = new List<Item>();
+
 
         public Player Player { get; set; }
         public HUD Hud { get; set; }
@@ -38,6 +40,7 @@ namespace VampireSurvivorsLike {
         public void Reset() {
             this.unequippedItems.Clear();
             this.equippedItems.Clear();
+            this.EquippedItemCount = 0;
             foreach (PackedScene scene in this.allItems) {
                 this.unequippedItems.Add(scene.Instance<Item>());
             }
@@ -51,8 +54,11 @@ namespace VampireSurvivorsLike {
                 this.Player.AddChild(item);
                 this.equippedItems.Add(item);
                 this.unequippedItems.Remove(item);
+                this.Hud.AddItem(item);
+                this.EquippedItemCount++;
             }
             item.Upgrade();
+            this.Hud.SetItemLevel(this.equippedItems.FindIndex(i=>i.Equals(item)),item.Level);
         }
 
         public List<Item> GetEquippedItems() {

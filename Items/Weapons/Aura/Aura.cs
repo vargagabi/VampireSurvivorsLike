@@ -66,7 +66,7 @@ namespace VampireSurvivorsLike {
         }
 
         public override void SetIcon() {
-            // this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon") as Texture;
+            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon.png") as Texture;
         }
 
 

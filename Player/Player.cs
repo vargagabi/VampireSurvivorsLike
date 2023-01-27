@@ -60,7 +60,7 @@ namespace VampireSurvivorsLike {
             this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
             ItemManagerSingleton.Instance.Player = this;
-            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[1]);
+            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
 
             //Emit signals to set the HUD health and level bars
             this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -69,9 +69,6 @@ namespace VampireSurvivorsLike {
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            // if (this.IsRewardSelection) {
-            // this.GetTree().Paused = true;
-            // }
             this.Move();
             if (this.takenDamageValue > 0) {
                 this.TakeDamage();
@@ -218,18 +215,6 @@ namespace VampireSurvivorsLike {
                 GD.Print("Exp: " + this.experience);
                 
                 this.GetTree().Paused = false;
-
-                // for (int i = 0; i < levelIncrease; i++) {
-                // this.currentLevel++;
-                // LevelUpManagerSingleton.Instance.OnLevelUp();
-                // this.GetTree().Paused = true;
-                // while (LevelUpManagerSingleton.Instance.CurrentlyRewardSelecting) {
-                // GD.Print("Waiting...");
-                // await Task.Delay(500);
-                // }
-                // LevelUpManagerSingleton.Instance.eventWaitHandle.WaitOne(); 
-                // this.EmitSignal(nameof(CurrentLevelSignal), this.currentLevel);
-                // }
             }
         }
 
@@ -252,6 +237,7 @@ namespace VampireSurvivorsLike {
          * Refreshes the xp using [CurrentExperience]
          */
         public void OnPickUp(float exp) {
+            GD.Print("EXPERIENCE PICKED UP: " + exp);
             this.experience += exp;
             this.CheckLevelUp();
         }

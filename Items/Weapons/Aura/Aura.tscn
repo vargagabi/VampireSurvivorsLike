@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Textures/white_image_fade.png" type="Texture" id=1]
 [ext_resource path="res://Items/Weapons/Aura/Aura.cs" type="Script" id=2]
@@ -7,18 +7,45 @@
 code = "shader_type  canvas_item;
 
 uniform sampler2D n;
+uniform sampler2D n2;
+uniform sampler2D grad;
 uniform float intensity = 0.0f;
 uniform float speed = 1.0f;
+uniform float resolution = 500.f;
+uniform float timeMultiplier = 2.f;
+uniform float timeAdder = 1.f;
+uniform float timeDivider = 3.f;
 
 void fragment(){
-	vec4 tx = texture(TEXTURE, UV);
-	vec4 noise = texture(n, UV - TIME / (1.0f+speed));
-	COLOR.a = clamp(tx.r * noise.r * intensity, 0.0f, 1.0f);
-	COLOR.a = pow(COLOR.a, 2.0f);
+	vec2 gridUv = round(UV * resolution)/resolution;	
+	vec4 tx = texture(TEXTURE, gridUv);
+	vec4 gradTx = texture(grad,gridUv);
+	//float timeValue = timeAdder+sin(TIME * timeMultiplier)/timeDivider;
+	float timeValue = timeAdder+sin(TIME * timeMultiplier)/timeDivider;
+	vec4 noise1 = texture(n, gridUv*timeValue - timeValue/2.f);
+	//vec4 noise1 = texture(n, UV + sin(TIME) / (-4.0f+speed));
+	//vec4 noise2 = texture(n2, vec2(UV.x, UV.y + sin(TIME/(9.0f))));
+	//COLOR = texture(grad, vec2(noise1.xy*noise2.xy));
+	COLOR = texture(grad ,vec2(tx.xy*noise1.xy));
+	
+//	COLOR.a = clamp(tx.r * noise1.r * intensity, 1.0f, 0.0f);
+	COLOR.a = pow(COLOR.a, 10.0f);
+
 }"
 
+[sub_resource type="Gradient" id=8]
+offsets = PoolRealArray( 0, 0.147601, 0.675277, 0.929889, 1 )
+colors = PoolColorArray( 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0.737244, 0.0390625, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=9]
+gradient = SubResource( 8 )
+
 [sub_resource type="OpenSimplexNoise" id=4]
-seed = 2
+seed = 5
+octaves = 9
+period = 0.1
+persistence = 0.0
+lacunarity = 0.1
 
 [sub_resource type="NoiseTexture" id=5]
 width = 32
@@ -26,25 +53,46 @@ height = 32
 seamless = true
 noise = SubResource( 4 )
 
+[sub_resource type="OpenSimplexNoise" id=6]
+seed = 642
+octaves = 7
+period = 0.1
+persistence = 0.0
+lacunarity = 0.1
+
+[sub_resource type="NoiseTexture" id=7]
+width = 32
+height = 32
+noise = SubResource( 6 )
+
 [sub_resource type="ShaderMaterial" id=3]
 shader = SubResource( 2 )
-shader_param/intensity = 3.165
-shader_param/speed = 1.0
+shader_param/intensity = 7.0
+shader_param/speed = 8.0
+shader_param/resolution = 64.0
+shader_param/timeMultiplier = 2.0
+shader_param/timeAdder = 1.0
+shader_param/timeDivider = 3.0
 shader_param/n = SubResource( 5 )
+shader_param/n2 = SubResource( 7 )
+shader_param/grad = SubResource( 9 )
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 48.0
 
 [node name="Node2D" type="Node2D"]
+show_behind_parent = true
 script = ExtResource( 2 )
 
 [node name="AuraTexture" type="Sprite" parent="."]
-self_modulate = Color( 0.698039, 0.121569, 0.121569, 0.537255 )
+self_modulate = Color( 1, 0, 0, 0.266667 )
+show_behind_parent = true
 material = SubResource( 3 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 
 [node name="AuraShape" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )
