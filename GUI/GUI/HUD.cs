@@ -15,7 +15,6 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("HUD Ready...");
-            LevelUpManagerSingleton.Instance.Hud = this;
             ItemManagerSingleton.Instance.Hud = this;
             this.ElapsedTime = 0;
             this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
@@ -25,10 +24,6 @@ namespace VampireSurvivorsLike {
             this.ItemControl = GetNode<HBoxContainer>("ItemControl");
             this.expBar.Value = 0;
             this.LevelNumber.Text = "0";
-            foreach (Control item in this.ItemControl.GetChildren()) {
-                // item.GetChild<TextureRect>(0).Texture = null;
-                // item.GetChild<Label>(1).Text = "";
-            }
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.

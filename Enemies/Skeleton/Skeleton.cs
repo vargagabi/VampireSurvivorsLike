@@ -27,7 +27,7 @@ namespace VampireSurvivorsLike {
                 return;
             }
             Vector2 velocity = ((this.Player.GlobalPosition + Vector2.Down * 15) - this.GlobalPosition).Normalized();
-            if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 15f) {
+            if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 20f) {
                 this.AnimationPlay(EnemyAnimationsEnum.Attack);
             } else {
                 this.MoveAndSlide(velocity * this.Speed);

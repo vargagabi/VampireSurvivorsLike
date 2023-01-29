@@ -1,0 +1,3 @@
+	-Skeletons don't reach player from above, decrease stop distance
+	-No icon for direction pointer
+	-Item level not showing correctly

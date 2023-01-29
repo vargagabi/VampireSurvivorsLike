@@ -11,7 +11,6 @@ namespace VampireSurvivorsLike {
 
         private static LevelUpManagerSingleton instance;
         public LevelUpScreen LevelUpScreen { get; set; }
-        public HUD Hud { get; set; }
         private int numberOfRewards = 4;
         private List<object> GeneratedRewards { get; set; }
         public bool CurrentlyRewardSelecting { get; private set; }
@@ -60,7 +59,7 @@ namespace VampireSurvivorsLike {
                 rewards.Add(possibleRewards[index]);
                 possibleRewards.RemoveAt(index);
             }
-            this.LevelUpScreen.SetRewards(rewards.Select(reward => reward.ToString()).ToList());
+            this.LevelUpScreen.SetRewards(rewards);
             return rewards;
         }
 
@@ -70,9 +69,6 @@ namespace VampireSurvivorsLike {
                 ItemManagerSingleton.Instance.EquipOrUpgradeItem(item);
             } else if (reward is Attribute attribute) {
                 attribute.Increase();
-                if (attribute.ToString().Contains("max health")) {
-                    this.Hud.SetHealthLabel(attribute.GetCurrentValue());
-                }
             }
             this.IsRewardSelected = true;
         }

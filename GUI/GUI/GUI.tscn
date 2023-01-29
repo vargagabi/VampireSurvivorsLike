@@ -436,28 +436,35 @@ margin_bottom = 84.0
 rect_min_size = Vector2( 200, 40 )
 text = "Main Menu"
 
-[node name="LevelUpScreen" type="CenterContainer" parent="Control"]
+[node name="LevelUpScreen" type="Control" parent="Control"]
 pause_mode = 2
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource( 6 )
 
 [node name="ColorRect" type="ColorRect" parent="Control/LevelUpScreen"]
-margin_right = 900.0
-margin_bottom = 500.0
-rect_min_size = Vector2( 900, 500 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 color = Color( 0.141176, 0.0941176, 0.196078, 0.690196 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/LevelUpScreen"]
-margin_left = 300.0
-margin_top = 172.0
-margin_right = 600.0
-margin_bottom = 328.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -258.0
+margin_top = -162.0
+margin_right = 258.0
+margin_bottom = 162.0
 custom_constants/separation = 16
 
 [node name="Label" type="Label" parent="Control/LevelUpScreen/VBoxContainer"]
-margin_right = 300.0
+margin_right = 516.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 40 )
 text = "Select a Reward"
@@ -465,11 +472,10 @@ align = 1
 valign = 1
 uppercase = true
 
-[node name="ItemList" type="ItemList" parent="Control/LevelUpScreen/VBoxContainer"]
+[node name="RewardList" type="VBoxContainer" parent="Control/LevelUpScreen/VBoxContainer"]
 margin_top = 56.0
-margin_right = 300.0
-margin_bottom = 156.0
-rect_min_size = Vector2( 300, 100 )
+margin_right = 516.0
+margin_bottom = 56.0
 
 [node name="PauseScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2
@@ -525,7 +531,5 @@ rect_min_size = Vector2( 200, 40 )
 text = "Quit"
 
 [connection signal="pressed" from="Control/GameOverScreen/VBoxContainer/MenuButton" to="Control/GameOverScreen" method="OnMenuButtonPressed"]
-[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="Control/HUD" method="OnRewardSelected"]
-[connection signal="item_activated" from="Control/LevelUpScreen/VBoxContainer/ItemList" to="Control/LevelUpScreen" method="OnRewardSelected"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="PauseGame"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]
