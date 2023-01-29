@@ -35,17 +35,8 @@ namespace VampireSurvivorsLike {
 
         [Signal] public delegate void ExperienceInPercent(int percent);
 
-        // [Signal] public delegate void ChooseReward(string opt0, string opt1, string opt2, string opt3);
-
-        //New ItemManager methods
-        // [Signal] public delegate void LevelUp();
-        // [Signal] public delegate void CurrentLevelSignal(int level);
-        // [Signal] public delegate void CurrentExperienceSignal(int experienceInPercentage);
-
         public override void _Ready() {
             GD.Print("Player Ready...");
-
-            // this.IsRewardSelection = false;
             this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
             this.Direction = Vector2.Right;
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");

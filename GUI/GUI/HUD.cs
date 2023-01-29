@@ -35,7 +35,6 @@ namespace VampireSurvivorsLike {
         public void AddItem(Item item) {
             Control itemFrame = this.ItemControl.GetChild<Control>(ItemManagerSingleton.Instance.EquippedItemCount);
             itemFrame.GetChild<TextureRect>(0).Texture = item.Icon;
-            // itemFrame.GetChild<Label>(1).Text = item.Level.ToString();
         }
 
         public void SetItemLevel(int index, int level) {

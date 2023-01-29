@@ -5,31 +5,29 @@ namespace VampireSurvivorsLike {
 
     public class RewardItemContainer : Control {
 
-        private int index;
+        public int Index {get; private set;}
         private Button button;
         private Label label;
 
         [Signal] public delegate void ButtonPressed(int index);
 
         public override void _Ready() {
-            this.index = -1;
+            this.Index = -1;
             this.button = GetChild<Button>(0);
             this.label = GetChild<Label>(1);
         }
 
         public void SetItemContainer(int index, Texture icon, string text, LevelUpScreen receiver) {
-            this.index = index;
+            this.Index = index;
             this.button.Icon = icon;
             this.label.Text = text;
-            Connect(nameof(ButtonPressed), receiver,nameof(receiver.OnRewardSelected));
-            if (this.index == 0) {
-                this.button.GrabFocus();
-            }
+            Connect(nameof(ButtonPressed), GetNode<HUD>("/root/Main/GUI/Control/HUD"), "OnRewardSelected");
+            Connect(nameof(ButtonPressed), receiver, nameof(receiver.OnRewardSelected));
         }
 
+
         public void OnButtonPressed() {
-            GD.Print($"Signal sent about chosen reward with index {this.index}");
-            EmitSignal(nameof(ButtonPressed), this.index);
+            EmitSignal(nameof(ButtonPressed), this.Index);
         }
 
     }
