@@ -46,7 +46,7 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        public void ChangeVisibility() {
+        private void ChangeVisibility() {
             this.IsCurrentlyVisible = !this.IsCurrentlyVisible;
             this.Visible = this.IsCurrentlyVisible;
         }

@@ -46,8 +46,7 @@ namespace VampireSurvivorsLike {
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
 
-            AttributeManagerSingleton.Instance.SetPickupRange(
-                this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
+            AttributeManagerSingleton.Instance.SetPickupArea( this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
             this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
             ItemManagerSingleton.Instance.Player = this;
@@ -137,7 +136,7 @@ namespace VampireSurvivorsLike {
             if (this.damageCounter % ImmunityTime == 0) {
                 FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
                 damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)this.takenDamageValue);
-                this.GetTree().Root.GetChild(0).CallDeferred("add_child", damageInd);
+                this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -159,7 +158,7 @@ namespace VampireSurvivorsLike {
                 FloatingValue healingInd = this.FloatingValue.Instance<FloatingValue>();
                 healingInd.SetValues(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f, 1f),
                     (int)AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue());
-                this.GetTree().Root.GetChild(0).CallDeferred("add_child", healingInd);
+                this.GetTree().Root.GetNode("Main").CallDeferred("add_child", healingInd);
                 this.healthCounter = 0;
                 this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
                     AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);

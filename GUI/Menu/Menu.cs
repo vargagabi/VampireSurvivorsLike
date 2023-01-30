@@ -16,7 +16,7 @@ namespace VampireSurvivorsLike {
             GetTree().ChangeScene("res://Main/Main.tscn");
             LevelUpManagerSingleton.Instance.Reset();
             ItemManagerSingleton.Instance.Reset();
-            AttributeManagerSingleton.Instance.Reset();
+            // AttributeManagerSingleton.Instance.Reset();
         }
 
         public void OnQuitButtonPressed() {
@@ -25,8 +25,13 @@ namespace VampireSurvivorsLike {
 
         public void OnSettingsButtonPressed() {
             Console.WriteLine("Settings button pressed");
+            AttributeManagerSingleton.Instance.Load();
         }
 
+        public void OnShopButtonPressed() {
+           GD.Print("Shop button pressed"); 
+           AttributeManagerSingleton.Instance.Save();
+        }
     }
 
 }

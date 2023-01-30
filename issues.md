@@ -2,6 +2,7 @@ Issues:
 	-Skeletons don't reach player from above, decrease stop distance
 	-No icon for direction pointer
 	-Item level not showing correctly
+	-Make singletons autoload
 
 Fixed:
 	-Maximum health not updating when selecting reward to increase max health.
@@ -11,7 +12,6 @@ Fixed:
 	-Fix aura is over the player, and the rectangle shows
 	-Refactor player Attribute to a standalone class
 	-Exp bar not filling correctyl when picking up xp
-constructor
 
 New Feature:
 	-New Weapon: Aura
@@ -25,6 +25,4 @@ Future plans/ideas:
 	-Night time
 	-Item that disables tree collision?
 	-chibi anime characters as compainons	
-----------	
-
-	
+	-Show attributes when game is paused
