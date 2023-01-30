@@ -12,6 +12,7 @@ namespace VampireSurvivorsLike {
         public Attribute HealthRegen { get; private set; }
         public Attribute Speed { get; private set; }
         public Attribute PickupArea { get; private set; }
+        
         private const string savePath = "user://attributes.save";
 
         public static AttributeManagerSingleton Instance {
