@@ -382,13 +382,15 @@ flip_h = true
 
 [node name="LevelLabel" type="Label" parent="Control/HUD/LevelControl"]
 pause_mode = 1
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-margin_right = -64.0
-text = "Lvl: "
+text = "Lvl:"
 align = 2
 valign = 1
 uppercase = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="LevelNumber" type="Label" parent="Control/HUD/LevelControl"]
 anchor_right = 1.0

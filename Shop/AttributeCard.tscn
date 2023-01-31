@@ -1,60 +1,114 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=11 format=2]
 
+[ext_resource path="res://Shop/AttributeCard.cs" type="Script" id=1]
 [ext_resource path="res://MyPixelArts/images/LevelProgressOver.png" type="Texture" id=2]
-[ext_resource path="res://MyPixelArts/images/HealthIcon.png" type="Texture" id=3]
+[ext_resource path="res://MyPixelArts/images/DirectionPointer.png" type="Texture" id=3]
 [ext_resource path="res://MyPixelArts/images/LevelProgressUnder.png" type="Texture" id=4]
 [ext_resource path="res://MyPixelArts/images/LevelProgressFill.png" type="Texture" id=5]
 [ext_resource path="res://MyPixelArts/images/AttributeCard.png" type="Texture" id=6]
-[ext_resource path="res://Fonts/MyFont.tres" type="DynamicFont" id=7]
+
+[sub_resource type="DynamicFontData" id=3]
+resource_local_to_scene = true
+font_path = "res://Fonts/ALGER.TTF"
+
+[sub_resource type="DynamicFont" id=4]
+size = 37
+use_mipmaps = true
+font_data = SubResource( 3 )
+
+[sub_resource type="DynamicFontData" id=1]
+resource_local_to_scene = true
+font_path = "res://Fonts/ALGER.TTF"
+
+[sub_resource type="DynamicFont" id=2]
+resource_local_to_scene = true
+size = 29
+font_data = SubResource( 1 )
 
 [node name="AttributeCard" type="TextureButton"]
-margin_right = 256.0
-margin_bottom = 80.0
+anchor_right = 0.284444
+anchor_bottom = 0.16
 texture_normal = ExtResource( 6 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="Control" type="Control" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="CenterContainer" type="CenterContainer" parent="Control"]
+[node name="CenterContainer" type="CenterContainer" parent="."]
 anchor_left = 0.031
 anchor_top = 0.1
 anchor_right = 0.281
 anchor_bottom = 0.917
 margin_left = 0.0639997
-margin_right = 0.0639954
+margin_right = 0.064003
 margin_bottom = -1.36
+mouse_filter = 2
 size_flags_horizontal = 4
 size_flags_vertical = 5
 
-[node name="TextureRect" type="TextureRect" parent="Control/CenterContainer"]
+[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
 margin_right = 64.0
 margin_bottom = 64.0
+mouse_filter = 2
 texture = ExtResource( 3 )
 
-[node name="Label" type="Label" parent="Control"]
-margin_left = 80.0
-margin_top = 8.0
-margin_right = 416.0
-margin_bottom = 104.0
+[node name="NameLabel" type="Label" parent="."]
+anchor_left = 0.3125
+anchor_top = 0.1
+anchor_right = 0.96875
+anchor_bottom = 0.7
+margin_right = 168.0
+margin_bottom = 48.0
 rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = SubResource( 4 )
 text = "Healt Regeneration"
 align = 1
 valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="CenterContainer2" type="CenterContainer" parent="Control"]
-margin_left = 80.0
-margin_top = 56.0
-margin_right = 248.0
-margin_bottom = 72.0
+[node name="CenterContainer2" type="CenterContainer" parent="."]
+anchor_left = 0.3125
+anchor_top = 0.7
+anchor_right = 0.65625
+anchor_bottom = 0.9
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="TextureProgress" type="TextureProgress" parent="Control/CenterContainer2"]
-margin_left = 52.0
-margin_right = 116.0
+[node name="TextureProgress" type="TextureProgress" parent="CenterContainer2"]
+margin_left = 12.0
+margin_right = 76.0
 margin_bottom = 16.0
+mouse_filter = 2
 max_value = 8.0
 value = 5.0
 texture_under = ExtResource( 4 )
 texture_over = ExtResource( 2 )
 texture_progress = ExtResource( 5 )
+
+[node name="CostLabel" type="Label" parent="."]
+self_modulate = Color( 0.972549, 1, 0, 1 )
+anchor_left = 1.21875
+anchor_top = 1.25
+anchor_right = 2.29688
+anchor_bottom = 1.6625
+margin_left = -156.0
+margin_top = -44.0
+margin_right = -248.0
+margin_bottom = -44.0
+rect_scale = Vector2( 0.5, 0.5 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+text = "100"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="pressed" from="." to="." method="OnButtonPressed"]

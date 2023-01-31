@@ -1,83 +1,90 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Godot;
-using Godot.Collections;
 
 namespace VampireSurvivorsLike {
 
+    public class AttributeSaveFormat {
+
+        public string name;
+        public string message;
+        public float initialValue;
+        public float bonusModifier;
+        public string iconName;
+        public int upgradeCost;
+        public int baseLevel;
+
+        public AttributeSaveFormat(string name, string message, float initialValue, float bonusModifier, int baseLevel,
+            int upgradeCost, string iconName) {
+            this.name = name;
+            this.message = message;
+            this.initialValue = initialValue;
+            this.bonusModifier = bonusModifier;
+            this.baseLevel = baseLevel;
+            this.upgradeCost = upgradeCost;
+            this.iconName = iconName;
+        }
+
+    }
+
     public class Attribute {
 
-        private string name;
+        public string Name { get; private set; }
         private string Message { get; set; }
-        private float initialValue;
+        private float InitialValue { get; set; }
+        private float BonusModifier { get; set; }
+        public int BaseLevel { get; set; }
+        private int UpgradeCost { get; set; }
+        public Texture Icon { get; private set; }
+
         private CircleShape2D shape;
-        private readonly float bonusModifier;
         private int sessionLevel;
-        private int baseLevel;
-        public Texture Icon { get; set; }
 
         public CircleShape2D Shape {
             set {
                 this.shape = value;
-                this.initialValue = this.shape.Radius;
+                this.shape.Radius = this.GetCurrentValue();
             }
             get => this.shape;
         }
-        public Attribute(string name, string message, float initialValue, float bonusInPercent, string iconPath) {
-            this.name = name;
-            this.Message = message;
-            this.initialValue = initialValue;
-            this.bonusModifier = bonusInPercent / 100f;
-            this.Icon = ResourceLoader.Load($"res://MyPixelArts/images/{iconPath}.png") as Texture;
-            this.sessionLevel = 0;
-        }
 
-        public Attribute(Dictionary<string, object> data) {
-            this.name = (string)data[ToLowerFirstChar(nameof(this.name))]; 
-            this.Message = data[ToLowerFirstChar(nameof(this.Message))] as string;
-            this.initialValue = (float)data[ToLowerFirstChar(nameof(this.initialValue))];
-            this.bonusModifier = (float)data[ToLowerFirstChar(nameof(this.bonusModifier))];
-            this.Icon = ResourceLoader.Load(data[ToLowerFirstChar(nameof(this.Icon))] as string) as Texture;
+        public Attribute(string name, string message, float initialValue, float bonusInPercent, string iconName, int upgradeCost=100, int baseLevel = 0 ) {
+            this.Name = name;
+            this.Message = message;
+            this.InitialValue = initialValue;
+            this.BonusModifier = bonusInPercent;
+            this.Icon = ResourceLoader.Load($"res://MyPixelArts/images/{iconName}") as Texture;
             this.sessionLevel = 0;
+            this.UpgradeCost = upgradeCost;
+            this.BaseLevel = baseLevel;
         }
 
         public float GetCurrentValue() {
-            return this.BaseValue() + (this.BaseValue() * this.bonusModifier) * this.sessionLevel;
+            return this.BaseValue() + (this.BaseValue() * this.BonusModifier) * this.sessionLevel;
         }
 
         private float BaseValue() {
-           return this.initialValue + this.baseLevel * this.initialValue * this.bonusModifier; 
+            return this.InitialValue + this.BaseLevel * this.InitialValue * this.BonusModifier;
         }
 
         public void Increase() {
             this.sessionLevel++;
             if (this.Shape != null) {
-                this.Shape.Radius = this.BaseValue() + this.BaseValue() * this.bonusModifier * this.sessionLevel;
+                this.Shape.Radius = this.BaseValue() + this.BaseValue() * this.BonusModifier * this.sessionLevel;
             }
         }
 
         public override string ToString() {
-            return this.Message + " " + this.bonusModifier * 100 + "%";
+            return this.Message + " " + this.BonusModifier * 100 + "%";
         }
 
-        public Dictionary<string,object> ToJson() {
-            return new Dictionary<string, object>() {
-                {this.ToLowerFirstChar(nameof(this.name)), this.name}, 
-                {this.ToLowerFirstChar(nameof(this.Message)), this.Message},
-                {this.ToLowerFirstChar(nameof(this.initialValue)), this.initialValue},
-                {this.ToLowerFirstChar(nameof(this.bonusModifier)), this.bonusModifier},
-                {this.ToLowerFirstChar(nameof(this.baseLevel)), this.baseLevel},
-                {this.ToLowerFirstChar(nameof(this.Icon)), this.Icon.ResourcePath},
-            };
+        public AttributeSaveFormat ToSaveFormat() {
+            return new AttributeSaveFormat(this.Name, this.Message, this.InitialValue, this.BonusModifier,
+                this.BaseLevel, this.UpgradeCost, this.Icon.ResourcePath.Split('/').Last());
         }
 
-        private string ToLowerFirstChar(string value) {
-            return char.ToLowerInvariant(value[0]) + value.Substring(1);
-        }
-
-        public void Load(Dictionary<string, object> data) {
-            GD.Print(data["name"] + "=> Loaded");
-            
-        }
     }
 
 }

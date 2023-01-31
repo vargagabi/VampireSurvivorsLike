@@ -20,17 +20,17 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnQuitButtonPressed() {
+            AttributeManagerSingleton.Instance.Save();
             GetTree().Quit();
         }
 
         public void OnSettingsButtonPressed() {
             Console.WriteLine("Settings button pressed");
-            AttributeManagerSingleton.Instance.Load();
         }
 
         public void OnShopButtonPressed() {
            GD.Print("Shop button pressed"); 
-           AttributeManagerSingleton.Instance.Save();
+           this.GetTree().ChangeScene("res://Shop/Shop.tscn");
         }
     }
 

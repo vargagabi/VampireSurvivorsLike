@@ -1,51 +1,38 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
+[ext_resource path="res://Shop/Shop.cs" type="Script" id=3]
 
 [node name="Shop" type="CanvasLayer"]
+script = ExtResource( 3 )
 
-[node name="VBoxContainer" type="Control" parent="."]
-anchor_top = 0.064
+[node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="VBoxContainer"]
-anchor_right = 1.0
-margin_top = -32.0
-margin_bottom = 72.0
-size_flags_horizontal = 4
-size_flags_vertical = 0
-text = "Level Up Your Attributes with Coins"
-align = 1
-valign = 1
-
-[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="Control"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -392.0
-margin_top = -149.0
+margin_top = -215.0
 margin_right = 392.0
-margin_bottom = 149.0
+margin_bottom = 83.0
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/TabContainer"]
+[node name="GridContainer" type="GridContainer" parent="Control/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 46.0
+margin_top = 41.0
 margin_right = -4.0
 margin_bottom = -4.0
-size_flags_vertical = 3
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/TabContainer/CenterContainer"]
-margin_left = 388.0
-margin_top = 124.0
-margin_right = 388.0
-margin_bottom = 124.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 3
 
-[node name="CenterContainer2" type="CenterContainer" parent="VBoxContainer/TabContainer"]
+[node name="GridContainer2" type="GridContainer" parent="Control/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -53,31 +40,65 @@ margin_left = 4.0
 margin_top = 46.0
 margin_right = -4.0
 margin_bottom = -4.0
-size_flags_vertical = 3
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/TabContainer/CenterContainer2"]
-margin_top = 42.0
-margin_right = 776.0
-margin_bottom = 206.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 3
 
-[node name="Explanation" type="Control" parent="VBoxContainer"]
-margin_top = 375.0
+[node name="Explanation" type="Control" parent="Control"]
+margin_top = 348.0
 margin_right = 900.0
-margin_bottom = 455.0
+margin_bottom = 428.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="Label" type="Label" parent="VBoxContainer/Explanation"]
-anchor_left = 0.069
-anchor_right = 0.931
-anchor_bottom = 1.0
-margin_left = -0.100006
-margin_right = 0.0999756
+[node name="Label" type="Label" parent="Control/Explanation"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -392.0
+margin_top = -40.0
+margin_right = 392.0
+margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "c.h, uwmoemt uuuuu uuuuuuuu u u tuhittu  tuhinut nuth itnu itun h tet ntehount eotnhoue "
 valign = 1
 autowrap = true
+
+[node name="BackButton" type="Button" parent="Control"]
+anchor_left = 0.575556
+anchor_top = 0.856
+anchor_right = 0.797778
+anchor_bottom = 0.92
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="MoneyContainer" type="HBoxContainer" parent="Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -162.0
+margin_bottom = 81.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="Control/MoneyContainer"]
+margin_top = 26.0
+margin_right = 46.0
+margin_bottom = 54.0
+text = "100"
+
+[node name="Label2" type="Label" parent="Control/MoneyContainer"]
+margin_left = 50.0
+margin_top = 26.0
+margin_right = 115.0
+margin_bottom = 54.0
+text = "Gold"
+
+[connection signal="pressed" from="Control/BackButton" to="." method="OnBackButtonPressed"]
