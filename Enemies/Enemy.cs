@@ -13,12 +13,14 @@ namespace VampireSurvivorsLike {
         public Vector2 SpawnTime { get; set; }
         protected KinematicBody2D Player { get; set; }
         private PackedScene ExpOrb { get; set; }
+        private PackedScene Gold {get; set;}
         protected AnimatedSprite AnimatedSprite { get; set; }
         private PackedScene DamageIndicator { get; set; }
 
 
         protected Enemy() {
             this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ExpOrbs/ExpOrb.tscn");
+            this.Gold = ResourceLoader.Load<PackedScene>("res://Gold/Gold.tscn");
             this.DamageIndicator = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
         }
 
@@ -38,6 +40,12 @@ namespace VampireSurvivorsLike {
                 expOrb.Set("Experience", this.ExpValue);
                 Node viewport = this.GetTree().Root.GetNode("Main");
                 viewport.CallDeferred("add_child", expOrb);
+                if (true) {
+                    Node2D gold = this.Gold.Instance<Node2D>(); 
+                    gold.GlobalPosition = this.GlobalPosition;
+                    viewport.CallDeferred("add_child", gold);
+                    
+                }
             }
         }
 

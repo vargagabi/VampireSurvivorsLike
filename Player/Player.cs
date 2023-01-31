@@ -8,6 +8,7 @@ namespace VampireSurvivorsLike {
     public class Player : KinematicBody2D {
 
         private float currentHealth;
+        public int Gold { get; set; }
 
         //Counters
         private int healthCounter = 0;
@@ -19,8 +20,6 @@ namespace VampireSurvivorsLike {
 
         private float experience = 0;
         private int currentLevel = 0;
-
-        // private bool IsRewardSelection { get; set; }
 
         private AnimatedSprite animatedSprite;
         private TextureProgress healthBar;
@@ -38,6 +37,7 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             GD.Print("Player Ready...");
             this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
+            this.Gold = 0;
             this.Direction = Vector2.Right;
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
             this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
@@ -46,7 +46,8 @@ namespace VampireSurvivorsLike {
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
 
-            AttributeManagerSingleton.Instance.SetPickupArea( this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
+            AttributeManagerSingleton.Instance.SetPickupArea(
+                this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
             this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
             ItemManagerSingleton.Instance.Player = this;
@@ -100,7 +101,7 @@ namespace VampireSurvivorsLike {
             }
 
             this.directionArrow.Rotation = this.Direction.Normalized().Angle();
-            this.directionArrow.Position = new Vector2(0f,-6f) + this.Direction.Normalized() * 15;
+            this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction.Normalized() * 15;
             this.Direction = this.Direction.Normalized();
             this.animatedSprite.Play(animation.ToString());
             this.MoveAndSlide(velocity.Normalized() * AttributeManagerSingleton.Instance.Speed.GetCurrentValue());
@@ -230,6 +231,15 @@ namespace VampireSurvivorsLike {
             GD.Print("EXPERIENCE PICKED UP: " + exp);
             this.experience += exp;
             this.CheckLevelUp();
+        }
+
+        public void OnGoldPickedUp(int value) {
+            this.Gold += value;
+            FloatingValue coin = this.FloatingValue.Instance<FloatingValue>();
+            Vector2 pos = this.GlobalPosition;
+            pos.x+=20;
+            coin.SetValues(pos, new Color(0.91f, 0.74f, 0.41f), value);
+            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", coin);
         }
 
     }

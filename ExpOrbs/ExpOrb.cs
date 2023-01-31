@@ -21,7 +21,7 @@ namespace VampireSurvivorsLike {
          * When the player picked up the ord set the player field to the player.
          * Also Connect [PickedUp] to the player's OnPickUp method.
          */
-        public void OnAreaEntered(Node2D body) {
+        public void OnAreaEntered(Area2D body) {
             if (!this.isMoving) {
                 Connect(nameof(PickedUp), body.GetParent(), "OnPickUp");
                 this.player = body;
