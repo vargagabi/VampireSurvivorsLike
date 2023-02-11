@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
+[ext_resource path="res://Shop/AttributeCard.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
 [ext_resource path="res://Shop/Shop.cs" type="Script" id=3]
 
@@ -9,45 +10,110 @@ script = ExtResource( 3 )
 [node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+focus_mode = 2
 theme = ExtResource( 2 )
 
-[node name="TabContainer" type="TabContainer" parent="Control"]
-anchor_left = 0.5
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -392.0
-margin_top = -215.0
-margin_right = 392.0
-margin_bottom = 83.0
-
-[node name="GridContainer" type="GridContainer" parent="Control/TabContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 41.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_top = -257.0
+margin_bottom = 218.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
+margin_left = 252.0
+margin_top = 107.0
+margin_right = 1028.0
+margin_bottom = 367.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+custom_constants/vseparation = 10
 columns = 3
 
-[node name="GridContainer2" type="GridContainer" parent="Control/TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 46.0
-margin_right = -4.0
-margin_bottom = -4.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 3
+[node name="AttributeCard" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_right = 256.0
+margin_bottom = 80.0
+
+[node name="AttributeCard2" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 260.0
+margin_right = 516.0
+margin_bottom = 80.0
+
+[node name="AttributeCard3" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 520.0
+margin_right = 776.0
+margin_bottom = 80.0
+
+[node name="AttributeCard4" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 90.0
+margin_right = 256.0
+margin_bottom = 170.0
+
+[node name="AttributeCard5" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 260.0
+margin_top = 90.0
+margin_right = 516.0
+margin_bottom = 170.0
+
+[node name="AttributeCard6" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 520.0
+margin_top = 90.0
+margin_right = 776.0
+margin_bottom = 170.0
+
+[node name="AttributeCard7" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 180.0
+margin_right = 256.0
+margin_bottom = 260.0
+
+[node name="AttributeCard8" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 260.0
+margin_top = 180.0
+margin_right = 516.0
+margin_bottom = 260.0
 
 [node name="Explanation" type="Control" parent="Control"]
-margin_top = 348.0
-margin_right = 900.0
-margin_bottom = 428.0
+margin_left = 179.0
+margin_top = 578.0
+margin_right = 1079.0
+margin_bottom = 658.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -70,10 +136,10 @@ valign = 1
 autowrap = true
 
 [node name="BackButton" type="Button" parent="Control"]
-anchor_left = 0.575556
-anchor_top = 0.856
-anchor_right = 0.797778
-anchor_bottom = 0.92
+anchor_left = 0.0644444
+anchor_top = 0.058
+anchor_right = 0.286666
+anchor_bottom = 0.122
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -82,23 +148,28 @@ __meta__ = {
 [node name="MoneyContainer" type="HBoxContainer" parent="Control"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -162.0
-margin_bottom = 81.0
+margin_left = -252.0
+margin_top = 42.0
+margin_right = -69.0
+margin_bottom = 123.0
+alignment = 2
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="Label" type="Label" parent="Control/MoneyContainer"]
-margin_top = 26.0
-margin_right = 46.0
-margin_bottom = 54.0
+margin_left = 84.0
+margin_top = 29.0
+margin_right = 124.0
+margin_bottom = 52.0
 text = "100"
 
 [node name="Label2" type="Label" parent="Control/MoneyContainer"]
-margin_left = 50.0
-margin_top = 26.0
-margin_right = 115.0
-margin_bottom = 54.0
+margin_left = 128.0
+margin_top = 29.0
+margin_right = 183.0
+margin_bottom = 52.0
 text = "Gold"
 
 [connection signal="pressed" from="Control/BackButton" to="." method="OnBackButtonPressed"]
+[connection signal="visibility_changed" from="Control/BackButton" to="." method="OnVisibilityChanged"]

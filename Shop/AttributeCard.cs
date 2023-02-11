@@ -9,6 +9,7 @@ namespace VampireSurvivorsLike {
         private Label AttributeLabel { get; set; }
         private Label CostLabel { get; set; }
         private TextureProgress LevelProgress { get; set; }
+        private Sprite Outline { get; set; }
 
         public Shop Receiver { get; set; }
         public string AttributeName { get; set; }
@@ -23,11 +24,14 @@ namespace VampireSurvivorsLike {
             this.AttributeLabel = GetNode<Label>("NameLabel");
             this.LevelProgress = GetNode<TextureProgress>("CenterContainer2/TextureProgress");
             this.CostLabel = GetNode<Label>("CostLabel");
+            this.Outline = GetNode<Sprite>("Sprite");
             this.LevelProgress.Value = this.Progress;
             this.AttributeLabel.Text = this.AttributeName;
             this.Icon.Texture = this.IconTexture;
             this.CostLabel.Text = this.Cost.ToString();
-            Connect(nameof(Purchase), this.Receiver, nameof(this.Receiver.OnPurchase));
+            if (this.Receiver != null) {
+                Connect(nameof(Purchase), this.Receiver, nameof(this.Receiver.OnPurchase));
+            }
         }
 
         public void OnButtonPressed() {
@@ -36,6 +40,14 @@ namespace VampireSurvivorsLike {
                 this.LevelProgress.Value = AttributeManagerSingleton.Instance.IncreaseBaseLevel(this.AttributeName);
                 this.EmitSignal(nameof(Purchase), this.AttributeName);
             }
+        }
+
+        public void OnFocusEntered() {
+            this.Outline.Visible = true;
+        }
+
+        public void OnFocusExited() {
+            this.Outline.Visible = false;
         }
 
     }
