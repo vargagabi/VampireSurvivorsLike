@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Main/Main.cs" type="Script" id=1]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://GUI/GUI/GUI.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enemies/MobSpawner/MobSpawner.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Map/Map.tscn" type="PackedScene" id=5]
+
+[node name="Main" type="Node2D"]
+pause_mode = 1
+script = ExtResource( 1 )
+
+[node name="Map" parent="." instance=ExtResource( 5 )]
+pause_mode = 1
+
+[node name="GUI" parent="." instance=ExtResource( 3 )]
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+
+[node name="MobSpawner" parent="." instance=ExtResource( 4 )]
+pause_mode = 1
+
+[node name="Timer" type="Timer" parent="."]
+pause_mode = 1
+wait_time = 10.0
+autostart = true
+
+[connection signal="RewardSelected" from="GUI" to="Player" method="OnRewardSelected"]
+[connection signal="CurrentHealth" from="Player" to="GUI" method="OnPlayerCurrentHealth"]
+[connection signal="ExperienceInPercent" from="Player" to="GUI" method="OnExperienceEarned"]
+[connection signal="timeout" from="Timer" to="." method="OnTimerTimeout"]
+[connection signal="timeout" from="Timer" to="MobSpawner" method="OnTimerTimeout"]

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Night Ambient 2 (Loop).ogg-0c21ca5d53fb66e315d299da626cadd5.oggstr"
+
+[deps]
+
+source_file="res://Audio/music/AmbientLoop/Night Ambient 2 (Loop).ogg"
+dest_files=[ "res://.import/Night Ambient 2 (Loop).ogg-0c21ca5d53fb66e315d299da626cadd5.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

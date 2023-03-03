@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Items/Weapons/FireRing/FireRing.cs" type="Script" id=1]
+[ext_resource path="res://Items/Weapons/Gun/bullet.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 3.0
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.689759, 1 )
+colors = PoolColorArray( 1, 0.949219, 0, 1, 1, 0, 0, 1, 0.353027, 0.0220642, 0.0220642, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.870317, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.779412 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+lifetime_randomness = 0.11
+emission_shape = 1
+emission_sphere_radius = 2.5
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 14.81
+linear_accel_random = 0.31
+radial_accel = -100.0
+radial_accel_random = 0.42
+angle = 137.1
+scale = 3.0
+scale_random = 0.5
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 3 )
+
+[node name="FireRing" type="Node2D"]
+position = Vector2( 632, 352 )
+script = ExtResource( 1 )
+
+[node name="FireBall" type="Node2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="FireBall"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FireBall/Area2D"]
+shape = SubResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="FireBall"]
+z_index = 1
+amount = 50
+lifetime = 0.1
+randomness = 0.04
+visibility_rect = Rect2( -50, -50, 100, 100 )
+local_coords = false
+process_material = SubResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="FireBall"]
+scale = Vector2( 0.195312, 0.179687 )
+texture = ExtResource( 2 )

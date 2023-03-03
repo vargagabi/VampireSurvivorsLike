@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Audio/AudioPlayerSingleton.cs" type="Script" id=1]
+
+[node name="AudioPlayer" type="Node"]
+pause_mode = 2
+script = ExtResource( 1 )
+
+[node name="AmbientAudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Tween" type="Tween" parent="AmbientAudioPlayer"]
+
+[node name="ActionAudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Tween" type="Tween" parent="ActionAudioPlayer"]
+
+[node name="EffectAudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Tween" type="Tween" parent="EffectAudioPlayer"]
+
+[connection signal="finished" from="AmbientAudioPlayer" to="." method="OnAudioFinished"]
+[connection signal="finished" from="ActionAudioPlayer" to="." method="OnAudioFinished"]
+[connection signal="finished" from="EffectAudioPlayer" to="." method="OnAudioFinished"]

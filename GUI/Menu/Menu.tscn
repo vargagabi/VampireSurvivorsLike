@@ -1,0 +1,275 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://GUI/Menu/Menu.cs" type="Script" id=1]
+[ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
+[ext_resource path="res://Assets/MainMenu/clearing1_pixelated.png" type="Texture" id=3]
+[ext_resource path="res://Assets/MainMenu/clearing5_pixelated.png" type="Texture" id=4]
+[ext_resource path="res://Assets/MainMenu/path5_pixelated.png" type="Texture" id=5]
+[ext_resource path="res://Assets/MainMenu/path1_pixelated.png" type="Texture" id=6]
+[ext_resource path="res://Shop/Shop.cs" type="Script" id=7]
+
+[sub_resource type="Animation" id=3]
+resource_name = "Fade"
+length = 20.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Images/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 19.1, 20 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Images/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Images/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="Menu" type="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 500, 500 )
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+
+[node name="FadeAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Fade = SubResource( 3 )
+anims/RESET = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Images" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TextureRect" type="TextureRect" parent="Images"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -100.0
+margin_right = 512.0
+margin_bottom = 204.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+
+[node name="TextureRect2" type="TextureRect" parent="Images"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -256.0
+margin_right = 512.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 4 )
+
+[node name="TextureRect3" type="TextureRect" parent="Images"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -264.0
+margin_right = 512.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 6 )
+
+[node name="TextureRect4" type="TextureRect" parent="Images"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -160.0
+margin_right = 512.0
+margin_bottom = 144.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 5 )
+
+[node name="ColorRect" type="ColorRect" parent="Images"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="MainMenu" type="CenterContainer" parent="."]
+anchor_top = 0.533333
+anchor_right = 0.25
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
+margin_left = 60.0
+margin_top = 68.0
+margin_right = 260.0
+margin_bottom = 268.0
+rect_min_size = Vector2( 200, 200 )
+alignment = 1
+
+[node name="StartButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Start"
+
+[node name="ShopButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_top = 51.0
+margin_right = 200.0
+margin_bottom = 98.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Shop"
+
+[node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_top = 102.0
+margin_right = 200.0
+margin_bottom = 149.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_top = 153.0
+margin_right = 200.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Quit"
+
+[node name="Shop" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 2
+theme = ExtResource( 2 )
+script = ExtResource( 7 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Shop"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -257.0
+margin_bottom = 218.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="Shop/ScrollContainer"]
+margin_top = 237.0
+margin_bottom = 237.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+custom_constants/vseparation = 14
+custom_constants/hseparation = 14
+columns = 3
+
+[node name="Explanation" type="Control" parent="Shop"]
+margin_left = 179.0
+margin_top = 578.0
+margin_right = 1079.0
+margin_bottom = 658.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="Shop/Explanation"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -392.0
+margin_top = -40.0
+margin_right = 392.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "c.h, uwmoemt uuuuu uuuuuuuu u u tuhittu  tuhinut nuth itnu itun h tet ntehount eotnhoue "
+valign = 1
+autowrap = true
+
+[node name="BackButton" type="Button" parent="Shop"]
+anchor_left = 0.0644444
+anchor_top = 0.058
+anchor_right = 0.286666
+anchor_bottom = 0.122
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ResetButton" type="Button" parent="Shop"]
+anchor_left = 0.44375
+anchor_top = 0.0583333
+anchor_right = 0.665972
+anchor_bottom = 0.122333
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="MoneyContainer" type="HBoxContainer" parent="Shop"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -252.0
+margin_top = 42.0
+margin_right = -69.0
+margin_bottom = 123.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="Shop/MoneyContainer"]
+margin_left = 84.0
+margin_top = 29.0
+margin_right = 124.0
+margin_bottom = 52.0
+text = "100"
+
+[node name="Label2" type="Label" parent="Shop/MoneyContainer"]
+margin_left = 128.0
+margin_top = 29.0
+margin_right = 183.0
+margin_bottom = 52.0
+text = "Gold"
+
+[connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/ShopButton" to="." method="OnShopButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/QuitButton" to="." method="OnQuitButtonPressed"]
+[connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
+[connection signal="pressed" from="Shop/BackButton" to="." method="OnShopBackButtonPressed"]
+[connection signal="pressed" from="Shop/ResetButton" to="Shop" method="OnResetButtonPressed"]
