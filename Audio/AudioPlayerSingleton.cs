@@ -29,8 +29,6 @@ namespace VampireSurvivorsLike {
         private readonly string[] directoryPaths = { "Ambient", "Action", "Effect" };
         private string currentlyPlaying = "";
 
-        private int typeInt = 0;
-
         public static AudioPlayerSingleton Instance {
             get => instance;
             set {
@@ -45,31 +43,6 @@ namespace VampireSurvivorsLike {
 
         static AudioPlayerSingleton() {
         }
-
-        public override void _Input(InputEvent @event) {
-            if (@event.IsActionPressed("num_1")) {
-                this.SwitchToAmbient();
-            } else if (@event.IsActionPressed("num_2")) {
-                this.SwitchToAction();
-            } else if (@event.IsActionPressed("num_3")) {
-                this.PlayEffect(EffectEnum.Death);
-            } else if (@event.IsActionPressed("ui_right")) {
-                // this.ContinueOrPlayRandomAudio(this.currentlyPlaying);
-            } else if (@event.IsActionPressed("ui_up")) {
-                // this.audioPlayers[this.currentlyPlaying].VolumeDb += 5;
-                GD.Print(this.audioPlayers[this.currentlyPlaying].VolumeDb);
-            } else if (@event.IsActionPressed("ui_down")) {
-                // this.audioPlayers[this.currentlyPlaying].VolumeDb -= 5;
-                GD.Print(this.audioPlayers[this.currentlyPlaying].VolumeDb);
-            } else if (@event.IsActionPressed("ui_left")) {
-                // this.typeInt = (this.typeInt + 1) % this.directoryPaths.Length;
-                // this.currentlyPlaying = this.directoryPaths[this.typeInt];
-                GD.Print($"Type set to {this.directoryPaths[this.typeInt]}");
-            } else if (@event.IsActionPressed("num_4")) {
-                // this.getStreamData();
-            }
-        }
-
 
         public override void _Ready() {
             Instance = this;
@@ -137,6 +110,7 @@ namespace VampireSurvivorsLike {
             int track = (int)GD.RandRange(0, this.fileMap[type].Count);
             this.audioPlayers[type].Stream =
                 ResourceLoader.Load<AudioStream>($"res://Audio/music/{type}/{this.fileMap[type][track]}");
+
             // GD.Print($"Now Playing {this.fileMap[type][track]}");
             this.audioPlayers[type].Play();
         }
@@ -156,11 +130,9 @@ namespace VampireSurvivorsLike {
         }
 
         public void SwitchToAmbient(bool continueLastStream = true) {
-            // GD.Print("Play ambient method");
+            GD.Print("Play ambient method");
             this.RemoveTweens();
-            if (this.currentlyPlaying.Equals("Ambient")) {
-                return;
-            }
+            this.currentlyPlaying = "Ambient";
 
             if (this.audioPlayers["Ambient"].StreamPaused) {
                 this.audioPlayers["Ambient"].StreamPaused = false;
@@ -168,16 +140,13 @@ namespace VampireSurvivorsLike {
             this.InterpolateVolume("Action", -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
             this.InterpolateVolume("Ambient", -15, 3, Tween.TransitionType.Expo, Tween.EaseType.In);
 
-            this.currentlyPlaying = "Ambient";
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
         }
 
         public void SwitchToAction(bool continueLastStream = true) {
             // GD.Print("Play action method");
             this.RemoveTweens();
-            if (this.currentlyPlaying.Equals("Action")) {
-                return;
-            }
+            this.currentlyPlaying = "Action";
 
             if (this.audioPlayers["Action"].StreamPaused) {
                 this.audioPlayers["Action"].StreamPaused = false;
@@ -185,7 +154,6 @@ namespace VampireSurvivorsLike {
             this.InterpolateVolume("Ambient", -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
             this.InterpolateVolume("Action", -5, 1, Tween.TransitionType.Linear, Tween.EaseType.In);
 
-            this.currentlyPlaying = "Action";
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
         }
 
@@ -207,6 +175,7 @@ namespace VampireSurvivorsLike {
             if (((AudioStreamPlayer)obj).VolumeDb <= -40) {
                 ((AudioStreamPlayer)obj).StreamPaused = true;
             }
+
             // this.getStreamData();
         }
 
