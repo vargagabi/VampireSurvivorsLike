@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 [gd_scene load_steps=19 format=2]
-=======
-[gd_scene load_steps=15 format=2]
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 
 [ext_resource path="res://GUI/GUI/GUI.cs" type="Script" id=1]
 [ext_resource path="res://GUI/GUI/HUD.cs" type="Script" id=2]
@@ -16,11 +12,8 @@
 [ext_resource path="res://MyPixelArts/images/ExpBarBack.png" type="Texture" id=10]
 [ext_resource path="res://MyPixelArts/images/TimerSign.png" type="Texture" id=11]
 [ext_resource path="res://MyPixelArts/images/OneSidedSign.png" type="Texture" id=12]
-<<<<<<< HEAD
 [ext_resource path="res://MyPixelArts/images/Gold.png" type="Texture" id=13]
 [ext_resource path="res://GUI/GUI/GameFinishedScreen.cs" type="Script" id=14]
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://Fonts/ALGER.TTF"
@@ -29,7 +22,6 @@ font_path = "res://Fonts/ALGER.TTF"
 size = 27
 font_data = SubResource( 1 )
 
-<<<<<<< HEAD
 [sub_resource type="DynamicFontData" id=3]
 resource_local_to_scene = true
 font_path = "res://Fonts/ALGER.TTF"
@@ -39,8 +31,6 @@ resource_local_to_scene = true
 size = 26
 font_data = SubResource( 3 )
 
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 [node name="GUI" type="CanvasLayer"]
 pause_mode = 2
 layer = 10
@@ -431,7 +421,6 @@ text = "1"
 align = 1
 valign = 1
 
-<<<<<<< HEAD
 [node name="GoldContainer" type="HBoxContainer" parent="Control/HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -468,8 +457,6 @@ size_flags_vertical = 7
 texture = ExtResource( 13 )
 stretch_mode = 4
 
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 [node name="GameOverScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2
 visible = false
@@ -607,7 +594,6 @@ margin_bottom = 152.0
 rect_min_size = Vector2( 200, 40 )
 text = "Quit"
 
-<<<<<<< HEAD
 [node name="GameFinishedScreen" type="CenterContainer" parent="Control"]
 pause_mode = 2
 visible = false
@@ -718,14 +704,9 @@ margin_right = 219.0
 margin_bottom = 180.0
 text = "Main Menu"
 
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 [connection signal="pressed" from="Control/GameOverScreen/VBoxContainer/MenuButton" to="Control/GameOverScreen" method="OnMenuButtonPressed"]
 [connection signal="visibility_changed" from="Control/LevelUpScreen" to="Control/LevelUpScreen" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="PauseGame"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]
-<<<<<<< HEAD
 [connection signal="visibility_changed" from="Control/GameFinishedScreen" to="Control/GameFinishedScreen" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Control/GameFinishedScreen/VBoxContainer/Button" to="Control/GameFinishedScreen" method="OnButtonPressed"]
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8

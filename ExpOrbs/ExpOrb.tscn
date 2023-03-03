@@ -70,11 +70,8 @@ root_node = NodePath("../Sprite")
 anims/Hover = SubResource( 1 )
 anims/RESET = SubResource( 2 )
 
-<<<<<<< HEAD
 [node name="Tween" type="Tween" parent="."]
 
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 8

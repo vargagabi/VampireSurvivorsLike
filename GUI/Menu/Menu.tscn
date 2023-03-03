@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://GUI/Menu/Menu.cs" type="Script" id=1]
@@ -55,20 +54,11 @@ tracks/1/keys = {
 
 [node name="Menu" type="Control"]
 pause_mode = 2
-=======
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://GUI/Menu/Menu.cs" type="Script" id=1]
-[ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
-
-[node name="Menu" type="Control"]
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 500, 500 )
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-<<<<<<< HEAD
 
 [node name="FadeAnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Fade = SubResource( 3 )
@@ -132,14 +122,6 @@ color = Color( 0, 0, 0, 1 )
 [node name="MainMenu" type="CenterContainer" parent="."]
 anchor_top = 0.533333
 anchor_right = 0.25
-=======
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="MainMenu" type="CenterContainer" parent="."]
-anchor_right = 1.0
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 __meta__ = {
@@ -147,17 +129,10 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
-<<<<<<< HEAD
 margin_left = 60.0
 margin_top = 68.0
 margin_right = 260.0
 margin_bottom = 268.0
-=======
-margin_left = 540.0
-margin_top = 260.0
-margin_right = 740.0
-margin_bottom = 460.0
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 rect_min_size = Vector2( 200, 200 )
 alignment = 1
 
@@ -192,7 +167,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Quit"
 
-<<<<<<< HEAD
 [node name="Shop" type="Control" parent="."]
 visible = false
 anchor_right = 1.0
@@ -292,15 +266,10 @@ margin_bottom = 52.0
 text = "Gold"
 
 [connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/ShopButton" to="." method="OnShopButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/QuitButton" to="." method="OnQuitButtonPressed"]
-<<<<<<< HEAD
 [connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Shop/BackButton" to="." method="OnShopBackButtonPressed"]
 [connection signal="pressed" from="Shop/ResetButton" to="Shop" method="OnResetButtonPressed"]
-=======
->>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
