@@ -232,7 +232,6 @@ namespace VampireSurvivorsLike {
             this.CheckLevelUp();
         }
 
-
     }
 
 }

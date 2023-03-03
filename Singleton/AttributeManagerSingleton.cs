@@ -120,7 +120,6 @@ namespace VampireSurvivorsLike {
             }
         }
 
-
         public bool IncreaseBaseLevel(string attributeName) {
             PropertyInfo prop = this.GetType().GetProperty(attributeName);
             if (prop != null && prop.GetValue(this) is Attribute attribute &&

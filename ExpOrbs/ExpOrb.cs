@@ -17,7 +17,6 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             this.animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             this.animationPlayer.Play("Hover");
-            
             this.tween = GetNode<Tween>("Tween");
             int degree = (int)GD.RandRange(0,360);
             double distance = GD.RandRange(30,40);

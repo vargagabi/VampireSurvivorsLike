@@ -8,7 +8,7 @@ namespace VampireSurvivorsLike {
         private GameOverScreen gameOverScreen;
         private PauseScreen pauseScreen;
         private GameFinishedScreen gameFinishedScreen;
-        
+
         private int gold = 0;
 
         [Signal] public delegate void RewardSelected(int index);
@@ -36,19 +36,19 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnExperienceEarned(int percent) {
-           this.hud.SetExpBar(percent); 
+            this.hud.SetExpBar(percent);
         }
 
         public void OnGoldPickedUp(int value) {
-            this.gold+=value;
-            this.hud.SetGold(this.gold);            
+            this.gold += value;
+            this.hud.SetGold(this.gold);
         }
 
         public void OnGameWon() {
             this.GetTree().Paused = true;
             this.gameFinishedScreen.SetGold(this.gold);
             this.gameFinishedScreen.Visible = true;
-        } 
+        }
 
     }
 

@@ -7,7 +7,10 @@
 [ext_resource path="res://Map/Map.tscn" type="PackedScene" id=5]
 
 [node name="Main" type="Node2D"]
+<<<<<<< HEAD
 pause_mode = 1
+=======
+>>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8
 script = ExtResource( 1 )
 
 [node name="Map" parent="." instance=ExtResource( 5 )]
@@ -20,6 +23,7 @@ pause_mode = 1
 [node name="MobSpawner" parent="." instance=ExtResource( 4 )]
 pause_mode = 1
 
+<<<<<<< HEAD
 [node name="Timer" type="Timer" parent="."]
 pause_mode = 1
 wait_time = 10.0
@@ -30,3 +34,8 @@ autostart = true
 [connection signal="ExperienceInPercent" from="Player" to="GUI" method="OnExperienceEarned"]
 [connection signal="timeout" from="Timer" to="." method="OnTimerTimeout"]
 [connection signal="timeout" from="Timer" to="MobSpawner" method="OnTimerTimeout"]
+=======
+[connection signal="RewardSelected" from="GUI" to="Player" method="OnRewardSelected"]
+[connection signal="CurrentHealth" from="Player" to="GUI" method="OnPlayerCurrentHealth"]
+[connection signal="ExperienceInPercent" from="Player" to="GUI" method="OnExperienceEarned"]
+>>>>>>> 95498d0115599782ee0acf8e8ea9ea635bbba7b8

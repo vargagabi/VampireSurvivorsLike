@@ -52,7 +52,6 @@ namespace VampireSurvivorsLike {
             GetTree().ChangeScene("res://Main/Main.tscn");
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(0);
             AudioPlayerSingleton.Instance.SwitchToAction(false);
-                
         }
 
 
