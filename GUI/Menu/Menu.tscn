@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://GUI/Menu/Menu.cs" type="Script" id=1]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Assets/MainMenu/path5_pixelated.png" type="Texture" id=5]
 [ext_resource path="res://Assets/MainMenu/path1_pixelated.png" type="Texture" id=6]
 [ext_resource path="res://Shop/Shop.cs" type="Script" id=7]
+[ext_resource path="res://GUI/Menu/Network.cs" type="Script" id=8]
 
 [sub_resource type="Animation" id=3]
 resource_name = "Fade"
@@ -120,7 +121,7 @@ anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
 
 [node name="MainMenu" type="CenterContainer" parent="."]
-anchor_top = 0.533333
+anchor_top = 0.5
 anchor_right = 0.25
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -130,37 +131,45 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
 margin_left = 60.0
-margin_top = 68.0
+margin_top = 80.0
 margin_right = 260.0
-margin_bottom = 268.0
+margin_bottom = 280.0
 rect_min_size = Vector2( 200, 200 )
 alignment = 1
 
 [node name="StartButton" type="Button" parent="MainMenu/VBoxContainer"]
 margin_right = 200.0
-margin_bottom = 47.0
+margin_bottom = 36.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Start"
 
-[node name="ShopButton" type="Button" parent="MainMenu/VBoxContainer"]
-margin_top = 51.0
+[node name="MultiplayerButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_top = 40.0
 margin_right = 200.0
-margin_bottom = 98.0
+margin_bottom = 77.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Multiplayer"
+
+[node name="ShopButton" type="Button" parent="MainMenu/VBoxContainer"]
+margin_top = 81.0
+margin_right = 200.0
+margin_bottom = 118.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Shop"
 
 [node name="SettingsButton" type="Button" parent="MainMenu/VBoxContainer"]
-margin_top = 102.0
+margin_top = 122.0
 margin_right = 200.0
-margin_bottom = 149.0
+margin_bottom = 159.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Settings"
 
 [node name="QuitButton" type="Button" parent="MainMenu/VBoxContainer"]
-margin_top = 153.0
+margin_top = 163.0
 margin_right = 200.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
@@ -185,7 +194,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Shop/ScrollContainer"]
+margin_left = 640.0
 margin_top = 237.0
+margin_right = 640.0
 margin_bottom = 237.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
@@ -265,11 +276,87 @@ margin_right = 183.0
 margin_bottom = 52.0
 text = "Gold"
 
+[node name="Network" type="Control" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -640.0
+margin_top = -360.0
+margin_right = 640.0
+margin_bottom = 360.0
+theme = ExtResource( 2 )
+script = ExtResource( 8 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Network"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -250.0
+margin_top = -50.0
+margin_right = 250.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AddressLineEdit" type="LineEdit" parent="Network/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+text = "127.0.0.1"
+align = 1
+max_length = 15
+expand_to_text_length = true
+context_menu_enabled = false
+caret_blink = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Network/VBoxContainer"]
+margin_top = 57.0
+margin_right = 500.0
+margin_bottom = 80.0
+size_flags_horizontal = 7
+size_flags_vertical = 6
+custom_constants/separation = 20
+
+[node name="HostButton" type="Button" parent="Network/VBoxContainer/HBoxContainer"]
+margin_right = 240.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="Network/VBoxContainer/HBoxContainer"]
+margin_left = 260.0
+margin_right = 500.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Join"
+
+[node name="BackButton" type="Button" parent="Network"]
+anchor_left = 0.7
+anchor_top = 0.811111
+anchor_right = 0.922222
+anchor_bottom = 0.875111
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/MultiplayerButton" to="." method="OnMultiplayerButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/ShopButton" to="." method="OnShopButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/QuitButton" to="." method="OnQuitButtonPressed"]
 [connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
-[connection signal="pressed" from="Shop/BackButton" to="." method="OnShopBackButtonPressed"]
+[connection signal="pressed" from="Shop/BackButton" to="." method="OnBackButtonPressed"]
 [connection signal="pressed" from="Shop/ResetButton" to="Shop" method="OnResetButtonPressed"]
+[connection signal="pressed" from="Network/VBoxContainer/HBoxContainer/HostButton" to="Network" method="OnHostButtonPressed"]
+[connection signal="pressed" from="Network/VBoxContainer/HBoxContainer/JoinButton" to="Network" method="OnJoinButtonPressed"]
+[connection signal="pressed" from="Network/BackButton" to="." method="OnBackButtonPressed"]
+[connection signal="pressed" from="Network/BackButton" to="Network" method="OnBackButtonPressed"]

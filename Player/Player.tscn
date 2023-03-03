@@ -134,7 +134,7 @@ animation = "Left"
 
 [node name="Arrow" type="Sprite" parent="."]
 position = Vector2( 0, -6.5 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]

@@ -2,8 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using Godot.Collections;
 
 namespace VampireSurvivorsLike {
 
@@ -20,12 +18,12 @@ namespace VampireSurvivorsLike {
 
         }
 
-        private System.Collections.Generic.Dictionary<string, List<string>> fileMap =
-            new System.Collections.Generic.Dictionary<string, List<string>>();
-        private System.Collections.Generic.Dictionary<string, AudioStreamPlayer> audioPlayers =
-            new System.Collections.Generic.Dictionary<string, AudioStreamPlayer>();
-        private System.Collections.Generic.Dictionary<string, Tween> tweens =
-            new System.Collections.Generic.Dictionary<string, Tween>();
+        private Dictionary<string, List<string>> fileMap =
+            new Dictionary<string, List<string>>();
+        private Dictionary<string, AudioStreamPlayer> audioPlayers =
+            new Dictionary<string, AudioStreamPlayer>();
+        private Dictionary<string, Tween> tweens =
+            new Dictionary<string, Tween>();
         private readonly string[] directoryPaths = { "Ambient", "Action", "Effect" };
         private string currentlyPlaying = "";
 
