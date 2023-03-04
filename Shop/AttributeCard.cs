@@ -11,7 +11,6 @@ namespace VampireSurvivorsLike {
         private Label CostLabel { get; set; }
         private TextureProgress LevelProgress { get; set; }
         private Sprite Outline { get; set; }
-        private Texture IconTexture { get; set; }
 
         //Info, other elements
         private Shop Receiver { get; set; }
@@ -24,7 +23,7 @@ namespace VampireSurvivorsLike {
             this.NameLabel.Text = name;
             this.CostLabel.Text = cost.ToString();
             this.LevelProgress.Value = progress;
-            this.IconTexture = iconTexture;
+            this.Icon.Texture = iconTexture;
             this.Receiver = receiver;
             this.maxLevel = maxLevel;
             this.Disabled = this.LevelProgress.Value >= this.maxLevel;

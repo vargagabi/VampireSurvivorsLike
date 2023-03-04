@@ -1,7 +1,7 @@
 [gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Player/Player.cs" type="Script" id=1]
-[ext_resource path="res://MyPixelArts/images/DirectionPointer (Custom).png" type="Texture" id=2]
+[ext_resource path="res://MyPixelArts/images/DirectionPointer.png" type="Texture" id=2]
 [ext_resource path="res://Textures/AnimationPlayerTutorialSprites/DemoRpgCharacter.png" type="Texture" id=3]
 [ext_resource path="res://Textures/bar_green_mini.png" type="Texture" id=4]
 [ext_resource path="res://Textures/bar_background.png" type="Texture" id=5]
@@ -134,7 +134,7 @@ animation = "Left"
 
 [node name="Arrow" type="Sprite" parent="."]
 position = Vector2( 0, -6.5 )
-scale = Vector2( 0.25, 0.25 )
+scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]

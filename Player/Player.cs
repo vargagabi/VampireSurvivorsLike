@@ -75,23 +75,11 @@ namespace VampireSurvivorsLike {
          */
         private void Move() {
             AnimationsEnum animation = AnimationsEnum.Idle;
-            bool isSpacePressed = Input.IsActionPressed("ui_space");
-            Vector2 velocity = Vector2.Zero;
-            if (Input.IsActionPressed("ui_down")) {
-                velocity += Vector2.Down;
-                this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Down;
-            }
-            if (Input.IsActionPressed("ui_up")) {
-                velocity += Vector2.Up;
-                this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Up;
-            }
-            if (Input.IsActionPressed("ui_left")) {
-                velocity += Vector2.Left;
-                this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Left;
-            }
-            if (Input.IsActionPressed("ui_right")) {
-                velocity += Vector2.Right;
-                this.Direction += isSpacePressed ? Vector2.Zero : Vector2.Right;
+            int xInput = (Input.IsActionPressed("ui_right") ? 1 : 0) - (Input.IsActionPressed("ui_left") ? 1 : 0);
+            int yInput = (Input.IsActionPressed("ui_down") ? 1 : 0) - (Input.IsActionPressed("ui_up") ? 1 : 0);
+            Vector2 velocity = new Vector2(xInput,yInput).Normalized();
+            if (!Input.IsActionPressed("ui_space") && !velocity.Equals(Vector2.Zero)) {
+                this.Direction = velocity;
             }
             if (velocity.x == 0 && velocity.y != 0) {
                 animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
@@ -99,10 +87,11 @@ namespace VampireSurvivorsLike {
                 animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
             }
 
-            this.directionArrow.Rotation = this.Direction.Normalized().Angle();
-            this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction.Normalized() * 15;
-            this.Direction = this.Direction.Normalized();
+            this.directionArrow.Rotation = this.Direction.Angle();
+            this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
+
             this.animatedSprite.Play(animation.ToString());
+
             this.MoveAndSlide(velocity.Normalized() * AttributeManagerSingleton.Instance.Speed.GetCurrentValue());
         }
 

@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Shop/AttributeCard.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
 [ext_resource path="res://Shop/Shop.cs" type="Script" id=3]
 
@@ -23,91 +22,14 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
-margin_left = 252.0
-margin_top = 107.0
-margin_right = 1028.0
-margin_bottom = 367.0
+margin_left = 640.0
+margin_top = 237.0
+margin_right = 640.0
+margin_bottom = 237.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 custom_constants/vseparation = 10
 columns = 3
-
-[node name="AttributeCard" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 0.0
-margin_right = 256.0
-margin_bottom = 80.0
-
-[node name="AttributeCard2" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 260.0
-margin_right = 516.0
-margin_bottom = 80.0
-
-[node name="AttributeCard3" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 520.0
-margin_right = 776.0
-margin_bottom = 80.0
-
-[node name="AttributeCard4" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 0.0
-margin_top = 90.0
-margin_right = 256.0
-margin_bottom = 170.0
-
-[node name="AttributeCard5" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 260.0
-margin_top = 90.0
-margin_right = 516.0
-margin_bottom = 170.0
-
-[node name="AttributeCard6" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 520.0
-margin_top = 90.0
-margin_right = 776.0
-margin_bottom = 170.0
-
-[node name="AttributeCard7" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 0.0
-margin_top = 180.0
-margin_right = 256.0
-margin_bottom = 260.0
-
-[node name="AttributeCard8" parent="Control/ScrollContainer/GridContainer" instance=ExtResource( 1 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 260.0
-margin_top = 180.0
-margin_right = 516.0
-margin_bottom = 260.0
 
 [node name="Explanation" type="Control" parent="Control"]
 margin_left = 179.0
