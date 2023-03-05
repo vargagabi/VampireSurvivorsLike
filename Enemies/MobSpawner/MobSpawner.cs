@@ -40,28 +40,31 @@ namespace VampireSurvivorsLike {
             }
             for (int i = 0; i < this.enemies.Count; i++) {
                 Enemy enemy = this.enemies[i].Instance<Enemy>();
-                enemy.PlayerOne = this.PlayerOne;
-                enemy.PlayerTwo = this.PlayerTwo;
                 if (this.SpawnCounter % enemy.SpawnRate == 0) {
+                    enemy.PlayerOne = this.PlayerOne;
+                    enemy.PlayerTwo = this.PlayerTwo;
+                    enemy.Name = enemy.GetClass() + Enemy.mobCount;
                     enemy.GlobalPosition = position +
                                            new Vector2(enemy.SpawnDistance, 0).Rotated(
                                                (float)GD.RandRange(0, Mathf.Tau));
-                    this.ySort.AddChild(enemy);
+                    this.ySort.AddChild(enemy, true);
                     if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                         GD.Print("Master: " + enemy.Name);
-                        Rpc(nameof(this.SpawnPuppetEnemy), i, enemy.GlobalPosition);
+                        Rpc(nameof(this.SpawnPuppetEnemy), i, enemy.GlobalPosition, enemy.Name);
                     }
                 }
             }
         }
 
         [Puppet]
-        public void SpawnPuppetEnemy(int enemyIndex, Vector2 globalPosition) {
+        public void SpawnPuppetEnemy(int enemyIndex, Vector2 globalPosition, string name) {
             Enemy enemy = this.enemies[enemyIndex].Instance<Enemy>();
             enemy.PlayerOne = this.PlayerOne;
             enemy.PlayerTwo = this.PlayerTwo;
+            enemy.Name = name;
             enemy.GlobalPosition = globalPosition;
-            this.ySort.AddChild(enemy);
+            this.ySort.AddChild(enemy, true);
+            GD.Print(enemy.Name);
         }
 
         public void OnTimerTimeout() {

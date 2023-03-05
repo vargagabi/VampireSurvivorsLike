@@ -5,6 +5,7 @@ namespace VampireSurvivorsLike {
 
     public class Enemy : KinematicBody2D {
 
+        public static int mobCount = 0;
         protected float Health { get; set; }
         protected float Strength { get; set; }
         protected float ExpValue { get; set; }
