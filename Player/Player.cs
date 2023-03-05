@@ -65,11 +65,13 @@ namespace VampireSurvivorsLike {
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            if (this.IsNetworkMaster()) {
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.Move();
-                
-                //Update puppets
-                RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
+
+                if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+                    //Update puppets
+                    RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
+                }
             }
 
             // if (this.takenDamageValue > 0) {
@@ -85,7 +87,7 @@ namespace VampireSurvivorsLike {
             this.Direction = direction;
             this.directionArrow.Rotation = this.Direction.Angle();
             this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
-            
+
             AnimationsEnum animation = AnimationsEnum.Idle;
             Vector2 velocity = (globalPosition - this.GlobalPosition).Normalized();
             if (velocity.x == 0 && velocity.y != 0) {

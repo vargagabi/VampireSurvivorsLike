@@ -19,7 +19,6 @@ namespace VampireSurvivorsLike {
         private Label status;
 
         public override void _Ready() {
-            GameStateManagerSingleton.Instance.IsMultiplayer = true;
             this.address = GetNode<LineEdit>("VBoxContainer/AddressLineEdit");
             this.hostButton = GetNode<Button>("VBoxContainer/HBoxContainer/HostButton");
             this.joinButton = GetNode<Button>("VBoxContainer/HBoxContainer/JoinButton");
@@ -89,6 +88,7 @@ namespace VampireSurvivorsLike {
 
 
         public void OnHostButtonPressed() {
+            GameStateManagerSingleton.Instance.IsMultiplayer = true;
             GD.Print("Waiting for player....");
             this.AddStatus("Waiting for player....");
             this.peer = new NetworkedMultiplayerENet();
@@ -109,6 +109,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnJoinButtonPressed() {
+            GameStateManagerSingleton.Instance.IsMultiplayer = true;
             GD.Print("Connecting...");
             this.AddStatus("Connecting...");
             string ip = this.address.Text;

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 
 namespace VampireSurvivorsLike {
 
@@ -11,9 +12,10 @@ namespace VampireSurvivorsLike {
         public int SpawnRate { get; set; }
         public float SpawnDistance { get; set; }
         public Vector2 SpawnTime { get; protected set; }
-        protected KinematicBody2D Player { get; set; }
+        public Player PlayerOne { get; set; }
+        public Player PlayerTwo { get; set; }
         private PackedScene ExpOrb { get; set; }
-        private PackedScene Gold {get; set;}
+        private PackedScene Gold { get; set; }
         protected AnimatedSprite AnimatedSprite { get; set; }
         private PackedScene DamageIndicator { get; set; }
         public int spawnAfterMinute;
@@ -33,6 +35,33 @@ namespace VampireSurvivorsLike {
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
         }
 
+        protected Vector2 GetTargetPosition() {
+            if (this.PlayerTwo == null) {
+                return this.PlayerOne.GlobalPosition;
+            }
+            return this.GlobalPosition.DistanceTo(this.PlayerOne.GlobalPosition) <
+                   this.GlobalPosition.DistanceTo(this.PlayerTwo.GlobalPosition)
+                ? this.PlayerOne.GlobalPosition
+                : this.PlayerTwo.GlobalPosition;
+        }
+
+        [Puppet]
+        protected void SetPuppetPosition(Vector2 globalPosition, int frame = 0) {
+            Vector2 velocity = (globalPosition - this.GlobalPosition).Normalized();
+            this.GlobalPosition = globalPosition;
+            this.AnimatedSprite.Frame = frame;
+            if (this.GetTargetPosition().DistanceTo(this.GlobalPosition) < 20) {
+                this.AnimationPlay(EnemyAnimationsEnum.Attack);
+            } else if (this.AnimatedSprite.Frame >= 2 && this.AnimatedSprite.Frame <= 4) {
+                this.AnimatedSprite.FlipH = velocity.x < 0;
+                this.AnimationPlay(EnemyAnimationsEnum.Walk);
+            }
+        }
+
+        protected void AnimationPlay(EnemyAnimationsEnum enemyAnimations) {
+            this.AnimatedSprite.Play(enemyAnimations.ToString());
+        }
+
         public void OnDeath() {
             if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
                 this.QueueFree();
@@ -42,10 +71,9 @@ namespace VampireSurvivorsLike {
                 Node viewport = this.GetTree().Root.GetNode("Main");
                 viewport.CallDeferred("add_child", expOrb);
                 if (true) {
-                    Node2D gold = this.Gold.Instance<Node2D>(); 
+                    Node2D gold = this.Gold.Instance<Node2D>();
                     gold.GlobalPosition = this.GlobalPosition;
                     viewport.CallDeferred("add_child", gold);
-                    
                 }
             }
         }
@@ -71,10 +99,6 @@ namespace VampireSurvivorsLike {
                 this.CollisionMask = 0;
                 this.AnimationPlay(EnemyAnimationsEnum.Death);
             }
-        }
-
-        protected void AnimationPlay(EnemyAnimationsEnum enemyAnimations) {
-            this.AnimatedSprite.Play(enemyAnimations.ToString());
         }
 
     }

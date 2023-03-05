@@ -10,12 +10,14 @@ namespace VampireSurvivorsLike {
         private Player playerOne;
         private Player playerTwo;
         private Map map;
+        private MobSpawner mobSpawner;
 
         [Signal] public delegate void OnGameWin();
 
         public override void _Ready() {
             GD.Print("Main ready...");
             this.map = GetNode<Map>("Map");
+            this.mobSpawner = GetNode<MobSpawner>("MobSpawner");
             
             //Create the player(s)
             this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
@@ -26,6 +28,8 @@ namespace VampireSurvivorsLike {
             }
             this.AddChild(this.playerOne);
             this.map.AddPlayer(this.playerOne);
+            this.mobSpawner.PlayerOne = this.playerOne;
+            
 
 
             // Connect(nameof(OnGameWin), this.GetNode("GUI"), "OnGameWon");
@@ -45,6 +49,7 @@ namespace VampireSurvivorsLike {
             
             this.AddChild(this.playerTwo);
             this.map.AddPlayer(this.playerTwo);
+            this.mobSpawner.PlayerTwo = this.playerTwo;
         }
 
         private void SetNetworkMasters() {

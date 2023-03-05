@@ -8,7 +8,6 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             base._Ready();
-            this.Player = this.GetNode<KinematicBody2D>("../../../Player");
         }
 
         public Skeleton() {
@@ -27,8 +26,8 @@ namespace VampireSurvivorsLike {
             if (this.Health <= 0) {
                 return;
             }
-            Vector2 velocity = ((this.Player.GlobalPosition + Vector2.Down * 15) - this.GlobalPosition).Normalized();
-            if (this.Player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 20f) {
+            Vector2 velocity = ((this.GetTargetPosition() + Vector2.Down * 15) - this.GlobalPosition).Normalized();
+            if (this.GetTargetPosition().DistanceTo(this.GlobalPosition) <= 20f) {
                 this.AnimationPlay(EnemyAnimationsEnum.Attack);
             } else {
                 this.MoveAndSlide(velocity * this.Speed);

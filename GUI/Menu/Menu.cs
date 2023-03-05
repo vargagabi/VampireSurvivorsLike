@@ -58,6 +58,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnMultiplayerButtonPressed() {
+            GameStateManagerSingleton.Instance.IsMultiplayer = true;
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(1);
             this.mainMenu.Visible = false;
             this.multiplayer.Visible = true;
