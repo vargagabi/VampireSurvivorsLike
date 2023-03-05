@@ -67,6 +67,9 @@ namespace VampireSurvivorsLike {
         public override void _Process(float delta) {
             if (this.IsNetworkMaster()) {
                 this.Move();
+                
+                //Update puppets
+                RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
             }
 
             // if (this.takenDamageValue > 0) {
@@ -75,6 +78,23 @@ namespace VampireSurvivorsLike {
             // if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
             //     this.PassiveHeal();
             // }
+        }
+
+        [Puppet]
+        public void MovePuppet(Vector2 globalPosition, Vector2 direction) {
+            this.Direction = direction;
+            this.directionArrow.Rotation = this.Direction.Angle();
+            this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
+            
+            AnimationsEnum animation = AnimationsEnum.Idle;
+            Vector2 velocity = (globalPosition - this.GlobalPosition).Normalized();
+            if (velocity.x == 0 && velocity.y != 0) {
+                animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
+            } else if (velocity.x != 0) {
+                animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
+            }
+            this.animatedSprite.Play(animation.ToString());
+            this.GlobalPosition = globalPosition;
         }
 
         /*
@@ -97,9 +117,7 @@ namespace VampireSurvivorsLike {
 
             this.directionArrow.Rotation = this.Direction.Angle();
             this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
-
             this.animatedSprite.Play(animation.ToString());
-
             this.MoveAndSlide(velocity.Normalized() * AttributeManagerSingleton.Instance.Speed.GetCurrentValue());
         }
 

@@ -5,7 +5,7 @@ namespace VampireSurvivorsLike {
 
     public class Main : Node2D {
 
-        private const int GameTimeInMinutes = 2;
+        private const int GameTimeInMinutes = 20;
         private int minutesPassed = 0;
         private Player playerOne;
         private Player playerTwo;
