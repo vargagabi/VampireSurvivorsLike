@@ -2,7 +2,7 @@ namespace VampireSurvivorsLike {
 
     public enum GameStateEnum {
 
-        Menu, Playing, Paused, GameEnd
+        Menu, Playing, Paused, GameWon, GameLost
 
     }
 

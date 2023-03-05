@@ -26,33 +26,47 @@ namespace VampireSurvivorsLike {
         private Texture[] textures = new Texture[3];
         private Sprite directionArrow;
         private PackedScene FloatingValue { get; set; }
+        private GUI gui;
+        public int Gold { get; private set; } = 11;
+        public int EnemiesDefeated { get; private set; } = 22;
         public bool IsDead { get; private set; } = false;
 
+        public GUI Gui {
+            get => this.gui;
+            set {
+                this.gui = value;
+                this.AddChild(this.gui);
+            }
+        }
 
         [Signal] public delegate void CurrentHealth(float currentHealth);
         [Signal] public delegate void CurrentExperience(float exp, int level);
 
         [Signal] public delegate void ExperienceInPercent(int percent);
 
+        [Signal] public delegate void OnPlayerDeath();
+
         public override void _Ready() {
             GD.Print("Player Ready...");
-
             this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
             this.Direction = Vector2.Right;
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
-
             this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
             this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
             this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
             GetNode<Label>("Label").Text = this.Name;
+            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
+
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
+                // this.Gui = GetNode<GUI>("GUI");
+            }
 
 
             //
             // AttributeManagerSingleton.Instance.SetPickupArea(
             //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
-            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
             //
             // ItemManagerSingleton.Instance.Player = this;
@@ -84,7 +98,6 @@ namespace VampireSurvivorsLike {
             //     this.PassiveHeal();
             // }
         }
-
 
         /*
          * Get the movement direction from the keyboard and set the velocity and animation
@@ -170,9 +183,8 @@ namespace VampireSurvivorsLike {
             if (this.currentHealth <= 0) {
                 AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Death);
                 if (!GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetTree().Paused = true;
-                    AudioPlayerSingleton.Instance.SwitchToAmbient();
-                    GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameEnd;
+                    this.IsDead = true;
+                    EmitSignal(nameof(OnPlayerDeath));
                 } else {
                     Rpc(nameof(this.PuppetDeath));
                 }
@@ -182,8 +194,9 @@ namespace VampireSurvivorsLike {
         [PuppetSync]
         public void PuppetDeath() {
             this.animatedSprite.SelfModulate = new Color(0, 0.91f, 1f, 0.28f);
-            this.IsDead = true;
             this.healthBar.Visible = false;
+            this.IsDead = true;
+            EmitSignal(nameof(OnPlayerDeath));
         }
 
         [Puppet]
