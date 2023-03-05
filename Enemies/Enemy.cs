@@ -39,6 +39,12 @@ namespace VampireSurvivorsLike {
             if (this.PlayerTwo == null) {
                 return this.PlayerOne.GlobalPosition;
             }
+            if (this.PlayerOne.IsDead) {
+                return this.PlayerTwo.GlobalPosition;
+            }
+            if (this.PlayerTwo.IsDead) {
+                return this.PlayerOne.GlobalPosition;
+            }
             return this.GlobalPosition.DistanceTo(this.PlayerOne.GlobalPosition) <
                    this.GlobalPosition.DistanceTo(this.PlayerTwo.GlobalPosition)
                 ? this.PlayerOne.GlobalPosition
