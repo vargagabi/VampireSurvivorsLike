@@ -174,8 +174,6 @@ namespace VampireSurvivorsLike {
                     AudioPlayerSingleton.Instance.SwitchToAmbient();
                     GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameEnd;
                 } else {
-                    this.IsDead = true;
-                    this.animatedSprite.SelfModulate = new Color(0, 0.91f, 1f, 0.28f);
                     Rpc(nameof(this.PuppetDeath));
                 }
             }
@@ -185,6 +183,7 @@ namespace VampireSurvivorsLike {
         public void PuppetDeath() {
             this.animatedSprite.SelfModulate = new Color(0, 0.91f, 1f, 0.28f);
             this.IsDead = true;
+            this.healthBar.Visible = false;
         }
 
         [Puppet]
