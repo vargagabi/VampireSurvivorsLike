@@ -35,38 +35,46 @@ namespace VampireSurvivorsLike {
 
         public override void _Ready() {
             GD.Print("Player Ready...");
-            this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
+
+            // this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
             this.Direction = Vector2.Right;
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
-            this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
-            this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
-            this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
-            this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+
+            // this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
+            // this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
+            // this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
+            // this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
+            GetNode<Label>("Label").Text = this.Name;
 
-            AttributeManagerSingleton.Instance.SetPickupArea(
-                this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
-            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
 
-            ItemManagerSingleton.Instance.Player = this;
-            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-            ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-
-            //Emit signals to set the HUD health and level bars
-            this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
-            this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
+            //
+            // AttributeManagerSingleton.Instance.SetPickupArea(
+            //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
+            // this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
+            //
+            // ItemManagerSingleton.Instance.Player = this;
+            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
+            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
+            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
+            //
+            // //Emit signals to set the HUD health and level bars
+            // this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
+            // this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            this.Move();
-            if (this.takenDamageValue > 0) {
-                this.TakeDamage();
+            if (this.IsNetworkMaster()) {
+                this.Move();
             }
-            if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
-                this.PassiveHeal();
-            }
+
+            // if (this.takenDamageValue > 0) {
+            //     this.TakeDamage();
+            // }
+            // if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
+            //     this.PassiveHeal();
+            // }
         }
 
         /*
@@ -77,7 +85,7 @@ namespace VampireSurvivorsLike {
             AnimationsEnum animation = AnimationsEnum.Idle;
             int xInput = (Input.IsActionPressed("ui_right") ? 1 : 0) - (Input.IsActionPressed("ui_left") ? 1 : 0);
             int yInput = (Input.IsActionPressed("ui_down") ? 1 : 0) - (Input.IsActionPressed("ui_up") ? 1 : 0);
-            Vector2 velocity = new Vector2(xInput,yInput).Normalized();
+            Vector2 velocity = new Vector2(xInput, yInput).Normalized();
             if (!Input.IsActionPressed("ui_space") && !velocity.Equals(Vector2.Zero)) {
                 this.Direction = velocity;
             }

@@ -19,6 +19,14 @@ config/icon="res://icon.png"
 AttributeManager="*res://Singleton/AttributeManagerSingleton.cs"
 AudioPlayer="*res://Audio/AudioPlayer.tscn"
 
+[debug]
+
+multirun/number_of_windows=2
+multirun/window_distance=920
+multirun/add_custom_args=true
+multirun/first_window_args="listen"
+multirun/other_window_args="join"
+
 [display]
 
 window/size/width=1280
@@ -29,6 +37,10 @@ window/size/test_height=540
 window/dpi/allow_hidpi=true
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/multirun/plugin.cfg" )
 
 [global]
 

@@ -6,6 +6,7 @@ namespace VampireSurvivorsLike {
 
         private static GameStateManagerSingleton instance;
         private GameStateEnum gameState;
+        public bool IsMultiplayer { get; set; } = false;
 
         private int Gold { get; set; } = 0;
         private int DefeatedEnemies { get; set; } = 0;

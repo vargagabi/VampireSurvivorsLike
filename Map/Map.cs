@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 namespace VampireSurvivorsLike {
@@ -9,7 +10,7 @@ namespace VampireSurvivorsLike {
         private TileMap props;
         private OpenSimplexNoise noise;
         private int renderDistance;
-        private KinematicBody2D player;
+        private List<Player> players = new List<Player>();
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
@@ -24,16 +25,21 @@ namespace VampireSurvivorsLike {
             this.noise.Period = 60f;
             this.noise.Persistence = 1f;
             this.noise.Lacunarity = 2f;
-            this.player = GetNode<KinematicBody2D>("../Player");
         }
 
         //  // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            GenerateTiles();
+            foreach (Player player in this.players) {
+               GenerateTiles(player.GlobalPosition); 
+            }
         }
 
-        private void GenerateTiles() {
-            Vector2 pos = this.ground.WorldToMap(this.player.GlobalPosition);
+        public void AddPlayer(Player player) {
+            this.players.Add(player);
+        }
+
+        private void GenerateTiles(Vector2 position) {
+            Vector2 pos = this.ground.WorldToMap(position);
             for (int x = -this.renderDistance; x < this.renderDistance; x++) {
                 for (int y = -this.renderDistance; y < this.renderDistance; y++) {
                     int posX = (int)(pos.x + x);

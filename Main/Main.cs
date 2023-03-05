@@ -7,15 +7,53 @@ namespace VampireSurvivorsLike {
 
         private const int GameTimeInMinutes = 2;
         private int minutesPassed = 0;
+        private Player playerOne;
+        private Player playerTwo;
+        private Map map;
 
         [Signal] public delegate void OnGameWin();
 
         public override void _Ready() {
             GD.Print("Main ready...");
-            Connect(nameof(OnGameWin), this.GetNode("GUI"), "OnGameWon");
+            this.map = GetNode<Map>("Map");
+            
+            //Create the player(s)
+            this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
+            this.playerOne.Name = "Player";
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.GetTree().NetworkPeer != null) {
+                GD.Print("hello three inside");
+                this.ConfigureMultiplayer();
+            }
+            this.AddChild(this.playerOne);
+            this.map.AddPlayer(this.playerOne);
+
+
+            // Connect(nameof(OnGameWin), this.GetNode("GUI"), "OnGameWon");
             this.GetTree().Paused = false;
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+            GD.Print(string.Join(", ", this.GetChildren()));
         }
+
+
+        private void ConfigureMultiplayer() {
+            this.GetTree().Paused = true;
+
+            //Setup player two
+            this.playerTwo = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
+            
+            this.SetNetworkMasters();
+            
+            this.AddChild(this.playerTwo);
+            this.map.AddPlayer(this.playerTwo);
+        }
+
+        private void SetNetworkMasters() {
+            this.playerOne.SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
+            this.playerOne.Name = this.playerOne.GetNetworkMaster().ToString();
+            this.playerTwo.SetNetworkMaster(this.GetTree().GetNetworkConnectedPeers()[0]);
+            this.playerTwo.Name = this.playerTwo.GetNetworkMaster().ToString();
+        }
+
 
         public void OnTimerTimeout() {
             this.minutesPassed++;
@@ -26,12 +64,6 @@ namespace VampireSurvivorsLike {
                 AudioPlayerSingleton.Instance.SwitchToAmbient(false);
                 AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Victory);
             }
-        }
-
-        public void Save() {
-        }
-
-        public void Load() {
         }
 
     }

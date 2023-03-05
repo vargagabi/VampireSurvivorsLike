@@ -13,17 +13,17 @@ namespace VampireSurvivorsLike {
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            GD.Randomize();
-            this.Player = this.GetNode<KinematicBody2D>("../Player");
-            this.SpawnCounter = 0;
-            this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
-            this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
-            this.ySort = this.GetChild<YSort>(0);
+            // GD.Randomize();
+            // this.Player = this.GetNode<KinematicBody2D>("../Player");
+            // this.SpawnCounter = 0;
+            // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
+            // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
+            // this.ySort = this.GetChild<YSort>(0);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            this.SpawnEnemy(delta);
+            // this.SpawnEnemy(delta);
         }
 
         /*
