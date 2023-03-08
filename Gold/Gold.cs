@@ -16,7 +16,7 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             this.animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             this.animationPlayer.Play("Hover");
-            Connect(nameof(GoldPickedUp), this.GetTree().Root.GetNode<CanvasLayer>("Main/GUI"), "OnGoldPickedUp");
+            // Connect(nameof(GoldPickedUp), this.GetTree().Root.GetNode<CanvasLayer>("Main/GUI"), "OnGoldPickedUp");
 
             //Create tween when gold drops
             this.tween = GetNode<Tween>("Tween");

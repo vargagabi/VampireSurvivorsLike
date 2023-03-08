@@ -11,11 +11,12 @@ namespace VampireSurvivorsLike {
         private Label LevelNumber { get; set; }
         internal float ElapsedTime { get; set; }
         private HBoxContainer ItemControl { get; set; }
+        private int nextEmpyItemFrame = 0;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("HUD Ready...");
-            ItemManagerSingleton.Instance.Hud = this;
+            // ItemManagerSingleton.Instance.Hud = this;
             this.ElapsedTime = 0;
             this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
             this.HpNumber = GetNode<Label>("HpControl/HpNumber");
@@ -33,35 +34,40 @@ namespace VampireSurvivorsLike {
             this.timeLabel.Text = TimeSpan.FromSeconds(this.ElapsedTime).ToString("hh':'mm':'ss");
         }
 
-        public void AddItem(Item item) {
-            Control itemFrame = this.ItemControl.GetChild<Control>(ItemManagerSingleton.Instance.EquippedItemCount);
-            itemFrame.GetChild<TextureRect>(0).Texture = item.Icon;
+        public void SetItem(int index, Texture icon, int level) {
+            Control itemFrame = this.ItemControl.GetChild<Control>(index);
+            TextureRect iconTexture = itemFrame.GetChild<TextureRect>(1);
+            if (iconTexture.Texture == null) {
+                iconTexture.Texture = icon;
+            }
+            itemFrame.GetChild<Label>(2).Text = level.ToString();
+            
         }
 
         public void SetItemLevel(int index, int level) {
-            Control itemFrame = this.ItemControl.GetChild<Control>(index);
-            itemFrame.GetChild<Label>(1).Text = level.ToString();
+            // Control itemFrame = this.ItemControl.GetChild<Control>(index);
+            // itemFrame.GetChild<Label>(1).Text = level.ToString();
         }
 
         public void SetHealthLabel(float currentHealth) {
-            this.HpNumber.Text = currentHealth.ToString();
+            // this.HpNumber.Text = currentHealth.ToString();
         }
 
         public void SetExpBar(int percent) {
-            this.expBar.Value = percent;
+            // this.expBar.Value = percent;
         }
 
         private void IncreaseLevel(int? value) {
-            this.LevelNumber.Text =
-                value == null ? (int.Parse(this.LevelNumber.Text) + 1).ToString() : value.ToString();
+            // this.LevelNumber.Text =
+                // value == null ? (int.Parse(this.LevelNumber.Text) + 1).ToString() : value.ToString();
         }
 
         public void OnRewardSelected(int index) {
-            this.IncreaseLevel(null);
+            // this.IncreaseLevel(null);
         }
 
         public void SetGold(int value) {
-            GetNode<Label>("GoldContainer/Label").Text = value.ToString();
+            // GetNode<Label>("GoldContainer/Label").Text = value.ToString();
         }
 
     }

@@ -4,7 +4,6 @@ namespace VampireSurvivorsLike {
 
     public class Gun : Weapon {
 
-        private KinematicBody2D player;
         private int NumberOfBullets { get; set; }
         private PackedScene bullet;
         private int piercing = 1;
@@ -18,26 +17,26 @@ namespace VampireSurvivorsLike {
             this.Counter = 0;
             this.AttackSpeed = 100;
             this.Damage = 5;
-            this.player = GetNode<KinematicBody2D>("../../Player");
             this.NumberOfBullets = 1;
             this.bullet = (PackedScene)ResourceLoader.Load("res://Items/Weapons/Gun/Bullet.tscn");
+            this.player = this.GetParent().GetParent<Player>();
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
             this.Counter++;
             if (this.Counter % this.AttackSpeed == 0) {
-                Shoot();
+                this.Shoot();
             }
         }
 
         private void Shoot() {
             for (int i = 0; i < this.NumberOfBullets; i++) {
                 Bullet bulletInst = (Bullet)this.bullet.Instance();
-                bulletInst.Speed = this.bulletSpeed; 
+                bulletInst.Speed = this.bulletSpeed;
                 bulletInst.Piercing = this.piercing;
                 bulletInst.Damage = this.Damage;
-                bulletInst.Direction =  ((Vector2)this.player.Get("Direction"))
+                bulletInst.Direction = ((Vector2)this.player.Get("Direction"))
                     .Rotated((i * Mathf.Pi / 12) - (Mathf.Pi / 12) * (this.NumberOfBullets - 1) / 2.0f).Normalized();
                 bulletInst.GlobalPosition =
                     this.player.GlobalPosition + ((Vector2)this.player.Get("Direction")).Normalized() * 10;

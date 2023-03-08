@@ -1,10 +1,11 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Player/Player.cs" type="Script" id=1]
 [ext_resource path="res://MyPixelArts/images/DirectionPointer.png" type="Texture" id=2]
 [ext_resource path="res://Textures/AnimationPlayerTutorialSprites/DemoRpgCharacter.png" type="Texture" id=3]
 [ext_resource path="res://Textures/bar_green_mini.png" type="Texture" id=4]
 [ext_resource path="res://Textures/bar_background.png" type="Texture" id=5]
+[ext_resource path="res://Singleton/ItemManager.cs" type="Script" id=6]
 
 [sub_resource type="CircleShape2D" id=22]
 radius = 32.249
@@ -177,6 +178,9 @@ margin_bottom = -25.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_scale = Vector2( 0.5, 0.5 )
+
+[node name="ItemManager" type="Node2D" parent="."]
+script = ExtResource( 6 )
 
 [connection signal="body_entered" from="Area2D" to="." method="OnBodyEntered"]
 [connection signal="body_exited" from="Area2D" to="." method="OnBodyExited"]

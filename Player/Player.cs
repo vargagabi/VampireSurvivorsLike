@@ -30,6 +30,7 @@ namespace VampireSurvivorsLike {
         public int Gold { get; private set; } = 11;
         public int EnemiesDefeated { get; private set; } = 22;
         public bool IsDead { get; private set; } = false;
+        private ItemManager itemManager;
 
         public GUI Gui {
             get => this.gui;
@@ -41,9 +42,7 @@ namespace VampireSurvivorsLike {
 
         [Signal] public delegate void CurrentHealth(float currentHealth);
         [Signal] public delegate void CurrentExperience(float exp, int level);
-
         [Signal] public delegate void ExperienceInPercent(int percent);
-
         [Signal] public delegate void OnPlayerDeath();
 
         public override void _Ready() {
@@ -58,12 +57,11 @@ namespace VampireSurvivorsLike {
             this.directionArrow = this.GetNode<Sprite>("Arrow");
             GetNode<Label>("Label").Text = this.Name;
             this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
+            this.itemManager = GetNode<ItemManager>("ItemManager");
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                // this.Gui = GetNode<GUI>("GUI");
-            }
-
-
+                this.itemManager.EquipOrUpgradeItem(0);
+            } 
             //
             // AttributeManagerSingleton.Instance.SetPickupArea(
             //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);

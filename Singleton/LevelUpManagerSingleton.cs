@@ -48,10 +48,10 @@ namespace VampireSurvivorsLike {
 
         private List<object> GenerateRewards() {
             List<object> possibleRewards = new List<object>();
-            possibleRewards.AddRange(ItemManagerSingleton.Instance.GetEquippedItems()
-                .Where(item => item.Level < item.MaxLevel).Select(item => item));
-            possibleRewards.AddRange(ItemManagerSingleton.Instance.GetUnequippedItems());
-            possibleRewards.AddRange(AttributeManagerSingleton.Instance.GetAttributes());
+            // possibleRewards.AddRange(ItemManagerSingleton.Instance.GetEquippedItems()
+                // .Where(item => item.Level < item.MaxLevel).Select(item => item));
+            // possibleRewards.AddRange(ItemManagerSingleton.Instance.GetUnequippedItems());
+            // possibleRewards.AddRange(AttributeManagerSingleton.Instance.GetAttributes());
 
             List<object> rewards = new List<object>();
             for (int i = 0; i < this.numberOfRewards; i++) {
@@ -66,7 +66,7 @@ namespace VampireSurvivorsLike {
         public void OnRewardSelected(int index) {
             object reward = this.GeneratedRewards[index];
             if (reward is Item item) {
-                ItemManagerSingleton.Instance.EquipOrUpgradeItem(item);
+                // ItemManagerSingleton.Instance.EquipOrUpgradeItem(item);
             } else if (reward is Attribute attribute) {
                 attribute.Increase();
             }

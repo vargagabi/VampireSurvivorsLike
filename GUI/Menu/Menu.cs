@@ -51,7 +51,7 @@ namespace VampireSurvivorsLike {
         public void OnStartButtonPressed() {
             GameStateManagerSingleton.Instance.IsMultiplayer = false;
             LevelUpManagerSingleton.Instance.Reset();
-            ItemManagerSingleton.Instance.Reset();
+            // ItemManagerSingleton.Instance.Reset();
             GetTree().ChangeScene("res://Main/Main.tscn");
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(0);
             AudioPlayerSingleton.Instance.SwitchToAction(false);

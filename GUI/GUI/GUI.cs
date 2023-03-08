@@ -24,6 +24,10 @@ namespace VampireSurvivorsLike {
             this.gameFinishedScreen.GameFinished(victory, enemiesDefeated, gold);
         }
 
+        public void SetItemOnHud(int index, Texture icon, int level) {
+            this.hud.SetItem(index, icon, level);
+        }
+
         /*
          * Sets the current health when receiving the value.
          * If the health is less than or equals 0 show the Game Over screen and pause the game

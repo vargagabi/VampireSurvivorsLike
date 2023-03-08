@@ -68,57 +68,6 @@ texture_over = ExtResource( 7 )
 texture_progress = ExtResource( 5 )
 fill_mode = 1
 
-[node name="ItemFramesControl" type="HBoxContainer" parent="Control/HUD"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -64.0
-margin_right = 384.0
-custom_constants/separation = 0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Item1" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Item2" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_left = 64.0
-margin_right = 128.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-flip_h = true
-flip_v = true
-
-[node name="Item3" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_left = 128.0
-margin_right = 192.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-flip_h = true
-
-[node name="Item4" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_left = 192.0
-margin_right = 256.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-flip_v = true
-
-[node name="Item5" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_left = 256.0
-margin_right = 320.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-flip_h = true
-flip_v = true
-
-[node name="Item6" type="TextureRect" parent="Control/HUD/ItemFramesControl"]
-margin_left = 320.0
-margin_right = 384.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
 [node name="ItemControl" type="HBoxContainer" parent="Control/HUD"]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -133,6 +82,11 @@ __meta__ = {
 margin_right = 64.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
+
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item1"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
 
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item1"]
 anchor_left = 0.5
@@ -164,6 +118,11 @@ margin_right = 128.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
 
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item2"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item2"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -193,6 +152,11 @@ margin_left = 128.0
 margin_right = 192.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
+
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item3"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
 
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item3"]
 anchor_left = 0.5
@@ -224,6 +188,11 @@ margin_right = 256.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
 
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item4"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item4"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -254,6 +223,11 @@ margin_right = 320.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
 
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item5"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
+
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item5"]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -283,6 +257,11 @@ margin_left = 320.0
 margin_right = 384.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
+
+[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item6"]
+margin_right = 64.0
+margin_bottom = 64.0
+texture = ExtResource( 9 )
 
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item6"]
 anchor_left = 0.5
