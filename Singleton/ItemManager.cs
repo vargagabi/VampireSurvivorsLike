@@ -32,11 +32,14 @@ namespace VampireSurvivorsLike {
                 this.EquippedItemCount++;
             }
             this.itemNodes[itemIndex].Upgrade();
-            this.GetParent<Player>().Gui.SetItemOnHud(itemIndex, this.itemNodes[itemIndex].Icon, this.itemNodes[itemIndex].Level);
+            this.GetParent<Player>().Gui
+                .SetItemOnHud(itemIndex, this.itemNodes[itemIndex].Icon, this.itemNodes[itemIndex].Level);
 
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+                this.itemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
                 Rpc(nameof(this.PuppetEquipOrUpgradeItem), itemIndex);
             }
+
             // this.hud.SetItemLevel(this.equippedItems.FindIndex(i=>i.Equals(item)),item.Level);
         }
 
@@ -50,6 +53,7 @@ namespace VampireSurvivorsLike {
                 this.EquippedItemCount++;
             }
             this.itemNodes[itemIndex].Upgrade();
+            this.itemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetRpcSenderId());
         }
 
 

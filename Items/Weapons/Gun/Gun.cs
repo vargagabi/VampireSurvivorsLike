@@ -24,9 +24,11 @@ namespace VampireSurvivorsLike {
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            this.Counter++;
-            if (this.Counter % this.AttackSpeed == 0) {
-                this.Shoot();
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
+                this.Counter++;
+                if (this.Counter % this.AttackSpeed == 0) {
+                    this.Shoot();
+                }
             }
         }
 
@@ -43,7 +45,23 @@ namespace VampireSurvivorsLike {
                 bulletInst.Visible = true;
                 AddChild(bulletInst);
                 bulletInst.SetAsToplevel(true);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(Gun.PuppetShoot), bulletInst.Direction.Round(), bulletInst.GlobalPosition.Round());
+                }
             }
+        }
+
+        [Puppet]
+        public void PuppetShoot(Vector2 direction, Vector2 position) {
+                Bullet bulletInst = (Bullet)this.bullet.Instance();
+                bulletInst.Speed = this.bulletSpeed;
+                bulletInst.Piercing = this.piercing;
+                bulletInst.Damage = this.Damage;
+                bulletInst.Direction = direction;
+                bulletInst.GlobalPosition = position;
+                bulletInst.Visible = true;
+                AddChild(bulletInst);
+                bulletInst.SetAsToplevel(true);
         }
 
         public override void Upgrade() {

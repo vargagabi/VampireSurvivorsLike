@@ -25,7 +25,7 @@ namespace VampireSurvivorsLike {
             get => this.gameState;
             set {
                 this.gameState = value;
-                GD.Print($"Game state: {this.gameState}");
+                // GD.Print($"Game state: {this.gameState}");
             }
         }
 
