@@ -49,7 +49,6 @@ namespace VampireSurvivorsLike {
                                                (float)GD.RandRange(0, Mathf.Tau));
                     this.ySort.AddChild(enemy, true);
                     if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                        GD.Print("Master: " + enemy.Name);
                         Rpc(nameof(this.SpawnPuppetEnemy), i, enemy.GlobalPosition, enemy.Name);
                     }
                 }
@@ -64,7 +63,6 @@ namespace VampireSurvivorsLike {
             enemy.Name = name;
             enemy.GlobalPosition = globalPosition;
             this.ySort.AddChild(enemy, true);
-            GD.Print(enemy.Name);
         }
 
         public void OnTimerTimeout() {

@@ -12,6 +12,8 @@ namespace VampireSurvivorsLike {
         private Map map;
         private MobSpawner mobSpawner;
 
+        private bool isConfigurationFinished = false;
+
         [Signal] public delegate void OnGameWin();
 
         public override void _Ready() {
@@ -31,17 +33,30 @@ namespace VampireSurvivorsLike {
             this.map.AddPlayer(this.playerOne);
             this.mobSpawner.PlayerOne = this.playerOne;
             this.playerOne.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+            this.isConfigurationFinished = true;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
+                Rpc(nameof(this.ConfigurationFinished));
+            }
 
             // Connect(nameof(OnGameWin), this.GetNode("GUI"), "OnGameWon");
-            this.GetTree().Paused = false;
-            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
-            GD.Print(string.Join(", ", this.GetChildren()));
         }
 
+        [Remote]
+        public void ConfigurationFinished() {
+            if (this.isConfigurationFinished && this.GetTree().IsNetworkServer()) {
+                GD.Print("config node, send start signal");
+                Rpc(nameof(this.StartGame));
+            }
+        }
+
+        [RemoteSync]
+        public void StartGame() {
+            GD.Print("start game");
+            this.GetTree().Paused = false;
+        }
 
         private void ConfigureMultiplayer() {
-            this.GetTree().Paused = true;
-
             //Setup player two
             this.playerTwo = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
 

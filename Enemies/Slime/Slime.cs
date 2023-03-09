@@ -21,7 +21,8 @@ namespace VampireSurvivorsLike {
             this.Health = 10;
             this.Strength = 5;
             this.ExpValue = 1;
-            this.Speed = 50;
+            // this.Speed = 50;
+            this.Speed = 10;
             this.SpawnRate = 222;
             this.SpawnDistance = 500;
             this.SpawnTime = new Vector2(0f, 60f);

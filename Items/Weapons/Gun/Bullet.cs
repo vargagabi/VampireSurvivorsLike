@@ -13,9 +13,9 @@ namespace VampireSurvivorsLike {
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            this.Speed = 200;
+            // this.Speed = 200;
             this.Counter = 0;
-            this.LifeSpan = 500;
+            this.LifeSpan = 5000; // original 500
         }
 
         //  // Called every frame. 'delta' is the elapsed time since the previous frame.

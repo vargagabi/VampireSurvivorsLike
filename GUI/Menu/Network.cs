@@ -52,7 +52,7 @@ namespace VampireSurvivorsLike {
             this.GetTree().NetworkPeer.RefuseNewConnections = true;
             this.peers.Add(id.ToString());
             this.AddStatus(string.Join(", ", this.peers.ToArray()));
-            
+            this.GetTree().Paused = true;
             this.GetTree().ChangeScene("res://Main/Main.tscn");
             
             
@@ -70,6 +70,7 @@ namespace VampireSurvivorsLike {
         private void ConnectedOk() {
             GD.Print("Connected Ok...");
             this.AddStatus("Connected Ok...");
+            this.GetTree().Paused = true;
         }
 
         // Callback from SceneTree, only for clients (not server).
