@@ -19,8 +19,7 @@ namespace VampireSurvivorsLike {
         private PackedScene Gold { get; set; }
         protected AnimatedSprite AnimatedSprite { get; set; }
         private PackedScene DamageIndicator { get; set; }
-        public int spawnAfterMinute;
-
+        public int spawnAfterMinute = 0;
 
         protected Enemy() {
             this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ExpOrbs/ExpOrb.tscn");
@@ -34,6 +33,14 @@ namespace VampireSurvivorsLike {
             this.AnimatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
             this.AnimatedSprite.Connect("animation_finished", this, nameof(this.OnDeath));
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+                Timer timer = new Timer();
+                timer.OneShot = false;
+                timer.WaitTime = 3;
+                timer.Autostart = true;
+                timer.Connect("timeout", this, nameof(OnTimerTimeout));
+                this.AddChild(timer);
+            }
         }
 
         protected Vector2 GetTargetPosition() {
@@ -54,27 +61,27 @@ namespace VampireSurvivorsLike {
 
         [Puppet]
         protected void SetPuppetPosition(Vector2 globalPosition, int frame = 0) {
-            Vector2 velocity = (globalPosition - this.GlobalPosition).Normalized();
+            if (this.Health <= 0) {
+                return;
+            }
+            GD.Print($"puppet pos set {globalPosition}");
             this.GlobalPosition = globalPosition;
             this.AnimatedSprite.Frame = frame;
-            if (this.GetTargetPosition().DistanceTo(this.GlobalPosition) < 20) {
-                this.AnimationPlay(EnemyAnimationsEnum.Attack);
-            } else if (this.AnimatedSprite.Frame >= 2 && this.AnimatedSprite.Frame <= 4) {
-                this.AnimatedSprite.FlipH = velocity.x < 0;
-                this.AnimationPlay(EnemyAnimationsEnum.Walk);
-            }
         }
 
         protected void AnimationPlay(EnemyAnimationsEnum enemyAnimations) {
+            if (this.Health <= 0 && enemyAnimations != EnemyAnimationsEnum.Death) {
+                return;
+            }
             this.AnimatedSprite.Play(enemyAnimations.ToString());
         }
 
         public void OnDeath() {
             if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
                 this.QueueFree();
-                Node2D expOrb = this.ExpOrb.Instance<Node2D>();
+                ExpOrb expOrb = this.ExpOrb.Instance<ExpOrb>();
                 expOrb.GlobalPosition = this.GlobalPosition;
-                expOrb.Set("Experience", this.ExpValue);
+                expOrb.Experience = this.ExpValue;
                 Node viewport = this.GetTree().Root.GetNode("Main");
                 viewport.CallDeferred("add_child", expOrb);
                 if (true) {
@@ -91,21 +98,54 @@ namespace VampireSurvivorsLike {
          * instance of an ExpOrb at its place.
          */
         public void OnHit(float damage, Weapon weapon) {
-            if (this.Health <= 0) {
-                return;
-            }
-            FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
-            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
-            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
-
-            this.Health -= damage;
-            if (this.Health <= 0) {
-                if (weapon is Aura aura) {
-                    this.ExpValue += this.ExpValue * aura.BonusExperience;
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster() && this.Health > 0) {
+                if (this.Health <= 0) {
+                    return;
                 }
-                this.CollisionMask = 0;
-                this.AnimationPlay(EnemyAnimationsEnum.Death);
+                FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
+                damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
+                this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(this.PuppetOnHit), (int)damage);
+                }
+
+                this.Health -= damage;
+                if (this.Health <= 0) {
+                    if (weapon is Aura aura) {
+                        this.ExpValue += this.ExpValue * aura.BonusExperience;
+                    }
+                    this.CollisionMask = 0;
+                    this.AnimationPlay(EnemyAnimationsEnum.Death);
+                    if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                        Rpc(nameof(this.PuppetOnDeath), this.ExpValue, this.GlobalPosition);
+                    }
+                }
             }
+        }
+
+        [Puppet]
+        public void PuppetOnHit(int damage) {
+            FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
+            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage);
+            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+        }
+
+        [Puppet]
+        public void PuppetOnDeath(float bonusExp, Vector2 position) {
+            this.Health = 0;
+            if (this.GlobalPosition != position) {
+                GD.Print("Pos not same-----------------------");
+            }
+            if (this.ExpValue != bonusExp) {
+                GD.Print("exp not same -------------------");
+            }
+            this.GlobalPosition = position;
+            this.ExpValue = bonusExp;
+            this.AnimationPlay(EnemyAnimationsEnum.Death);
+        }
+
+        public void OnTimerTimeout() {
+            Rpc(nameof(this.SetPuppetPosition), this.GlobalPosition, this.AnimatedSprite.Frame);
         }
 
     }

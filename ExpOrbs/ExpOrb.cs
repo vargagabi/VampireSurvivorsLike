@@ -5,7 +5,7 @@ namespace VampireSurvivorsLike {
 
     public class ExpOrb : Node2D {
 
-        private float Experience { get; set; }
+        public float Experience { get; set; }
         private AnimationPlayer animationPlayer;
         private Node2D player;
         private bool isMoving = false;

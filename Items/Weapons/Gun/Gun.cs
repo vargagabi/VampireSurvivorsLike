@@ -8,6 +8,7 @@ namespace VampireSurvivorsLike {
         private PackedScene bullet;
         private int piercing = 1;
         private float bulletSpeed = 20; // original 200
+        private uint bulletsShot = 0;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
@@ -35,7 +36,9 @@ namespace VampireSurvivorsLike {
         private void Shoot() {
             for (int i = 0; i < this.NumberOfBullets; i++) {
                 Bullet bulletInst = (Bullet)this.bullet.Instance();
+                bulletInst.SetNetworkMaster(this.GetParent().GetNetworkMaster());
                 bulletInst.Speed = this.bulletSpeed;
+                bulletInst.Name = this.GetParent().Name + this.bulletsShot++;
                 bulletInst.Piercing = this.piercing;
                 bulletInst.Damage = this.Damage;
                 bulletInst.Direction = ((Vector2)this.player.Get("Direction"))
@@ -43,25 +46,28 @@ namespace VampireSurvivorsLike {
                 bulletInst.GlobalPosition =
                     this.player.GlobalPosition + ((Vector2)this.player.Get("Direction")).Normalized() * 10;
                 bulletInst.Visible = true;
-                AddChild(bulletInst);
+                AddChild(bulletInst, true);
                 bulletInst.SetAsToplevel(true);
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(Gun.PuppetShoot), bulletInst.Direction.Round(), bulletInst.GlobalPosition.Round());
+                    Rpc(nameof(Gun.PuppetShoot), bulletInst.Direction, bulletInst.GlobalPosition, bulletInst.Name);
                 }
             }
         }
 
         [Puppet]
-        public void PuppetShoot(Vector2 direction, Vector2 position) {
-                Bullet bulletInst = (Bullet)this.bullet.Instance();
-                bulletInst.Speed = this.bulletSpeed;
-                bulletInst.Piercing = this.piercing;
-                bulletInst.Damage = this.Damage;
-                bulletInst.Direction = direction;
-                bulletInst.GlobalPosition = position;
-                bulletInst.Visible = true;
-                AddChild(bulletInst);
-                bulletInst.SetAsToplevel(true);
+        public void PuppetShoot(Vector2 direction, Vector2 position, string name) {
+            Bullet bulletInst = (Bullet)this.bullet.Instance();
+            bulletInst.SetNetworkMaster(this.GetParent().GetNetworkMaster());
+            bulletInst.Speed = this.bulletSpeed;
+            bulletInst.Modulate = new Color(0, 0, 1f);
+            bulletInst.Name = name;
+            bulletInst.Piercing = this.piercing;
+            bulletInst.Damage = this.Damage;
+            bulletInst.Direction = direction;
+            bulletInst.GlobalPosition = position;
+            bulletInst.Visible = true;
+            AddChild(bulletInst, true);
+            bulletInst.SetAsToplevel(true);
         }
 
         public override void Upgrade() {

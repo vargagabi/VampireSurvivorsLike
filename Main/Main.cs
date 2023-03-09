@@ -5,10 +5,10 @@ namespace VampireSurvivorsLike {
 
     public class Main : Node2D {
 
-        private const int GameTimeInMinutes = 20;
+        private const int GameTimeInMinutes = 200;
         private int minutesPassed = 0;
         private Player playerOne;
-        private Player playerTwo;
+        public Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;
 

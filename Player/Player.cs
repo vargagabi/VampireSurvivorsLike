@@ -61,7 +61,16 @@ namespace VampireSurvivorsLike {
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.itemManager.EquipOrUpgradeItem(0);
-            } 
+            }
+            if (!this.GetTree().IsNetworkServer()) {
+                if (this.IsNetworkMaster()) {
+                    GetNode<Camera2D>("Camera2D").Current = false;
+                    GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
+                } else {
+                    GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
+                }
+            }
+
             //
             // AttributeManagerSingleton.Instance.SetPickupArea(
             //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
