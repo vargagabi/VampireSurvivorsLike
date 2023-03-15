@@ -16,6 +16,7 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("HUD Ready...");
+
             // ItemManagerSingleton.Instance.Hud = this;
             this.ElapsedTime = 0;
             this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
@@ -35,13 +36,20 @@ namespace VampireSurvivorsLike {
         }
 
         public void SetItem(int index, Texture icon, int level) {
-            Control itemFrame = this.ItemControl.GetChild<Control>(index);
-            TextureRect iconTexture = itemFrame.GetChild<TextureRect>(1);
-            if (iconTexture.Texture == null) {
-                iconTexture.Texture = icon;
+            //Not new  item
+            foreach (Control frame in this.ItemControl.GetChildren()) {
+                if (frame.GetChild<TextureRect>(1).Texture != null &&
+                    frame.GetChild<TextureRect>(1).Texture.Equals(icon)) {
+                    frame.GetChild<Label>(2).Text = level.ToString();
+                    return;
+                }
             }
+
+            //New item
+            Control itemFrame = this.ItemControl.GetChild<Control>(this.nextEmpyItemFrame++);
+            TextureRect iconTexture = itemFrame.GetChild<TextureRect>(1);
+            iconTexture.Texture = icon;
             itemFrame.GetChild<Label>(2).Text = level.ToString();
-            
         }
 
         public void SetItemLevel(int index, int level) {
@@ -59,7 +67,7 @@ namespace VampireSurvivorsLike {
 
         private void IncreaseLevel(int? value) {
             // this.LevelNumber.Text =
-                // value == null ? (int.Parse(this.LevelNumber.Text) + 1).ToString() : value.ToString();
+            // value == null ? (int.Parse(this.LevelNumber.Text) + 1).ToString() : value.ToString();
         }
 
         public void OnRewardSelected(int index) {

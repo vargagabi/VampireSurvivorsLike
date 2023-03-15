@@ -63,12 +63,12 @@ namespace VampireSurvivorsLike {
                     if (groundTile != TileMap.InvalidCell) continue;
 
                     //Places the grass, flowers etc. tiles
-                    if (groundNoiseValue > 0.2 && otherNoiseValue > 0) {
+                    if (groundNoiseValue > 0.2 && otherNoiseValue > 0 && this.tree.GetCell(posX, posY) == -1) {
                         this.tree.SetCell(posX, posY, (int)GD.RandRange(0, 3));
                     }
                     this.ground.SetCell(posX, posY, 0, false, false, false,
                         new Vector2((int)GD.RandRange(0, 8), (int)GD.RandRange(0, 4)));
-                    if (otherNoiseValue > 0.40 && otherNoiseValue < 0.42) {
+                    if (otherNoiseValue > 0.40 && otherNoiseValue < 0.42 && this.props.GetCell(posX, posY) == -1) {
                         this.props.SetCell(posX, posY, (int)((otherNoiseValue * groundNoiseValue + 1) * 7));
                     }
                 }
