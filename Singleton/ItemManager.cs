@@ -11,32 +11,32 @@ namespace VampireSurvivorsLike {
             ResourceLoader.Load<PackedScene>("res://Items/Weapons/Aura/Aura.tscn"),
             ResourceLoader.Load<PackedScene>("res://Items/Weapons/FireRing/FireRing.tscn")
         };
-        private readonly List<Item> itemNodes = new List<Item>();
+        public List<Item> ItemNodes { get; } = new List<Item>();
         private const int maximumItemCount = 6;
         public int EquippedItemCount { get; set; }
 
         public override void _Ready() {
-            this.itemNodes.Clear();
+            this.ItemNodes.Clear();
             this.EquippedItemCount = 0;
             foreach (PackedScene scene in this.allItems) {
-                this.itemNodes.Add(scene.Instance<Item>());
+                this.ItemNodes.Add(scene.Instance<Item>());
             }
         }
 
         public void EquipOrUpgradeItem(int itemIndex) {
-            if (maximumItemCount <= this.itemNodes.Count) {
+            if (maximumItemCount <= this.ItemNodes.Count) {
                 return;
             }
-            if (!this.GetChildren().Contains(this.itemNodes[itemIndex])) {
-                this.AddChild(this.itemNodes[itemIndex]);
+            if (!this.GetChildren().Contains(this.ItemNodes[itemIndex])) {
+                this.AddChild(this.ItemNodes[itemIndex]);
                 this.EquippedItemCount++;
             }
-            this.itemNodes[itemIndex].Upgrade();
+            this.ItemNodes[itemIndex].Upgrade();
             this.GetParent<Player>().Gui
-                .SetItemOnHud(itemIndex, this.itemNodes[itemIndex].Icon, this.itemNodes[itemIndex].Level);
+                .SetItemOnHud(itemIndex, this.ItemNodes[itemIndex].Icon, this.ItemNodes[itemIndex].Level);
 
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
-                this.itemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
+                this.ItemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
                 Rpc(nameof(this.PuppetEquipOrUpgradeItem), itemIndex);
             }
 
@@ -45,15 +45,15 @@ namespace VampireSurvivorsLike {
 
         [Puppet]
         public void PuppetEquipOrUpgradeItem(int itemIndex) {
-            if (maximumItemCount <= this.itemNodes.Count) {
+            if (maximumItemCount <= this.ItemNodes.Count) {
                 return;
             }
-            if (!this.GetChildren().Contains(this.itemNodes[itemIndex])) {
-                this.AddChild(this.itemNodes[itemIndex]);
+            if (!this.GetChildren().Contains(this.ItemNodes[itemIndex])) {
+                this.AddChild(this.ItemNodes[itemIndex]);
                 this.EquippedItemCount++;
             }
-            this.itemNodes[itemIndex].Upgrade();
-            this.itemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetRpcSenderId());
+            this.ItemNodes[itemIndex].Upgrade();
+            this.ItemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetRpcSenderId());
         }
 
 

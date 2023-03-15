@@ -26,12 +26,13 @@ namespace VampireSurvivorsLike {
         private CircleShape2D pickupArea;
         private Texture[] textures = new Texture[3];
         private Sprite directionArrow;
-        private PackedScene FloatingValue { get; set; }
+
+        // private PackedScene FloatingValue { get; set; }
         private GUI gui;
         public int Gold { get; private set; } = 0;
         public int EnemiesDefeated { get; private set; } = 0;
         public bool IsDead { get; private set; } = false;
-        private ItemManager itemManager;
+        public ItemManager ItemManager { get; private set; }
 
         public GUI Gui {
             get => this.gui;
@@ -52,14 +53,15 @@ namespace VampireSurvivorsLike {
             this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
             this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
-            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
+
+            // this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
             this.directionArrow = this.GetNode<Sprite>("Arrow");
             GetNode<Label>("Label").Text = this.Name;
-            this.itemManager = GetNode<ItemManager>("ItemManager");
+            this.ItemManager = GetNode<ItemManager>("ItemManager");
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.itemManager.EquipOrUpgradeItem(1);
-                this.itemManager.EquipOrUpgradeItem(0);
+                this.ItemManager.EquipOrUpgradeItem(1);
+                this.ItemManager.EquipOrUpgradeItem(0);
 
                 //Set hud initial values
                 this.gui.SetCurrentHealth(this.currentHealth);
@@ -84,22 +86,20 @@ namespace VampireSurvivorsLike {
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.Move();
-
-                if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
-                    //Update puppets
-                    RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
-                }
-                if (this.takenDamageValue > 0 && !this.IsDead) {
-                    this.TakeDamage();
-                }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
             }
-
-
-            // if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
-            //     this.PassiveHeal();
-            // }
+            this.Move();
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+                //Update puppets
+                this.RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
+            }
+            if (this.takenDamageValue > 0 && !this.IsDead) {
+                this.TakeDamage();
+            }
+            if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
+                this.PassiveHeal();
+            }
         }
 
         /*
@@ -175,8 +175,7 @@ namespace VampireSurvivorsLike {
         private void TakeDamage() {
             this.damageCounter++;
             if (this.damageCounter % ImmunityTime == 0) {
-                FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
-                damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
+                FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
                     (int)this.takenDamageValue, this.GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
@@ -207,8 +206,7 @@ namespace VampireSurvivorsLike {
 
         [Puppet]
         public void PuppetTakeDamage(float damage, int currentHealth) {
-            FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
-            damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
+            FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
                 this.GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealth();
@@ -219,18 +217,31 @@ namespace VampireSurvivorsLike {
          * the MaxHealth is higher than the CurrentHealth.
          */
         private void PassiveHeal() {
-            // this.healthCounter++;
-            // if (this.healthCounter % PassiveHealTime == 0) {
-            //     FloatingValue healingInd = this.FloatingValue.Instance<FloatingValue>();
-            //     healingInd.SetValues(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f, 1f),
-            //         (int)AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue());
-            //     this.GetTree().Root.GetNode("Main").CallDeferred("add_child", healingInd);
-            //     this.healthCounter = 0;
-            //     this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
-            //         AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
-            //     this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
-            //     this.UpdateHealth();
-            // }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            this.healthCounter++;
+            if (this.healthCounter % PassiveHealTime != 0) {
+                return;
+            }
+            this.healthCounter = 0;
+            FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f),
+                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent());
+            this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
+                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
+            this.UpdateHealth();
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                Rpc(nameof(this.PuppetPassiveHeal), AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(),
+                    this.currentHealth);
+            }
+        }
+
+        [Puppet]
+        public void PuppetPassiveHeal(int healingValue, int currentHealth) {
+            FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f), healingValue,
+                this.GetParent());
+            this.currentHealth = currentHealth;
+            this.UpdateHealth();
         }
 
         /*

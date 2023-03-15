@@ -15,6 +15,7 @@ namespace VampireSurvivorsLike {
         private List<object> GeneratedRewards { get; set; }
         public bool CurrentlyRewardSelecting { get; private set; }
         private bool IsRewardSelected { get; set; } = false;
+        public Player Player { get; set; }
 
         public EventWaitHandle eventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
@@ -28,38 +29,35 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        private void Init() {
-        }
-
         public async Task OnLevelUp(int numberOfLevelUps) {
-            this.CurrentlyRewardSelecting = true;
-
-            for (int i = 0; i < numberOfLevelUps; i++) {
-                this.IsRewardSelected = false;
-                this.GeneratedRewards = this.GenerateRewards();
-                while (!this.IsRewardSelected) {
-                    await Task.Delay(250);
-                }
-            }
-
-
-            this.CurrentlyRewardSelecting = false;
+            // this.CurrentlyRewardSelecting = true;
+            //
+            // for (int i = 0; i < numberOfLevelUps; i++) {
+            //     this.IsRewardSelected = false;
+            //     this.GeneratedRewards = this.GenerateRewards();
+            //     while (!this.IsRewardSelected) {
+            //         await Task.Delay(250);
+            //     }
+            // }
+            //
+            //
+            // this.CurrentlyRewardSelecting = false;
         }
 
         private List<object> GenerateRewards() {
-            List<object> possibleRewards = new List<object>();
-            // possibleRewards.AddRange(ItemManagerSingleton.Instance.GetEquippedItems()
+            // List<object> possibleRewards = new List<object>();
+
+            // possibleRewards.AddRange(this.Player.ItemManager.ItemNodes
                 // .Where(item => item.Level < item.MaxLevel).Select(item => item));
-            // possibleRewards.AddRange(ItemManagerSingleton.Instance.GetUnequippedItems());
             // possibleRewards.AddRange(AttributeManagerSingleton.Instance.GetAttributes());
 
             List<object> rewards = new List<object>();
-            for (int i = 0; i < this.numberOfRewards; i++) {
-                int index = (int)GD.RandRange(0, possibleRewards.Count);
-                rewards.Add(possibleRewards[index]);
-                possibleRewards.RemoveAt(index);
-            }
-            this.LevelUpScreen.SetRewards(rewards);
+            // for (int i = 0; i < this.numberOfRewards; i++) {
+            //     int index = (int)GD.RandRange(0, possibleRewards.Count);
+            //     rewards.Add(possibleRewards[index]);
+            //     possibleRewards.RemoveAt(index);
+            // }
+            // this.LevelUpScreen.SetRewards(rewards);
             return rewards;
         }
 

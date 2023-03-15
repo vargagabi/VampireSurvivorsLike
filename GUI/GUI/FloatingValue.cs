@@ -24,13 +24,16 @@ namespace VampireSurvivorsLike {
             this.tween.Start();
         }
 
-        public void CreateFloatingValue(Vector2 position, Color color, int amount, Node parent) {
-            this.color = color;
-            this.amount = amount;
+        public static void CreateFloatingValue(Vector2 position, Color color, int amount, Node parent) {
+            FloatingValue floatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn")
+                .Instance<FloatingValue>();
+            floatingValue.color = color;
+            floatingValue.amount = amount;
             position.y -= 20;
-            this.GlobalPosition = position;
-            parent.CallDeferred("add_child", this);
+            floatingValue.GlobalPosition = position;
+            parent.CallDeferred("add_child", floatingValue);
         }
+
 
         public void TweenCompleted() {
             CallDeferred("queue_free");

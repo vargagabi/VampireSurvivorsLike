@@ -25,6 +25,7 @@ namespace VampireSurvivorsLike {
             this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
             this.playerOne.Gui = ResourceLoader.Load<PackedScene>("res://GUI/GUI/GUI.tscn").Instance<GUI>();
             this.playerOne.Name = "Player";
+            LevelUpManagerSingleton.Instance.Player = this.playerOne;
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.GetTree().NetworkPeer != null) {
                 GD.Print("hello three inside");
                 this.ConfigureMultiplayer();

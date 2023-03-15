@@ -120,8 +120,7 @@ namespace VampireSurvivorsLike {
         }
 
         private void ShowDamage(int damage) {
-            FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
-            damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage,
+            FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage,
                 this.GetParent().GetParent());
         }
 
