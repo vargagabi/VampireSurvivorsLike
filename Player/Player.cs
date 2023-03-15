@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
+using VampireSurvivorsLike.ItemDrops;
 using Thread = System.Threading.Thread;
 
 namespace VampireSurvivorsLike {
@@ -62,7 +63,7 @@ namespace VampireSurvivorsLike {
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.itemManager.EquipOrUpgradeItem(0);
             }
-            if (!this.GetTree().IsNetworkServer()) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 if (this.IsNetworkMaster()) {
                     GetNode<Camera2D>("Camera2D").Current = false;
                     GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
@@ -295,7 +296,8 @@ namespace VampireSurvivorsLike {
          * After picking up an ExpOrb the xp of the orb is added to the player's xp.
          * Refreshes the xp using [CurrentExperience]
          */
-        public void OnPickUp(float exp) {
+        public void OnPickedUp(int value, ItemDropsEnum type) {
+            GD.Print($"Pick up {type} : {value}");
             // this.experience += exp;
             // this.CheckLevelUp();
         }

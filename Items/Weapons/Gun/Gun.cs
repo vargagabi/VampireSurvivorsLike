@@ -7,7 +7,7 @@ namespace VampireSurvivorsLike {
         private int NumberOfBullets { get; set; }
         private PackedScene bullet;
         private int piercing = 1;
-        private float bulletSpeed = 20; // original 200
+        private float bulletSpeed = 200;
         private uint bulletsShot = 0;
 
         // Called when the node enters the scene tree for the first time.

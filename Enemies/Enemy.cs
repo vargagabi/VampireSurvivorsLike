@@ -1,5 +1,6 @@
 ﻿using System;
 using Godot;
+using VampireSurvivorsLike.ItemDrops;
 
 namespace VampireSurvivorsLike {
 
@@ -8,7 +9,7 @@ namespace VampireSurvivorsLike {
         public static int mobCount = 0;
         protected float Health { get; set; }
         protected float Strength { get; set; }
-        protected float ExpValue { get; set; }
+        protected int ExpValue { get; set; }
         protected float Speed { get; set; }
         public int SpawnRate { get; set; }
         public float SpawnDistance { get; set; }
@@ -22,8 +23,8 @@ namespace VampireSurvivorsLike {
         public int spawnAfterMinute = 0;
 
         protected Enemy() {
-            this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ExpOrbs/ExpOrb.tscn");
-            this.Gold = ResourceLoader.Load<PackedScene>("res://Gold/Gold.tscn");
+            this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ItemDrops/ExpOrbs/ExpOrb.tscn");
+            this.Gold = ResourceLoader.Load<PackedScene>("res://ItemDrops/Gold/Gold.tscn");
             this.DamageIndicator = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
         }
 
@@ -79,16 +80,21 @@ namespace VampireSurvivorsLike {
         public void OnDeath() {
             if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
                 this.QueueFree();
-                ExpOrb expOrb = this.ExpOrb.Instance<ExpOrb>();
-                expOrb.GlobalPosition = this.GlobalPosition;
-                expOrb.Experience = this.ExpValue;
-                Node viewport = this.GetTree().Root.GetNode("Main");
-                viewport.CallDeferred("add_child", expOrb);
-                if (true) {
-                    Node2D gold = this.Gold.Instance<Node2D>();
-                    gold.GlobalPosition = this.GlobalPosition;
-                    viewport.CallDeferred("add_child", gold);
-                }
+                ItemDropManager.Instance.CreateExperienceOrb(this.ExpValue, this.GlobalPosition);
+                ItemDropManager.Instance.CreateGold(this.ExpValue, this.GlobalPosition);
+
+                // ExpOrb expOrb = new ExpOrb(this.GlobalPosition, this.GetTree().Root.GetNode("Main"));
+
+                // ExpOrb expOrb = this.ExpOrb.Instance<ExpOrb>();
+                // expOrb.GlobalPosition = this.GlobalPosition;
+                // expOrb.Experience = this.ExpValue;
+                // Node viewport = this.GetTree().Root.GetNode("Main");
+                // viewport.CallDeferred("add_child", expOrb);
+                // if (true) {
+                // Node2D gold = this.Gold.Instance<Node2D>();
+                // gold.GlobalPosition = this.GlobalPosition;
+                // viewport.CallDeferred("add_child", gold);
+                // }
             }
         }
 
@@ -112,7 +118,7 @@ namespace VampireSurvivorsLike {
                 this.Health -= damage;
                 if (this.Health <= 0) {
                     if (weapon is Aura aura) {
-                        this.ExpValue += this.ExpValue * aura.BonusExperience;
+                        this.ExpValue += (int)(this.ExpValue * aura.BonusExperience);
                     }
                     this.CollisionMask = 0;
                     this.AnimationPlay(EnemyAnimationsEnum.Death);
@@ -131,7 +137,7 @@ namespace VampireSurvivorsLike {
         }
 
         [Puppet]
-        public void PuppetOnDeath(float bonusExp, Vector2 position) {
+        public void PuppetOnDeath(int bonusExp, Vector2 position) {
             this.Health = 0;
             if (this.GlobalPosition != position) {
                 GD.Print("Pos not same-----------------------");

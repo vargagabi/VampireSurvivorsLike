@@ -18,6 +18,7 @@ config/icon="res://icon.png"
 
 AttributeManager="*res://Singleton/AttributeManagerSingleton.cs"
 AudioPlayer="*res://Audio/AudioPlayer.tscn"
+ItemDropManager="*res://ItemDrops/ItemDropManager.cs"
 
 [debug]
 
