@@ -148,7 +148,7 @@ namespace VampireSurvivorsLike {
          * Change the health bar color according to its value
          */
         private void UpdateHealth() {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.Gui.SetCurrentHealth(this.currentHealth);
             }
             this.healthBar.Value =
@@ -244,30 +244,6 @@ namespace VampireSurvivorsLike {
             this.UpdateHealth();
         }
 
-        /*
-         * When an enemy overlaps with the player, the Strength value of the enemy is added to the TakenDamageValue field.
-         * This field's value is then subtracted from the player's health, thus hurting the player.
-         */
-        public void OnBodyEntered(Node body) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
-                return;
-            }
-            if (body is Enemy enemy) {
-                this.takenDamageValue += enemy.Strength;
-            }
-        }
-
-        /*
-         * When an enemy leave the player, its Strength value is subtracted from the TakenDamageValue field.
-         */
-        public void OnBodyExited(Node body) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
-                return;
-            }
-            if (body is Enemy enemy) {
-                this.takenDamageValue -= enemy.Strength;
-            }
-        }
 
         /*
          * This method checks if a new level is reached. If the Player gains enough experience to level multiple
@@ -276,26 +252,26 @@ namespace VampireSurvivorsLike {
          * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
          */
         private async void CheckLevelUp() {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
-                return;
-            }
-            if (this.ExpToLvl(this.experience) > this.currentLevel) {
-                int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer) {
+                if (this.ExpToLvl(this.experience) > this.currentLevel) {
+                    int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
 
-                // GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
-                // this.GetTree().Paused = true;
-                //
-                // await LevelUpManagerSingleton.Instance.OnLevelUp(levelIncrease);
-                this.currentLevel += levelIncrease;
+                    GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+                    this.GetTree().Paused = true;
 
-                //
-                // this.GetTree().Paused = false;
-                // GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
-                this.gui.SetCurrentLevel(this.currentLevel);
+                    await LevelUpManagerSingleton.Instance.OnSinglePlayerLevelUp(levelIncrease);
+                    this.currentLevel += levelIncrease;
+
+                    this.GetTree().Paused = false;
+                    GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+                    this.gui.SetCurrentLevel(this.currentLevel);
+                }
+                int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
+                                              (this.LvlToExp(this.currentLevel + 1) -
+                                               this.LvlToExp(this.currentLevel)));
+                this.gui.SetCurrentExperience(currentExpInLevel);
+            } else {
             }
-            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
-                                          (this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel)));
-            this.gui.SetCurrentExperience(currentExpInLevel);
         }
 
         /*
@@ -326,6 +302,31 @@ namespace VampireSurvivorsLike {
             } else if (type.Equals(ItemDropsEnum.Gold)) {
                 this.Gold += value;
                 this.gui.SetGoldCount(this.Gold);
+            }
+        }
+
+        /*
+         * When an enemy overlaps with the player, the Strength value of the enemy is added to the TakenDamageValue field.
+         * This field's value is then subtracted from the player's health, thus hurting the player.
+         */
+        public void OnBodyEntered(Node body) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.takenDamageValue += enemy.Strength;
+            }
+        }
+
+        /*
+         * When an enemy leave the player, its Strength value is subtracted from the TakenDamageValue field.
+         */
+        public void OnBodyExited(Node body) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.takenDamageValue -= enemy.Strength;
             }
         }
 

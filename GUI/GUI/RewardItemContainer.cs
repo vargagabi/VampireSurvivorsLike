@@ -21,7 +21,6 @@ namespace VampireSurvivorsLike {
             this.Index = index;
             this.button.Icon = icon;
             this.label.Text = text;
-            Connect(nameof(ButtonPressed), GetNode<HUD>("/root/Main/GUI/Control/HUD"), "OnRewardSelected");
             Connect(nameof(ButtonPressed), receiver, nameof(receiver.OnRewardSelected));
         }
 

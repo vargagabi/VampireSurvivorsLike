@@ -22,8 +22,8 @@ namespace VampireSurvivorsLike {
             this.gameFinishedScreen.GameFinished(victory, enemiesDefeated, gold);
         }
 
-        public void SetItemOnHud(int index, Texture icon, int level) {
-            this.hud.SetItem(index, icon, level);
+        public void SetItemOnHud(Texture icon, int level) {
+            this.hud.SetItem(icon, level);
         }
 
         /*
@@ -32,12 +32,6 @@ namespace VampireSurvivorsLike {
          */
         public void SetCurrentHealth(int currentHealth) {
             this.hud.SetHealthLabel(currentHealth);
-            GD.Print(currentHealth);
-
-            // if (currentHealth <= 0) {
-            // this.gameOverScreen.SetScoreLabel(this.hud.ElapsedTime);
-            //     this.pauseScreen.IsPlaying = false;
-            // }
         }
 
         public void SetCurrentExperience(int percent) {

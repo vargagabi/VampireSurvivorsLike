@@ -19,23 +19,15 @@ namespace VampireSurvivorsLike {
             this.ItemContainer = GetNode<Control>("VBoxContainer/RewardList");
         }
 
-        public void OnVisibilityChanged() {
-            if (this.Visible) {
-                this.ItemContainer.GetChild<RewardItemContainer>(this.InFocus).GetChild<Button>(0).GrabFocus();
-            } else {
-                this.InFocus = this.GetFocusOwner().GetParent().GetIndex();
-            }
-        }
-
         public void SetRewards(List<object> options) {
             this.InFocus = 0;
             for (int i = 0; i < options.Count; i++) {
-                createItemContainer(options[i], i);
+                this.CreateItemContainer(options[i], i);
             }
             this.ChangeVisibility();
         }
 
-        private void createItemContainer(object option, int index) {
+        private void CreateItemContainer(object option, int index) {
             RewardItemContainer container = ResourceLoader.Load<PackedScene>("res://GUI/GUI/RewardItemContainer.tscn")
                 .Instance<RewardItemContainer>();
             this.ItemContainer.AddChild(container);
@@ -57,6 +49,14 @@ namespace VampireSurvivorsLike {
             }
             LevelUpManagerSingleton.Instance.OnRewardSelected(index);
             this.ChangeVisibility();
+        }
+
+        public void OnVisibilityChanged() {
+            if (this.Visible) {
+                this.ItemContainer.GetChild<RewardItemContainer>(this.InFocus).GetChild<Button>(0).GrabFocus();
+            } else {
+                this.InFocus = this.GetFocusOwner().GetParent().GetIndex();
+            }
         }
 
     }

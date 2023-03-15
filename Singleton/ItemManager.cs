@@ -18,8 +18,9 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             this.ItemNodes.Clear();
             this.EquippedItemCount = 0;
-            foreach (PackedScene scene in this.allItems) {
-                this.ItemNodes.Add(scene.Instance<Item>());
+            for (int i = 0; i < this.allItems.Count; i++) {
+                this.ItemNodes.Add(this.allItems[i].Instance<Item>());
+                this.ItemNodes[i].Id = i;
             }
         }
 
@@ -33,7 +34,7 @@ namespace VampireSurvivorsLike {
             }
             this.ItemNodes[itemIndex].Upgrade();
             this.GetParent<Player>().Gui
-                .SetItemOnHud(itemIndex, this.ItemNodes[itemIndex].Icon, this.ItemNodes[itemIndex].Level);
+                .SetItemOnHud(this.ItemNodes[itemIndex].Icon, this.ItemNodes[itemIndex].Level);
 
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
                 this.ItemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
@@ -54,11 +55,6 @@ namespace VampireSurvivorsLike {
             }
             this.ItemNodes[itemIndex].Upgrade();
             this.ItemNodes[itemIndex].SetNetworkMaster(this.GetTree().GetRpcSenderId());
-        }
-
-
-        public Array GetEquippedItems() {
-            return this.GetChildren();
         }
 
     }

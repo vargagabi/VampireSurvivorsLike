@@ -80,7 +80,7 @@ namespace VampireSurvivorsLike {
             if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
                 this.QueueFree();
                 ItemDropManager.Instance.CreateExperienceOrb(this.ExpValue, this.GlobalPosition);
-                ItemDropManager.Instance.CreateGold(this.ExpValue, this.GlobalPosition);
+                ItemDropManager.Instance.CreateGold(new Random().Next(1, 10), this.GlobalPosition);
             }
         }
 

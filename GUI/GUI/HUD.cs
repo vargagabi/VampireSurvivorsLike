@@ -38,7 +38,7 @@ namespace VampireSurvivorsLike {
             this.timeLabel.Text = TimeSpan.FromSeconds(this.ElapsedTime).ToString("hh':'mm':'ss");
         }
 
-        public void SetItem(int index, Texture icon, int level) {
+        public void SetItem(Texture icon, int level) {
             //Not new  item
             foreach (Control frame in this.ItemControl.GetChildren()) {
                 if (frame.GetChild<TextureRect>(1).Texture != null &&
