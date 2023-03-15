@@ -8,8 +8,6 @@ namespace VampireSurvivorsLike {
         private PauseScreen pauseScreen;
         private GameFinishedScreen gameFinishedScreen;
 
-        private int gold = 0;
-
         [Signal] public delegate void RewardSelected(int index);
 
         // Called when the node enters the scene tree for the first time.
@@ -42,13 +40,16 @@ namespace VampireSurvivorsLike {
             // }
         }
 
-        public void OnExperienceEarned(int percent) {
-            // this.hud.SetExpBar(percent);
+        public void SetCurrentExperience(int percent) {
+            this.hud.SetExpBar(percent);
         }
 
-        public void OnGoldPickedUp(int value) {
-            // this.gold += value;
-            // this.hud.SetGold(this.gold);
+        public void SetCurrentLevel(int level) {
+            this.hud.SetLevel(level);
+        }
+
+        public void SetGoldCount(int value) {
+            this.hud.SetGold(value);
         }
 
         public void OnGameWon() {

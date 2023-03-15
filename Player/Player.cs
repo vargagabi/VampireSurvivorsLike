@@ -28,8 +28,8 @@ namespace VampireSurvivorsLike {
         private Sprite directionArrow;
         private PackedScene FloatingValue { get; set; }
         private GUI gui;
-        public int Gold { get; private set; } = 11;
-        public int EnemiesDefeated { get; private set; } = 22;
+        public int Gold { get; private set; } = 0;
+        public int EnemiesDefeated { get; private set; } = 0;
         public bool IsDead { get; private set; } = false;
         private ItemManager itemManager;
 
@@ -41,8 +41,6 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        [Signal] public delegate void CurrentExperience(float exp, int level);
-        [Signal] public delegate void ExperienceInPercent(int percent);
         [Signal] public delegate void OnPlayerDeath();
 
         public override void _Ready() {
@@ -63,10 +61,14 @@ namespace VampireSurvivorsLike {
                 this.itemManager.EquipOrUpgradeItem(1);
                 this.itemManager.EquipOrUpgradeItem(0);
 
-                //Emit signals to set the HUD health and level bars
-                // this.EmitSignal(nameof(HealthChange), this.currentHealth);
+                //Set hud initial values
                 this.gui.SetCurrentHealth(this.currentHealth);
-                this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
+                this.gui.SetCurrentExperience(0);
+                this.gui.SetCurrentLevel(0);
+                this.gui.SetGoldCount(0);
+
+                AttributeManagerSingleton.Instance.SetPickupArea(
+                    this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
             }
 
             //JUST FOR TESTING, REMOVE LATER: THIS FOLLOWS THE HOST PLAYER ON BOTH GAME INSTANCES
@@ -78,9 +80,6 @@ namespace VampireSurvivorsLike {
                     GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
                 }
             }
-
-            // AttributeManagerSingleton.Instance.SetPickupArea(
-            //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -148,11 +147,13 @@ namespace VampireSurvivorsLike {
          * Update the health bar depending on the current health
          * Change the health bar color according to its value
          */
-        private void UpdateHealthBar() {
+        private void UpdateHealth() {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
+                this.Gui.SetCurrentHealth(this.currentHealth);
+            }
             this.healthBar.Value =
-                Math.Round(
-                    (float)this.currentHealth / AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue() * 100,
-                    2);
+                Math.Round((float)this.currentHealth / AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()
+                           * 100, 2);
             if (this.healthBar.Value < 100 && this.healthBar.TextureProgress_ != this.textures[0]) {
                 this.healthBar.TextureProgress_ = this.textures[0];
             }
@@ -179,8 +180,7 @@ namespace VampireSurvivorsLike {
                     (int)this.takenDamageValue, this.GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
-                this.Gui.SetCurrentHealth(this.currentHealth);
-                this.UpdateHealthBar();
+                this.UpdateHealth();
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     Rpc(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
                 }
@@ -211,7 +211,7 @@ namespace VampireSurvivorsLike {
             damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
                 this.GetParent());
             this.currentHealth = currentHealth;
-            this.UpdateHealthBar();
+            this.UpdateHealth();
         }
 
         /*
@@ -229,7 +229,7 @@ namespace VampireSurvivorsLike {
             //     this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
             //         AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
             //     this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
-            //     this.UpdateHealthBar();
+            //     this.UpdateHealth();
             // }
         }
 
@@ -265,19 +265,26 @@ namespace VampireSurvivorsLike {
          * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
          */
         private async void CheckLevelUp() {
-            // if (this.ExpToLvl(this.experience) > this.currentLevel) {
-            //     int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
-            //     this.GetTree().Paused = true;
-            //
-            //     await LevelUpManagerSingleton.Instance.OnLevelUp(levelIncrease);
-            //     this.currentLevel += levelIncrease;
-            //
-            //     this.GetTree().Paused = false;
-            // }
-            // float currentExpInLevel = 100 * (this.experience - (float)this.LvlToExp(this.currentLevel)) /
-            //                           ((float)this.LvlToExp(this.currentLevel + 1) -
-            //                            this.LvlToExp(this.currentLevel));
-            // this.EmitSignal(nameof(ExperienceInPercent), currentExpInLevel);
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (this.ExpToLvl(this.experience) > this.currentLevel) {
+                int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
+
+                // GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+                // this.GetTree().Paused = true;
+                //
+                // await LevelUpManagerSingleton.Instance.OnLevelUp(levelIncrease);
+                this.currentLevel += levelIncrease;
+
+                //
+                // this.GetTree().Paused = false;
+                // GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+                this.gui.SetCurrentLevel(this.currentLevel);
+            }
+            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
+                                          (this.LvlToExp(this.currentLevel + 1) - this.LvlToExp(this.currentLevel)));
+            this.gui.SetCurrentExperience(currentExpInLevel);
         }
 
         /*
@@ -299,10 +306,16 @@ namespace VampireSurvivorsLike {
          * Refreshes the xp using [CurrentExperience]
          */
         public void OnPickedUp(int value, ItemDropsEnum type) {
-            GD.Print($"Pick up {type} : {value}");
-
-            // this.experience += exp;
-            // this.CheckLevelUp();
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
+                this.experience += value;
+                this.CheckLevelUp();
+            } else if (type.Equals(ItemDropsEnum.Gold)) {
+                this.Gold += value;
+                this.gui.SetGoldCount(this.Gold);
+            }
         }
 
     }

@@ -6,9 +6,10 @@ namespace VampireSurvivorsLike {
     public class HUD : Control {
 
         private Label timeLabel;
-        private Label HpNumber { get; set; }
-        private TextureProgress expBar;
-        private Label LevelNumber { get; set; }
+
+        // private Label HpNumber { get; set; }
+        // private TextureProgress expBar;
+        // private Label LevelNumber { get; set; }
         internal float ElapsedTime { get; set; }
         private HBoxContainer ItemControl { get; set; }
         private int nextEmpyItemFrame = 0;
@@ -20,12 +21,14 @@ namespace VampireSurvivorsLike {
             // ItemManagerSingleton.Instance.Hud = this;
             this.ElapsedTime = 0;
             this.timeLabel = GetNode<Label>("TimerControl/TimeLabel");
-            this.HpNumber = GetNode<Label>("HpControl/HpNumber");
-            this.LevelNumber = GetNode<Label>("LevelControl/LevelNumber");
-            this.expBar = GetNode<TextureProgress>("ExpBar");
+
+            // this.HpNumber = GetNode<Label>("HpControl/HpNumber");
+            // this.LevelNumber = GetNode<Label>("LevelControl/LevelNumber");
+            // this.expBar = GetNode<TextureProgress>("ExpBar");
             this.ItemControl = GetNode<HBoxContainer>("ItemControl");
-            this.expBar.Value = 0;
-            this.LevelNumber.Text = "0";
+
+            // this.expBar.Value = 0;
+            // this.LevelNumber.Text = "0";
             GetNode<Label>("GoldContainer/Label").Text = "0";
         }
 
@@ -52,22 +55,16 @@ namespace VampireSurvivorsLike {
             itemFrame.GetChild<Label>(2).Text = level.ToString();
         }
 
-        public void SetItemLevel(int index, int level) {
-            // Control itemFrame = this.ItemControl.GetChild<Control>(index);
-            // itemFrame.GetChild<Label>(1).Text = level.ToString();
-        }
-
-        public void SetHealthLabel(float currentHealth) {
-            this.HpNumber.Text = currentHealth.ToString();
+        public void SetHealthLabel(int currentHealth) {
+            this.GetNode<Label>("HpControl/HpNumber").Text = currentHealth.ToString();
         }
 
         public void SetExpBar(int percent) {
-            // this.expBar.Value = percent;
+            this.GetNode<TextureProgress>("ExpBar").Value = percent;
         }
 
-        private void IncreaseLevel(int? value) {
-            // this.LevelNumber.Text =
-            // value == null ? (int.Parse(this.LevelNumber.Text) + 1).ToString() : value.ToString();
+        public void SetLevel(int value) {
+            this.GetNode<Label>("LevelControl/LevelNumber").Text = value.ToString();
         }
 
         public void OnRewardSelected(int index) {
@@ -75,7 +72,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void SetGold(int value) {
-            // GetNode<Label>("GoldContainer/Label").Text = value.ToString();
+            GetNode<Label>("GoldContainer/Label").Text = value.ToString();
         }
 
     }

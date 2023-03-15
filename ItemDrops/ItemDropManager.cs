@@ -59,7 +59,7 @@ namespace VampireSurvivorsLike.ItemDrops {
             drop.Name = $"Exp{this.goldCount++}";
             int direction = (int)GD.RandRange(0, 360);
             int distance = (int)GD.RandRange(30, 40);
-            drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
+            drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.Gold);
             parent.AddChild(drop, true);
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                 Rpc(nameof(PuppetCreateGold), drop.Name, value, direction, distance, globalPosition);
@@ -71,7 +71,7 @@ namespace VampireSurvivorsLike.ItemDrops {
             Node parent = this.GetTree().Root.GetNode("Main");
             ItemDrop drop = this.gold.Instance<ItemDrop>();
             drop.Name = name;
-            drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
+            drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.Gold);
             parent.AddChild(drop, true);
         }
 
