@@ -43,11 +43,11 @@ namespace VampireSurvivorsLike {
         }
 
         public void Reset() {
-            this.MaxHealth = new Attribute("MaxHealth", "Increase max health by", 200f, 10f / 100f, "HealthIcon.png");
-            this.HealthRegen = new Attribute("HealthRegen", "Increase health regeneration by", 2.0f, 50f / 100f,
+            this.MaxHealth = new Attribute("MaxHealth", "Increase max health by", 200, 10f / 100f, "HealthIcon.png");
+            this.HealthRegen = new Attribute("HealthRegen", "Increase health regeneration by", 2, 50f / 100f,
                 "HealthRegenIcon.png");
-            this.Speed = new Attribute("Speed", "Increase speed by", 100.0f, 20f / 100f, "SpeedIcon.png");
-            this.PickupArea = new Attribute("PickupArea", "Increase the pickup range by", 15f, 10.0f / 100f,
+            this.Speed = new Attribute("Speed", "Increase speed by", 100, 20f / 100f, "SpeedIcon.png");
+            this.PickupArea = new Attribute("PickupArea", "Increase the pickup range by", 15, 10.0f / 100f,
                 "PickupAreaIcon.png");
             this.Gold = 500;
             this.goldSpentOnAttributes = 0;
@@ -111,7 +111,7 @@ namespace VampireSurvivorsLike {
                 this.GetType().GetProperty(section)?.SetValue(this, new Attribute(
                     (string)file.GetValue(section, keys[0]),
                     (string)file.GetValue(section, keys[1]),
-                    (float)file.GetValue(section, keys[2]),
+                    (int)file.GetValue(section, keys[2]),
                     (float)file.GetValue(section, keys[3]),
                     (string)file.GetValue(section, keys[4]),
                     (int)file.GetValue(section, keys[5]),

@@ -10,14 +10,14 @@ namespace VampireSurvivorsLike {
 
         public string name;
         public string message;
-        public float initialValue;
+        public int initialValue;
         public float bonusModifier;
         public string iconName;
         public int upgradeCost;
         public int baseLevel;
         public int maxBaseLevel;
 
-        public AttributeSaveFormat(string name, string message, float initialValue, float bonusModifier, int baseLevel,
+        public AttributeSaveFormat(string name, string message, int initialValue, float bonusModifier, int baseLevel,
             int upgradeCost, string iconName, int maxBaseLevel) {
             this.name = name;
             this.message = message;
@@ -35,7 +35,7 @@ namespace VampireSurvivorsLike {
 
         public string Name { get; private set; }
         private string Message { get; set; }
-        private float InitialValue { get; set; }
+        private int InitialValue { get; set; }
         private float BonusModifier { get; set; }
         public int BaseLevel { get; set; } //The saved level of attribute
         private int InitialCost { get; set; }
@@ -52,7 +52,7 @@ namespace VampireSurvivorsLike {
             get => this.shape;
         }
 
-        public Attribute(string name, string message, float initialValue, float bonusInPercent, string iconName,
+        public Attribute(string name, string message, int initialValue, float bonusInPercent, string iconName,
             int initialCost = 100, int baseLevel = 0, int maxBaseLevel = 8) {
             this.Name = name;
             this.Message = message;
@@ -69,8 +69,8 @@ namespace VampireSurvivorsLike {
             return (int)(this.InitialCost * Math.Pow(2, this.BaseLevel));
         }
 
-        public float GetCurrentValue() {
-            return this.BaseValue() + (this.BaseValue() * this.BonusModifier) * this.sessionLevel;
+        public int GetCurrentValue() {
+            return (int)(this.BaseValue() + (this.BaseValue() * this.BonusModifier) * this.sessionLevel);
         }
 
         private float BaseValue() {

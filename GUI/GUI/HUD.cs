@@ -58,7 +58,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void SetHealthLabel(float currentHealth) {
-            // this.HpNumber.Text = currentHealth.ToString();
+            this.HpNumber.Text = currentHealth.ToString();
         }
 
         public void SetExpBar(int percent) {

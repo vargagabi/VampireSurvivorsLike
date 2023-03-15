@@ -32,8 +32,10 @@ namespace VampireSurvivorsLike {
          * Sets the current health when receiving the value.
          * If the health is less than or equals 0 show the Game Over screen and pause the game
          */
-        public void OnPlayerCurrentHealth(float currentHealth) {
-            // this.hud.SetHealthLabel(currentHealth);
+        public void SetCurrentHealth(int currentHealth) {
+            this.hud.SetHealthLabel(currentHealth);
+            GD.Print(currentHealth);
+
             // if (currentHealth <= 0) {
             // this.gameOverScreen.SetScoreLabel(this.hud.ElapsedTime);
             //     this.pauseScreen.IsPlaying = false;

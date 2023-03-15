@@ -8,7 +8,7 @@ namespace VampireSurvivorsLike {
 
     public class Player : KinematicBody2D {
 
-        private float currentHealth;
+        private int currentHealth;
 
         //Counters
         private int healthCounter = 0;
@@ -41,7 +41,6 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        [Signal] public delegate void CurrentHealth(float currentHealth);
         [Signal] public delegate void CurrentExperience(float exp, int level);
         [Signal] public delegate void ExperienceInPercent(int percent);
         [Signal] public delegate void OnPlayerDeath();
@@ -55,14 +54,21 @@ namespace VampireSurvivorsLike {
             this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
             this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
             this.directionArrow = this.GetNode<Sprite>("Arrow");
             GetNode<Label>("Label").Text = this.Name;
-            this.FloatingValue = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
             this.itemManager = GetNode<ItemManager>("ItemManager");
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.itemManager.EquipOrUpgradeItem(1);
+                this.itemManager.EquipOrUpgradeItem(0);
+
+                //Emit signals to set the HUD health and level bars
+                // this.EmitSignal(nameof(HealthChange), this.currentHealth);
+                this.gui.SetCurrentHealth(this.currentHealth);
+                this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
             }
+
             //JUST FOR TESTING, REMOVE LATER: THIS FOLLOWS THE HOST PLAYER ON BOTH GAME INSTANCES
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 if (this.IsNetworkMaster()) {
@@ -75,16 +81,6 @@ namespace VampireSurvivorsLike {
 
             // AttributeManagerSingleton.Instance.SetPickupArea(
             //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
-
-            //
-            // ItemManagerSingleton.Instance.Player = this;
-            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-            // ItemManagerSingleton.Instance.EquipOrUpgradeItem(ItemManagerSingleton.Instance.GetUnequippedItems()[0]);
-            //
-            // //Emit signals to set the HUD health and level bars
-            // this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
-            // this.EmitSignal(nameof(CurrentExperience), this.experience, this.currentLevel);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -154,7 +150,9 @@ namespace VampireSurvivorsLike {
          */
         private void UpdateHealthBar() {
             this.healthBar.Value =
-                (this.currentHealth / AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) * 100;
+                Math.Round(
+                    (float)this.currentHealth / AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue() * 100,
+                    2);
             if (this.healthBar.Value < 100 && this.healthBar.TextureProgress_ != this.textures[0]) {
                 this.healthBar.TextureProgress_ = this.textures[0];
             }
@@ -181,7 +179,7 @@ namespace VampireSurvivorsLike {
                     (int)this.takenDamageValue, this.GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
-                this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
+                this.Gui.SetCurrentHealth(this.currentHealth);
                 this.UpdateHealthBar();
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     Rpc(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
@@ -208,7 +206,7 @@ namespace VampireSurvivorsLike {
         }
 
         [Puppet]
-        public void PuppetTakeDamage(float damage, float currentHealth) {
+        public void PuppetTakeDamage(float damage, int currentHealth) {
             FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
             damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
                 this.GetParent());
