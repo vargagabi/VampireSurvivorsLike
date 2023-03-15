@@ -116,6 +116,7 @@ extents = Vector2( 6, 8.5 )
 [node name="Player" type="KinematicBody2D"]
 pause_mode = 1
 scale = Vector2( 2, 2 )
+z_index = 1
 collision_mask = 0
 script = ExtResource( 1 )
 

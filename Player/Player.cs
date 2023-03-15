@@ -61,8 +61,9 @@ namespace VampireSurvivorsLike {
             this.itemManager = GetNode<ItemManager>("ItemManager");
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.itemManager.EquipOrUpgradeItem(0);
+                this.itemManager.EquipOrUpgradeItem(1);
             }
+            //JUST FOR TESTING, REMOVE LATER: THIS FOLLOWS THE HOST PLAYER ON BOTH GAME INSTANCES
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 if (this.IsNetworkMaster()) {
                     GetNode<Camera2D>("Camera2D").Current = false;
@@ -72,7 +73,6 @@ namespace VampireSurvivorsLike {
                 }
             }
 
-            //
             // AttributeManagerSingleton.Instance.SetPickupArea(
             //     this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
 

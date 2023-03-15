@@ -82,10 +82,11 @@ radius = 48.0
 
 [node name="Node2D" type="Node2D"]
 show_behind_parent = true
+z_index = -1
 script = ExtResource( 2 )
 
 [node name="AuraTexture" type="Sprite" parent="."]
-self_modulate = Color( 1, 0, 0, 0.266667 )
+self_modulate = Color( 1, 1, 1, 0.5 )
 show_behind_parent = true
 material = SubResource( 3 )
 scale = Vector2( 0.2, 0.2 )

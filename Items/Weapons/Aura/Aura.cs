@@ -9,7 +9,7 @@ namespace VampireSurvivorsLike {
         public float BonusExperience { get; set; }
         private CircleShape2D CollisionShape { get; set; }
         private Sprite AuraTexture { get; set; }
-        private List<Node2D> overlappingBodies = new List<Node2D>();
+        private readonly List<Enemy> overlappingBodies = new List<Enemy>();
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
@@ -76,23 +76,31 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnBodyEntered(Node2D body) {
-            if (body.HasMethod("OnHit")) {
-                this.overlappingBodies.Add(body);
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.overlappingBodies.Add(enemy);
             }
         }
 
         public void OnBodyExited(Node2D body) {
-            if (body.HasMethod("OnHit")) {
-                this.overlappingBodies.Remove(body);
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.overlappingBodies.Remove(enemy);
             }
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
             if (++this.Counter % this.AttackSpeed == 0) {
                 this.Counter = 0;
-                foreach (Node2D body in this.overlappingBodies) {
-                    Enemy enemy = (Enemy)body;
+                foreach (Enemy enemy in this.overlappingBodies) {
                     enemy.OnHit(this.Damage, this);
                 }
             }

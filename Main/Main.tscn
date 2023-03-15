@@ -13,6 +13,7 @@ pause_mode = 1
 
 [node name="MobSpawner" parent="." instance=ExtResource( 4 )]
 pause_mode = 1
+z_index = 1
 
 [node name="Timer" type="Timer" parent="."]
 pause_mode = 1
