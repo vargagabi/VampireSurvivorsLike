@@ -22,7 +22,7 @@ namespace VampireSurvivorsLike.ItemDrops {
             this.animationPlayer = this.GetNode<AnimationPlayer>("AnimationPlayer");
             this.animationPlayer.Play("Hover");
             this.tween = this.GetNode<Tween>("Tween");
-            
+
             double degree = this.dropDirection * 3.1415 / 180;
             Vector2 newPos = Vector2.Zero;
             newPos.y = (float)(Math.Sin(degree) * this.dropDistance);
@@ -57,11 +57,25 @@ namespace VampireSurvivorsLike.ItemDrops {
 
         //Signal connection
         public void OnAreaEntered(Area2D body) {
-            if (!this.isMoving && body.GetParent() is Player playerBody) {
-                Connect(nameof(OnPickUp), playerBody, "OnPickedUp");
-                this.player = playerBody;
-                this.isMoving = true;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !body.IsNetworkMaster()) {
+                return;
             }
+            if (this.isMoving || !(body.GetParent() is Player playerBody)) {
+                return;
+            }
+            this.player = playerBody;
+            this.Connect(nameof(OnPickUp), this.player, "OnPickedUp");
+            this.isMoving = true;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                Rpc(nameof(this.PuppetOnAreaEntered), playerBody.Name);
+            }
+        }
+
+        [Remote]
+        public void PuppetOnAreaEntered(string name) {
+            this.player = this.GetTree().Root.GetNode<Player>($"Main/{name}");
+            this.Connect(nameof(OnPickUp), this.player, "OnPickedUp");
+            this.isMoving = true;
         }
 
     }

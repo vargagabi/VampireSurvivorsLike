@@ -16,6 +16,8 @@ namespace VampireSurvivorsLike.ItemDrops {
         private readonly PackedScene experienceOrb =
             ResourceLoader.Load<PackedScene>("res://ItemDrops/ExpOrbs/ExpOrb.tscn");
         private readonly PackedScene gold = ResourceLoader.Load<PackedScene>("res://ItemDrops/Gold/Gold.tscn");
+        private uint expOrbCount = 0;
+        private uint goldCount = 0;
 
         public override void _Ready() {
             GD.Print("ItemDropManager ready...");
@@ -28,21 +30,24 @@ namespace VampireSurvivorsLike.ItemDrops {
             }
             Node parent = this.GetTree().Root.GetNode("Main");
             ItemDrop drop = this.experienceOrb.Instance<ItemDrop>();
+            drop.Name = $"Exp{this.expOrbCount++}";
             int direction = (int)GD.RandRange(0, 360);
             int distance = (int)GD.RandRange(30, 40);
             drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
-            parent.CallDeferred("add_child", drop);
+            parent.AddChild(drop, true);
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(PuppetCreateExperienceOrb), value, direction, distance, globalPosition);
+                Rpc(nameof(PuppetCreateExperienceOrb), drop.Name, value, direction, distance, globalPosition);
             }
         }
 
         [Puppet]
-        public void PuppetCreateExperienceOrb(int value, int direction, int distance, Vector2 globalPosition) {
+        public void PuppetCreateExperienceOrb(string name, int value, int direction, int distance,
+            Vector2 globalPosition) {
             Node parent = this.GetTree().Root.GetNode("Main");
             ItemDrop drop = this.experienceOrb.Instance<ItemDrop>();
+            drop.Name = name;
             drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
-            parent.CallDeferred("add_child", drop);
+            parent.AddChild(drop, true);
         }
 
         public void CreateGold(int value, Vector2 globalPosition) {
@@ -51,21 +56,23 @@ namespace VampireSurvivorsLike.ItemDrops {
             }
             Node parent = this.GetTree().Root.GetNode("Main");
             ItemDrop drop = this.gold.Instance<ItemDrop>();
+            drop.Name = $"Exp{this.goldCount++}";
             int direction = (int)GD.RandRange(0, 360);
             int distance = (int)GD.RandRange(30, 40);
             drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
-            parent.CallDeferred("add_child", drop);
+            parent.AddChild(drop, true);
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(PuppetCreateGold), value, direction, distance, globalPosition);
+                Rpc(nameof(PuppetCreateGold), drop.Name, value, direction, distance, globalPosition);
             }
         }
 
         [Puppet]
-        public void PuppetCreateGold(int value, int direction, int distance, Vector2 globalPosition) {
+        public void PuppetCreateGold(string name, int value, int direction, int distance, Vector2 globalPosition) {
             Node parent = this.GetTree().Root.GetNode("Main");
             ItemDrop drop = this.gold.Instance<ItemDrop>();
+            drop.Name = name;
             drop.Init(globalPosition, value, direction, distance, ItemDropsEnum.ExperienceOrb);
-            parent.CallDeferred("add_child", drop);
+            parent.AddChild(drop, true);
         }
 
     }

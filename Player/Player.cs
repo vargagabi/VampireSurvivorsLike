@@ -177,8 +177,8 @@ namespace VampireSurvivorsLike {
             this.damageCounter++;
             if (this.damageCounter % ImmunityTime == 0) {
                 FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
-                damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)this.takenDamageValue);
-                this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+                damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
+                    (int)this.takenDamageValue, this.GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.EmitSignal(nameof(CurrentHealth), this.currentHealth);
@@ -210,8 +210,8 @@ namespace VampireSurvivorsLike {
         [Puppet]
         public void PuppetTakeDamage(float damage, float currentHealth) {
             FloatingValue damageInd = this.FloatingValue.Instance<FloatingValue>();
-            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage);
-            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+            damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
+                this.GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealthBar();
         }
@@ -240,9 +240,11 @@ namespace VampireSurvivorsLike {
          * This field's value is then subtracted from the player's health, thus hurting the player.
          */
         public void OnBodyEntered(Node body) {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                float dmg = (float)(body.Get("Strength"));
-                this.takenDamageValue += dmg;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.takenDamageValue += enemy.Strength;
             }
         }
 
@@ -250,9 +252,11 @@ namespace VampireSurvivorsLike {
          * When an enemy leave the player, its Strength value is subtracted from the TakenDamageValue field.
          */
         public void OnBodyExited(Node body) {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                float dmg = (float)(body.Get("Strength"));
-                this.takenDamageValue -= dmg;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (body is Enemy enemy) {
+                this.takenDamageValue -= enemy.Strength;
             }
         }
 
@@ -298,6 +302,7 @@ namespace VampireSurvivorsLike {
          */
         public void OnPickedUp(int value, ItemDropsEnum type) {
             GD.Print($"Pick up {type} : {value}");
+
             // this.experience += exp;
             // this.CheckLevelUp();
         }

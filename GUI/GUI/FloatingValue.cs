@@ -24,11 +24,12 @@ namespace VampireSurvivorsLike {
             this.tween.Start();
         }
 
-        public void SetValues(Vector2 position, Color color, int amount) {
+        public void CreateFloatingValue(Vector2 position, Color color, int amount, Node parent) {
             this.color = color;
             this.amount = amount;
             position.y -= 20;
             this.GlobalPosition = position;
+            parent.CallDeferred("add_child", this);
         }
 
         public void TweenCompleted() {

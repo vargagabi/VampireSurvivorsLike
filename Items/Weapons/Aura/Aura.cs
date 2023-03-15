@@ -14,7 +14,7 @@ namespace VampireSurvivorsLike {
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             this.SetIcon();
-            this.Damage = 1f;
+            this.Damage = 1;
             this.Level = 0;
             this.MaxLevel = 7;
             this.Counter = 0;
@@ -34,7 +34,7 @@ namespace VampireSurvivorsLike {
                     this.IncreaseRadius();
                     break;
                 case 3:
-                    this.Damage += 0.1f;
+                    this.Damage += 1;
                     break;
                 case 4:
                     this.AttackSpeed -= 1;

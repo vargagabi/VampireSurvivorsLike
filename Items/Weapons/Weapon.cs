@@ -7,7 +7,7 @@ namespace VampireSurvivorsLike {
 
         protected int Counter { get; set; }
         protected int AttackSpeed { get; set; }
-        protected float Damage { get; set; }
+        protected int Damage { get; set; }
 
     }
 

@@ -6,7 +6,7 @@ namespace VampireSurvivorsLike {
 
         public Vector2 Direction { set; get; }
         public float Speed { get; set; }
-        public float Damage { get; set; }
+        public int Damage { get; set; }
         private int Counter { get; set; }
         private int LifeSpan { get; set; }
         public int Piercing { get; set; }
@@ -21,34 +21,37 @@ namespace VampireSurvivorsLike {
         public override void _Process(float delta) {
             this.Counter++;
             if (this.Counter % this.LifeSpan == 0) {
-                QueueFree();
+                this.Counter = 0;
                 if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
-                    Rpc(nameof(this.PuppetDestroyed));
+                    Rpc(nameof(this.PuppetQueueFree));
                 }
+                QueueFree();
                 return;
             }
             GlobalPosition += Direction * this.Speed * delta;
         }
 
+
+        [Puppet]
+        public void PuppetQueueFree() {
+            QueueFree();
+        }
+
+        //Signal connection
         public void OnBodyEntered(Node2D body) {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
                 return;
             }
-            if (body.HasMethod("OnHit") && body.GetClass() == "KinematicBody2D") {
-                ((Enemy)body).OnHit(this.Damage, this.GetParent<Weapon>());
+            if (body.HasMethod("OnHit") && body is Enemy enemy) {
+                enemy.OnHit(this.Damage, this.GetParent<Weapon>());
                 this.Piercing--;
             }
             if (this.Piercing <= 0) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.Rpc(nameof(this.PuppetDestroyed));
+                    this.Rpc(nameof(this.PuppetQueueFree));
                 }
                 this.QueueFree();
             }
-        }
-
-        [Puppet]
-        public void PuppetDestroyed() {
-            QueueFree();
         }
 
     }

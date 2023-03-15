@@ -7,8 +7,8 @@ namespace VampireSurvivorsLike {
     public class Enemy : KinematicBody2D {
 
         public static int mobCount = 0;
-        protected float Health { get; set; }
-        protected float Strength { get; set; }
+        protected int Health { get; set; }
+        public int Strength { get; protected set; }
         protected int ExpValue { get; set; }
         protected float Speed { get; set; }
         public int SpawnRate { get; set; }
@@ -65,7 +65,6 @@ namespace VampireSurvivorsLike {
             if (this.Health <= 0) {
                 return;
             }
-            GD.Print($"puppet pos set {globalPosition}");
             this.GlobalPosition = globalPosition;
             this.AnimatedSprite.Frame = frame;
         }
@@ -82,19 +81,6 @@ namespace VampireSurvivorsLike {
                 this.QueueFree();
                 ItemDropManager.Instance.CreateExperienceOrb(this.ExpValue, this.GlobalPosition);
                 ItemDropManager.Instance.CreateGold(this.ExpValue, this.GlobalPosition);
-
-                // ExpOrb expOrb = new ExpOrb(this.GlobalPosition, this.GetTree().Root.GetNode("Main"));
-
-                // ExpOrb expOrb = this.ExpOrb.Instance<ExpOrb>();
-                // expOrb.GlobalPosition = this.GlobalPosition;
-                // expOrb.Experience = this.ExpValue;
-                // Node viewport = this.GetTree().Root.GetNode("Main");
-                // viewport.CallDeferred("add_child", expOrb);
-                // if (true) {
-                // Node2D gold = this.Gold.Instance<Node2D>();
-                // gold.GlobalPosition = this.GlobalPosition;
-                // viewport.CallDeferred("add_child", gold);
-                // }
             }
         }
 
@@ -103,48 +89,45 @@ namespace VampireSurvivorsLike {
          * If the Health is less than or equals 0 remove the enemy and add an
          * instance of an ExpOrb at its place.
          */
-        public void OnHit(float damage, Weapon weapon) {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster() && this.Health > 0) {
-                if (this.Health <= 0) {
-                    return;
+        public void OnHit(int damage, Weapon weapon) {
+            this.TakeDamage(damage);
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                Rpc(nameof(this.RemoteOnHit), damage);
+            }
+            if (this.Health <= 0) {
+                if (weapon is Aura aura) {
+                    this.ExpValue += (int)(this.ExpValue * aura.BonusExperience);
                 }
-                FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
-                damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), (int)damage);
-                this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+                this.CollisionMask = 0;
+                this.AnimationPlay(EnemyAnimationsEnum.Death);
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.PuppetOnHit), (int)damage);
-                }
-
-                this.Health -= damage;
-                if (this.Health <= 0) {
-                    if (weapon is Aura aura) {
-                        this.ExpValue += (int)(this.ExpValue * aura.BonusExperience);
-                    }
-                    this.CollisionMask = 0;
-                    this.AnimationPlay(EnemyAnimationsEnum.Death);
-                    if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                        Rpc(nameof(this.PuppetOnDeath), this.ExpValue, this.GlobalPosition);
-                    }
+                    Rpc(nameof(this.RemoteOnDeath), this.ExpValue, this.GlobalPosition);
                 }
             }
         }
 
-        [Puppet]
-        public void PuppetOnHit(int damage) {
+        [Remote]
+        public void RemoteOnHit(int damage) {
+            this.TakeDamage(damage);
+        }
+
+        private void TakeDamage(int damage) {
+            if (this.Health <= 0) {
+                return;
+            }
+            this.ShowDamage(damage);
+            this.Health -= damage;
+        }
+
+        private void ShowDamage(int damage) {
             FloatingValue damageInd = this.DamageIndicator.Instance<FloatingValue>();
-            damageInd.SetValues(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage);
-            this.GetTree().Root.GetNode("Main").CallDeferred("add_child", damageInd);
+            damageInd.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage,
+                this.GetParent().GetParent());
         }
 
-        [Puppet]
-        public void PuppetOnDeath(int bonusExp, Vector2 position) {
+        [Remote]
+        public void RemoteOnDeath(int bonusExp, Vector2 position) {
             this.Health = 0;
-            if (this.GlobalPosition != position) {
-                GD.Print("Pos not same-----------------------");
-            }
-            if (this.ExpValue != bonusExp) {
-                GD.Print("exp not same -------------------");
-            }
             this.GlobalPosition = position;
             this.ExpValue = bonusExp;
             this.AnimationPlay(EnemyAnimationsEnum.Death);
