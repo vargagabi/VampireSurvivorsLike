@@ -12,6 +12,13 @@ namespace VampireSurvivorsLike {
         private Map map;
         private MobSpawner mobSpawner;
 
+        //multiplayer variables
+        private int level = 0;
+        private int experience = 0;
+        private int gold = 0;
+
+        private bool isLevelingUp = false;
+
         private bool isConfigurationFinished = false;
 
         [Signal] public delegate void OnGameWin();
@@ -34,11 +41,59 @@ namespace VampireSurvivorsLike {
             this.map.AddPlayer(this.playerOne);
             this.mobSpawner.PlayerOne = this.playerOne;
             this.playerOne.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
+            AttributeManagerSingleton.Instance.SetPickupArea(
+                this.playerOne.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
             this.isConfigurationFinished = true;
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 Rpc(nameof(this.ConfigurationFinished));
             }
+        }
+
+        [RemoteSync]
+        public async void MultiplayerIncreaseExperience(int value) {
+            this.experience += value;
+            int levelIncreases = Main.ExpToLvl(this.experience) - this.level;
+            if (Main.ExpToLvl(this.experience) > this.level) {
+                this.isLevelingUp = true;
+                this.GetTree().Paused = true;
+                this.level += levelIncreases;
+                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+
+                await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
+                
+                this.isLevelingUp = false;
+                Rpc(nameof(LevelingUpFinished));
+                this.playerOne.Gui.SetCurrentLevel(this.level);
+            }
+            this.playerOne.Gui.SetCurrentExperience(this.experience);
+        }
+
+        [Remote]
+        public void LevelingUpFinished() {
+            if (!this.isLevelingUp) {
+                Rpc(nameof(this.UnpauseGame));
+            }
+        }
+
+        [RemoteSync]
+        public void MultiplayerAddGold(int gold) {
+            this.gold += gold;
+            this.playerOne.Gui.SetGoldCount(this.gold);
+        }
+
+        /*
+         * Calculates the current level depending on the experience.
+         */
+        public static int ExpToLvl(float exp) {
+            return (int)(Math.Sqrt(exp + 4) - 2);
+        }
+
+        /*
+         * Calculates the experience required to reach the level.
+         */
+        public static float LvlToExp(int lvl) {
+            return (float)(4 * lvl + Math.Pow(lvl, 2));
         }
 
         [Remote]

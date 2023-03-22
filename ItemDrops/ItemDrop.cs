@@ -39,7 +39,10 @@ namespace VampireSurvivorsLike.ItemDrops {
             GlobalPosition += (this.player.GlobalPosition - GlobalPosition).Normalized() * this.speed * delta;
             this.speed += 4;
             if (this.player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 10) {
-                EmitSignal(nameof(OnPickUp), this.value, this.type);
+                if (this.GetTree().IsNetworkServer()) {
+                    GD.Print(this.player.Name);
+                    EmitSignal(nameof(OnPickUp), this.value, this.type);
+                }
                 CallDeferred("queue_free");
             }
         }
@@ -57,10 +60,13 @@ namespace VampireSurvivorsLike.ItemDrops {
 
         //Signal connection
         public void OnAreaEntered(Area2D body) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !body.IsNetworkMaster()) {
+            if (this.player != null) {
                 return;
             }
             if (this.isMoving || !(body.GetParent() is Player playerBody)) {
+                return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !playerBody.IsNetworkMaster()) {
                 return;
             }
             this.player = playerBody;
@@ -74,7 +80,6 @@ namespace VampireSurvivorsLike.ItemDrops {
         [Remote]
         public void PuppetOnAreaEntered(string name) {
             this.player = this.GetTree().Root.GetNode<Player>($"Main/{name}");
-            this.Connect(nameof(OnPickUp), this.player, "OnPickedUp");
             this.isMoving = true;
         }
 

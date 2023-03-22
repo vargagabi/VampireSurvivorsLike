@@ -69,8 +69,7 @@ namespace VampireSurvivorsLike {
                 this.gui.SetCurrentLevel(0);
                 this.gui.SetGoldCount(0);
 
-                AttributeManagerSingleton.Instance.SetPickupArea(
-                    this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
+                // AttributeManagerSingleton.Instance.SetPickupArea(this.GetNode<Area2D>("PickupArea").GetChild<CollisionShape2D>(0).Shape as CircleShape2D);
             }
 
             //JUST FOR TESTING, REMOVE LATER: THIS FOLLOWS THE HOST PLAYER ON BOTH GAME INSTANCES
@@ -252,70 +251,22 @@ namespace VampireSurvivorsLike {
          * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
          */
         private async void CheckLevelUp() {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
-                return;
-            }
-            if (this.ExpToLvl(this.experience) > this.currentLevel) {
-                int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
-
-                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+            if (Main.ExpToLvl(this.experience) > this.currentLevel) {
                 this.GetTree().Paused = true;
+                int levelIncrease = Main.ExpToLvl(this.experience) - this.currentLevel;
+                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
 
-                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(RemoteLevelUp), levelIncrease);
-                }
                 await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncrease);
-                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(RewardSelectionFinished));
-                } else {
-                    this.GetTree().Paused = false;
-                }
+
+                this.GetTree().Paused = false;
                 this.currentLevel += levelIncrease;
-                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
                 this.gui.SetCurrentLevel(this.currentLevel);
+                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
             }
-            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
-                                          (this.LvlToExp(this.currentLevel + 1) -
-                                           this.LvlToExp(this.currentLevel)));
+            int currentExpInLevel = (int)(100 * (this.experience - Main.LvlToExp(this.currentLevel)) /
+                                          (Main.LvlToExp(this.currentLevel + 1) -
+                                           Main.LvlToExp(this.currentLevel)));
             this.gui.SetCurrentExperience(currentExpInLevel);
-        }
-
-        [Remote]
-        public async void RemoteLevelUp(int levelIncrease) {
-            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
-            this.GetTree().Paused = true;
-
-            await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncrease);
-            Rpc(nameof(RewardSelectionFinished));
-            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
-            this.GetParent<Main>().playerOne.currentLevel += levelIncrease;
-            this.GetParent<Main>().playerOne.gui.SetCurrentLevel(this.currentLevel);
-            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
-                                          (this.LvlToExp(this.currentLevel + 1) -
-                                           this.LvlToExp(this.currentLevel)));
-            this.GetParent<Main>().playerOne.gui.SetCurrentExperience(currentExpInLevel);
-        }
-
-        [Remote]
-        public void RewardSelectionFinished() {
-            if (!LevelUpManagerSingleton.Instance.CurrentlyRewardSelecting) {
-                this.GetParent<Main>().Rpc(nameof(Main.UnpauseGame));
-            }
-        }
-
-
-        /*
-         * Calculates the current level depending on the experience.
-         */
-        private int ExpToLvl(float exp) {
-            return (int)(Math.Sqrt(exp + 4) - 2);
-        }
-
-        /*
-         * Calculates the experience required to reach the level.
-         */
-        private float LvlToExp(int lvl) {
-            return (float)(4 * lvl + Math.Pow(lvl, 2));
         }
 
         /*
@@ -327,32 +278,19 @@ namespace VampireSurvivorsLike {
                 return;
             }
             if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
-                this.experience += value;
-                this.CheckLevelUp();
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.RemoteAddExperience), value);
+                    this.GetParent<Main>().Rpc(nameof(Main.MultiplayerIncreaseExperience), value);
+                } else {
+                    this.experience += value;
+                    this.CheckLevelUp();
                 }
             } else if (type.Equals(ItemDropsEnum.Gold)) {
-                this.Gold += value;
-                this.gui.SetGoldCount(this.Gold);
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.RemoteAddGold), value);
+                    this.GetParent<Main>().Rpc(nameof(Main.MultiplayerAddGold), value);
+                } else {
+                    this.Gold += value;
+                    this.gui.SetGoldCount(this.Gold);
                 }
-            }
-        }
-
-        [Remote]
-        public void RemoteAddExperience(int exp) {
-            if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
-                this.GetParent<Main>().playerOne.experience += exp;
-            }
-        }
-
-        [Remote]
-        public void RemoteAddGold(int gold) {
-            if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
-                this.GetParent<Main>().playerOne.Gold += gold;
-                this.GetParent<Main>().playerOne.gui.SetGoldCount(this.GetParent<Main>().playerOne.Gold);
             }
         }
 

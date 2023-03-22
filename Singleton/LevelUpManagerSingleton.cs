@@ -13,7 +13,6 @@ namespace VampireSurvivorsLike {
         public LevelUpScreen LevelUpScreen { get; set; }
         private int numberOfRewards = 4;
         private List<object> GeneratedRewards { get; set; }
-        public bool CurrentlyRewardSelecting { get; private set; }
         public bool IsRewardSelected { get; private set; } = false;
         public Player Player { get; set; }
         public bool OtherPlayerFinished { get; set; } = false;
@@ -29,8 +28,6 @@ namespace VampireSurvivorsLike {
         }
 
         public async Task OnPlayerLevelUp(int numberOfLevelUps) {
-            this.CurrentlyRewardSelecting = true;
-
             for (int i = 0; i < numberOfLevelUps; i++) {
                 this.IsRewardSelected = false;
                 this.GeneratedRewards = this.GenerateRewards();
@@ -38,7 +35,6 @@ namespace VampireSurvivorsLike {
                     await Task.Delay(250);
                 }
             }
-            this.CurrentlyRewardSelecting = false;
         }
 
         private List<object> GenerateRewards() {

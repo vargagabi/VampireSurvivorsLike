@@ -29,6 +29,15 @@ namespace VampireSurvivorsLike {
                 return;
             }
             GlobalPosition += Direction * this.Speed * delta;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster() && this.Counter % 100 == 0) {
+                RpcUnreliable(nameof(this.PuppetPosition),this.GlobalPosition);
+            }
+            
+        }
+
+        [Puppet]
+        public void PuppetPosition(Vector2 position) {
+            this.GlobalPosition = position;
         }
 
 
