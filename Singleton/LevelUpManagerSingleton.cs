@@ -14,8 +14,9 @@ namespace VampireSurvivorsLike {
         private int numberOfRewards = 4;
         private List<object> GeneratedRewards { get; set; }
         public bool CurrentlyRewardSelecting { get; private set; }
-        private bool IsRewardSelected { get; set; } = false;
+        public bool IsRewardSelected { get; private set; } = false;
         public Player Player { get; set; }
+        public bool OtherPlayerFinished { get; set; } = false;
 
         public static LevelUpManagerSingleton Instance {
             get {
@@ -27,10 +28,7 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        public async Task OnSinglePlayerLevelUp(int numberOfLevelUps) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                return;
-            }
+        public async Task OnPlayerLevelUp(int numberOfLevelUps) {
             this.CurrentlyRewardSelecting = true;
 
             for (int i = 0; i < numberOfLevelUps; i++) {

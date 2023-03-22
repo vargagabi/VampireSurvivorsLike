@@ -39,21 +39,17 @@ namespace VampireSurvivorsLike {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 Rpc(nameof(this.ConfigurationFinished));
             }
-
-            // Connect(nameof(OnGameWin), this.GetNode("GUI"), "OnGameWon");
         }
 
         [Remote]
         public void ConfigurationFinished() {
             if (this.isConfigurationFinished && this.GetTree().IsNetworkServer()) {
-                GD.Print("config node, send start signal");
-                Rpc(nameof(this.StartGame));
+                Rpc(nameof(this.UnpauseGame));
             }
         }
 
         [RemoteSync]
-        public void StartGame() {
-            GD.Print("start game");
+        public void UnpauseGame() {
             this.GetTree().Paused = false;
         }
 

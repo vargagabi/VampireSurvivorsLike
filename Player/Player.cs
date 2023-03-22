@@ -261,10 +261,16 @@ namespace VampireSurvivorsLike {
                 GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
                 this.GetTree().Paused = true;
 
-                await LevelUpManagerSingleton.Instance.OnSinglePlayerLevelUp(levelIncrease);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(RemoteLevelUp), levelIncrease);
+                }
+                await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncrease);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(RewardSelectionFinished));
+                } else {
+                    this.GetTree().Paused = false;
+                }
                 this.currentLevel += levelIncrease;
-
-                this.GetTree().Paused = false;
                 GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
                 this.gui.SetCurrentLevel(this.currentLevel);
             }
@@ -273,6 +279,30 @@ namespace VampireSurvivorsLike {
                                            this.LvlToExp(this.currentLevel)));
             this.gui.SetCurrentExperience(currentExpInLevel);
         }
+
+        [Remote]
+        public async void RemoteLevelUp(int levelIncrease) {
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+            this.GetTree().Paused = true;
+
+            await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncrease);
+            Rpc(nameof(RewardSelectionFinished));
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+            this.GetParent<Main>().playerOne.currentLevel += levelIncrease;
+            this.GetParent<Main>().playerOne.gui.SetCurrentLevel(this.currentLevel);
+            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
+                                          (this.LvlToExp(this.currentLevel + 1) -
+                                           this.LvlToExp(this.currentLevel)));
+            this.GetParent<Main>().playerOne.gui.SetCurrentExperience(currentExpInLevel);
+        }
+
+        [Remote]
+        public void RewardSelectionFinished() {
+            if (!LevelUpManagerSingleton.Instance.CurrentlyRewardSelecting) {
+                this.GetParent<Main>().Rpc(nameof(Main.UnpauseGame));
+            }
+        }
+
 
         /*
          * Calculates the current level depending on the experience.
@@ -315,13 +345,11 @@ namespace VampireSurvivorsLike {
         public void RemoteAddExperience(int exp) {
             if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
                 this.GetParent<Main>().playerOne.experience += exp;
-                this.GetParent<Main>().playerOne.CheckLevelUp();
             }
         }
 
         [Remote]
         public void RemoteAddGold(int gold) {
-            GD.Print(gold);
             if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
                 this.GetParent<Main>().playerOne.Gold += gold;
                 this.GetParent<Main>().playerOne.gui.SetGoldCount(this.GetParent<Main>().playerOne.Gold);

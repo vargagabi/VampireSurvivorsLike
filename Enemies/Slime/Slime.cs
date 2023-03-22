@@ -7,7 +7,7 @@ namespace VampireSurvivorsLike {
         public Slime() {
             this.Health = 10;
             this.Strength = 5;
-            this.ExpValue = 1;
+            this.ExpValue = 30;
             this.Speed = 50;
             this.SpawnRate = 222;
             this.SpawnDistance = 500;
