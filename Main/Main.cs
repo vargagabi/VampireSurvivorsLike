@@ -7,7 +7,7 @@ namespace VampireSurvivorsLike {
 
         private const int GameTimeInMinutes = 200;
         private int minutesPassed = 0;
-        private Player playerOne;
+        public Player playerOne;
         public Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;

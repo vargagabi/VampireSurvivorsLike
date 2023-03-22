@@ -252,26 +252,26 @@ namespace VampireSurvivorsLike {
          * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
          */
         private async void CheckLevelUp() {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer) {
-                if (this.ExpToLvl(this.experience) > this.currentLevel) {
-                    int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
-
-                    GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
-                    this.GetTree().Paused = true;
-
-                    await LevelUpManagerSingleton.Instance.OnSinglePlayerLevelUp(levelIncrease);
-                    this.currentLevel += levelIncrease;
-
-                    this.GetTree().Paused = false;
-                    GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
-                    this.gui.SetCurrentLevel(this.currentLevel);
-                }
-                int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
-                                              (this.LvlToExp(this.currentLevel + 1) -
-                                               this.LvlToExp(this.currentLevel)));
-                this.gui.SetCurrentExperience(currentExpInLevel);
-            } else {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
             }
+            if (this.ExpToLvl(this.experience) > this.currentLevel) {
+                int levelIncrease = this.ExpToLvl(this.experience) - this.currentLevel;
+
+                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+                this.GetTree().Paused = true;
+
+                await LevelUpManagerSingleton.Instance.OnSinglePlayerLevelUp(levelIncrease);
+                this.currentLevel += levelIncrease;
+
+                this.GetTree().Paused = false;
+                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
+                this.gui.SetCurrentLevel(this.currentLevel);
+            }
+            int currentExpInLevel = (int)(100 * (this.experience - this.LvlToExp(this.currentLevel)) /
+                                          (this.LvlToExp(this.currentLevel + 1) -
+                                           this.LvlToExp(this.currentLevel)));
+            this.gui.SetCurrentExperience(currentExpInLevel);
         }
 
         /*
@@ -299,9 +299,32 @@ namespace VampireSurvivorsLike {
             if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
                 this.experience += value;
                 this.CheckLevelUp();
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(this.RemoteAddExperience), value);
+                }
             } else if (type.Equals(ItemDropsEnum.Gold)) {
                 this.Gold += value;
                 this.gui.SetGoldCount(this.Gold);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(this.RemoteAddGold), value);
+                }
+            }
+        }
+
+        [Remote]
+        public void RemoteAddExperience(int exp) {
+            if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
+                this.GetParent<Main>().playerOne.experience += exp;
+                this.GetParent<Main>().playerOne.CheckLevelUp();
+            }
+        }
+
+        [Remote]
+        public void RemoteAddGold(int gold) {
+            GD.Print(gold);
+            if (this.Name.ToInt().Equals(this.GetTree().GetRpcSenderId())) {
+                this.GetParent<Main>().playerOne.Gold += gold;
+                this.GetParent<Main>().playerOne.gui.SetGoldCount(this.GetParent<Main>().playerOne.Gold);
             }
         }
 
