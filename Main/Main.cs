@@ -6,7 +6,7 @@ namespace VampireSurvivorsLike {
 
     public class Main : Node2D {
 
-        private const int GameTimeInMinutes = 200;
+        private const int GameTimeInMinutes = 10;
         private int minutesPassed = 0;
         public Player playerOne;
         public Player playerTwo;
@@ -20,7 +20,6 @@ namespace VampireSurvivorsLike {
         private int gold = 0;
 
         private bool isLevelingUp = false;
-
         private bool isConfigurationFinished = false;
 
         [Signal] public delegate void OnGameWin();
@@ -184,46 +183,36 @@ namespace VampireSurvivorsLike {
 
         //Check if all players are dead, if true end game
         public void OnPlayerDied() {
-            GD.Print("Someone died lol");
             if (this.playerOne.IsDead && (this.playerTwo == null || this.playerTwo.IsDead)) {
-                GD.Print("Game ended, sad");
-                this.GetTree().Paused = true;
-                GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameLost;
-                AudioPlayerSingleton.Instance.SwitchToAmbient(false);
-
-                if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
-                    GD.Print("Send status to server");
-                    this.RpcId(1, nameof(this.SendStatus), 0, 0);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    this.Rpc(nameof(this.GameEnded), false, 0);
+                } else {
+                    this.GameEnded(false, 0);
                 }
-
-                // this.playerOne.Gui.OnGameWon();
-            }
-        }
-
-        [Remote]
-        public void SendStatus(int gold, int enemiesDefeated) {
-            GD.Print("Receive sent status");
-            if (this.GetTree().IsNetworkServer()) {
-                int allGold = gold + this.playerOne.Gold;
-                int enemyCount = enemiesDefeated + this.playerOne.EnemiesDefeated;
-                Rpc(nameof(this.SetGameEndStatus),
-                    GameStateManagerSingleton.Instance.GameState == GameStateEnum.GameWon, allGold, enemiesDefeated);
             }
         }
 
         [RemoteSync]
-        public void SetGameEndStatus(bool victory, int enemiesDefeated, int gold) {
-            this.playerOne.Gui.GameEnded(victory, enemiesDefeated, gold);
+        public void GameEnded(bool isVictory, int gold) {
+            AudioPlayerSingleton.Instance.SwitchToAmbient(false);
+            this.GetTree().Paused = true;
+            if (isVictory) {
+                AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Victory);
+            }
+            this.playerOne.Gui.GameFinished(isVictory, gold);
         }
 
         public void OnTimerTimeout() {
             this.minutesPassed++;
 
-            if (this.minutesPassed >= GameTimeInMinutes) {
-                this.EmitSignal(nameof(OnGameWin));
-                GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameWon;
-                AudioPlayerSingleton.Instance.SwitchToAmbient(false);
-                AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Victory);
+            if (this.minutesPassed < GameTimeInMinutes ||
+                (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer())) {
+                return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                Rpc(nameof(this.GameEnded), true, this.gold);
+            } else {
+                this.GameEnded(true, this.gold);
             }
         }
 

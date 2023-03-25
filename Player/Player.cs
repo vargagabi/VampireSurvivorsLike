@@ -200,6 +200,12 @@ namespace VampireSurvivorsLike {
             this.animatedSprite.SelfModulate = new Color(0, 0.91f, 1f, 0.28f);
             this.healthBar.Visible = false;
             this.IsDead = true;
+            this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
+            this.GetNode<Area2D>("PickupArea").QueueFree();
+            this.GetNode<CollisionShape2D>("CollisionShape2D").QueueFree();
+            this.GetNode<Area2D>("Area2D").QueueFree();
+            this.GetNode<Area2D>("PickupArea").QueueFree();
+            this.GetNode("ItemManager").QueueFree();
             EmitSignal(nameof(OnPlayerDeath));
         }
 
@@ -243,35 +249,6 @@ namespace VampireSurvivorsLike {
             this.currentHealth = currentHealth;
             this.UpdateHealth();
         }
-
-
-        /*
-         * This method checks if a new level is reached. If the Player gains enough experience to level multiple
-         * times the level's rewards are given after each other. The Player can select between two types of rewards
-         * Either upgrade an item or increase one Status.
-         * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
-         */
-        // private async void CheckLevelUp() {
-        //     if (GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.Leveling)) {
-        //         return;
-        //     }
-        //     if (Main.ExpToLvl(this.experience) > this.currentLevel) {
-        //         this.GetTree().Paused = true;
-        //         int levelIncrease = Main.ExpToLvl(this.experience) - this.currentLevel;
-        //         GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
-        //
-        //         await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncrease);
-        //
-        //         this.GetTree().Paused = false;
-        //         this.currentLevel += levelIncrease;
-        //         this.gui.SetCurrentLevel(this.currentLevel);
-        //         GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
-        //     }
-        //     int currentExpInLevel = (int)(100 * (this.experience - Main.LvlToExp(this.currentLevel)) /
-        //                                   (Main.LvlToExp(this.currentLevel + 1) -
-        //                                    Main.LvlToExp(this.currentLevel)));
-        //     this.gui.SetCurrentExperience(currentExpInLevel);
-        // }
 
         /*
          * After picking up an ExpOrb the xp of the orb is added to the player's xp.

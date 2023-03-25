@@ -15,7 +15,6 @@ namespace VampireSurvivorsLike {
         private List<object> GeneratedRewards { get; set; }
         public bool IsRewardSelected { get; private set; } = false;
         public Player Player { get; set; }
-        public bool OtherPlayerFinished { get; set; } = false;
 
         public static LevelUpManagerSingleton Instance {
             get {
@@ -28,6 +27,9 @@ namespace VampireSurvivorsLike {
         }
 
         public async Task OnPlayerLevelUp(int numberOfLevelUps) {
+            if (GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.GameFinished)) {
+                return;
+            }
             for (int i = 0; i < numberOfLevelUps; i++) {
                 this.IsRewardSelected = false;
                 this.GeneratedRewards = this.GenerateRewards();

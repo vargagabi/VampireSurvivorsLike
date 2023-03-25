@@ -9,10 +9,9 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
         }
 
-        public void GameFinished(bool victory,int enemiesDefeated = 0, int gold = -1) {
-            GD.Print("Game finished lololol");
+        public void GameFinished(bool isVictory, int gold = -1) {
             this.Visible = true;
-            if (victory) {
+            if (isVictory) {
                 GetNode<Label>("VBoxContainer/Label").Text = "Congratulations!\nYou Win!";
                 if (gold >= 0) {
                     SetGold(gold);

@@ -5,8 +5,6 @@ namespace VampireSurvivorsLike {
     public class GUI : CanvasLayer {
 
         private HUD hud;
-        private PauseScreen pauseScreen;
-        private GameFinishedScreen gameFinishedScreen;
 
         [Signal] public delegate void RewardSelected(int index);
 
@@ -14,12 +12,11 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             GD.Print("GUI Ready...");
             this.hud = this.GetNode<HUD>("Control/HUD");
-            this.pauseScreen = this.GetNode<PauseScreen>("Control/PauseScreen");
-            this.gameFinishedScreen = this.GetNode<GameFinishedScreen>("Control/GameFinishedScreen");
         }
 
-        internal void GameEnded(bool victory, int enemiesDefeated = 0, int gold = -1) {
-            this.gameFinishedScreen.GameFinished(victory, enemiesDefeated, gold);
+        public void GameFinished(bool isVictory, int gold = -1) {
+            this.GetNode<GameFinishedScreen>("Control/GameFinishedScreen").GameFinished(isVictory, gold);
+            this.GetNode<LevelUpScreen>("Control/LevelUpScreen").Visible = false;
         }
 
         public void SetItemOnHud(Texture icon, int level) {
@@ -47,13 +44,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void TogglePauseGame(bool isPaused) {
-           this.pauseScreen.TogglePauseGame(isPaused); 
-        }
-        
-        public void OnGameWon() {
-            // this.GetTree().Paused = true;
-            // this.gameFinishedScreen.SetGold(this.gold);
-            // this.gameFinishedScreen.Visible = true;
+           this.GetNode<PauseScreen>("Control/PauseScreen").TogglePauseGame(isPaused); 
         }
 
     }
