@@ -39,11 +39,10 @@ namespace VampireSurvivorsLike.ItemDrops {
             GlobalPosition += (this.player.GlobalPosition - GlobalPosition).Normalized() * this.speed * delta;
             this.speed += 4;
             if (this.player.GlobalPosition.DistanceTo(this.GlobalPosition) <= 10) {
-                if (this.GetTree().IsNetworkServer()) {
-                    GD.Print(this.player.Name);
-                    EmitSignal(nameof(OnPickUp), this.value, this.type);
+                if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.GetTree().IsNetworkServer()) {
+                    this.EmitSignal(nameof(OnPickUp), this.value, this.type);
                 }
-                CallDeferred("queue_free");
+                this.CallDeferred("queue_free");
             }
         }
 
@@ -60,10 +59,7 @@ namespace VampireSurvivorsLike.ItemDrops {
 
         //Signal connection
         public void OnAreaEntered(Area2D body) {
-            if (this.player != null) {
-                return;
-            }
-            if (this.isMoving || !(body.GetParent() is Player playerBody)) {
+            if (this.player != null || this.isMoving || !(body.GetParent() is Player playerBody)) {
                 return;
             }
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {

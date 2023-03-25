@@ -94,7 +94,11 @@ namespace VampireSurvivorsLike {
             await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
 
             this.isLevelingUp = false;
-            Rpc(nameof(LevelingUpFinished));
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.Rpc(nameof(this.LevelingUpFinished));
+            } else {
+                this.LevelingUpFinished();
+            }
             this.playerOne.Gui.SetCurrentLevel(this.level);
         }
 
@@ -116,15 +120,18 @@ namespace VampireSurvivorsLike {
 
         [Remote]
         public void LevelingUpFinished() {
-            if (!this.isLevelingUp) {
-                Rpc(nameof(this.UnpauseGame));
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                if (!this.isLevelingUp) {
+                    Rpc(nameof(this.UnpauseGame));
+                }
+            } else {
+                this.UnpauseGame();
             }
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
         }
 
         [RemoteSync]
         public void MultiplayerAddGold(int gold) {
-            GD.Print($"Gold added {gold}");
             this.gold += gold;
             this.playerOne.Gui.SetGoldCount(this.gold);
         }
