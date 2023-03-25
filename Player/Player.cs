@@ -96,7 +96,7 @@ namespace VampireSurvivorsLike {
             if (this.takenDamageValue > 0 && !this.IsDead) {
                 this.TakeDamage();
             }
-            if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue()) {
+            if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue() && !this.IsDead) {
                 this.PassiveHeal();
             }
         }
@@ -132,11 +132,12 @@ namespace VampireSurvivorsLike {
             this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
 
             AnimationsEnum animation = AnimationsEnum.Idle;
-            Vector2 velocity = (globalPosition - this.GlobalPosition).Normalized();
-            if (velocity.x == 0 && velocity.y != 0) {
-                animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
-            } else if (velocity.x != 0) {
-                animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
+            if (globalPosition - this.GlobalPosition != Vector2.Zero) {
+                if (direction.x == 0 && direction.y != 0) {
+                    animation = (direction.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
+                } else if (direction.x != 0) {
+                    animation = (direction.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
+                }
             }
             this.animatedSprite.Play(animation.ToString());
             this.GlobalPosition = globalPosition;
