@@ -5,9 +5,6 @@ namespace VampireSurvivorsLike {
 
     public class GameFinishedScreen : CenterContainer {
 
-        // Called when the node enters the scene tree for the first time.
-        public override void _Ready() {
-        }
 
         public void GameFinished(bool isVictory, int gold = -1) {
             this.Visible = true;
@@ -22,9 +19,8 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        public void SetGold(int value) {
+        private void SetGold(int value) {
             GetChild(1).GetNode<Label>("GoldContainer/GoldLabel").Text = value.ToString();
-            AttributeManagerSingleton.Instance.Gold += value;
         }
 
         public void OnVisibilityChanged() {

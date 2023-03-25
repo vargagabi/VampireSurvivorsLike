@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Collections.Generic;
 
 namespace VampireSurvivorsLike {
 
@@ -64,6 +62,9 @@ namespace VampireSurvivorsLike {
         }
 
         private void PlayerDisconnected(int id) {
+            if (GameStateManagerSingleton.Instance.GameState == GameStateEnum.GameFinished) {
+                return;
+            }
             GD.Print("Player disconnected: " + id);
             this.GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
             this.ShowStatus("Player disconnected");
@@ -83,6 +84,9 @@ namespace VampireSurvivorsLike {
         }
 
         private void ServerDisconnected() {
+            if (GameStateManagerSingleton.Instance.GameState == GameStateEnum.GameFinished) {
+                return;
+            }
             GD.Print("ServerDisconnected...");
             this.peer = null;
             this.GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");

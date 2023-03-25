@@ -44,7 +44,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void TogglePauseGame(bool isPaused) {
-           this.GetNode<PauseScreen>("Control/PauseScreen").TogglePauseGame(isPaused); 
+            this.GetNode<PauseScreen>("Control/PauseScreen").TogglePauseGame(isPaused);
         }
 
     }

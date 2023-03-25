@@ -1,8 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using Godot;
 using VampireSurvivorsLike.ItemDrops;
-using Thread = System.Threading.Thread;
 
 namespace VampireSurvivorsLike {
 
@@ -73,14 +71,14 @@ namespace VampireSurvivorsLike {
             }
 
             //JUST FOR TESTING, REMOVE LATER: THIS FOLLOWS THE HOST PLAYER ON BOTH GAME INSTANCES
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
-                if (this.IsNetworkMaster()) {
-                    GetNode<Camera2D>("Camera2D").Current = false;
-                    GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
-                } else {
-                    GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
-                }
-            }
+            // if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
+            //     if (this.IsNetworkMaster()) {
+            //         GetNode<Camera2D>("Camera2D").Current = false;
+            //         GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
+            //     } else {
+            //         GetParent<Main>().playerTwo.GetNode<Camera2D>("Camera2D").Current = true;
+            //     }
+            // }
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -267,9 +265,9 @@ namespace VampireSurvivorsLike {
                 }
             } else if (type.Equals(ItemDropsEnum.Gold)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent<Main>().Rpc(nameof(Main.MultiplayerAddGold), value);
+                    this.GetParent<Main>().Rpc(nameof(Main.AddGold), value);
                 } else {
-                    this.GetParent<Main>().MultiplayerAddGold(value);
+                    this.GetParent<Main>().AddGold(value);
                 }
             }
         }

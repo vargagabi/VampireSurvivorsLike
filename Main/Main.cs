@@ -6,15 +6,14 @@ namespace VampireSurvivorsLike {
 
     public class Main : Node2D {
 
-        private const int GameTimeInMinutes = 10;
+        private const int GameTimeInMinutes = 1;
         private int minutesPassed = 0;
-        public Player playerOne;
-        public Player playerTwo;
+        private Player playerOne;
+        private Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;
         private int levelingCounter = 0;
 
-        //multiplayer variables
         private int level = 0;
         private int experience = 0;
         private int gold = 0;
@@ -140,7 +139,7 @@ namespace VampireSurvivorsLike {
         }
 
         [RemoteSync]
-        public void MultiplayerAddGold(int gold) {
+        public void AddGold(int gold) {
             this.gold += gold;
             this.playerOne.Gui.SetGoldCount(this.gold);
         }
@@ -148,14 +147,14 @@ namespace VampireSurvivorsLike {
         /*
          * Calculates the current level depending on the experience.
          */
-        public static int ExpToLvl(float exp) {
+        private static int ExpToLvl(float exp) {
             return (int)(Math.Sqrt(exp + 4) - 2);
         }
 
         /*
          * Calculates the experience required to reach the level.
          */
-        public static float LvlToExp(int lvl) {
+        private static float LvlToExp(int lvl) {
             return (float)(4 * lvl + Math.Pow(lvl, 2));
         }
 
@@ -193,23 +192,27 @@ namespace VampireSurvivorsLike {
 
         //Check if all players are dead, if true end game
         public void OnPlayerDied() {
-            if (this.playerOne.IsDead && (this.playerTwo == null || this.playerTwo.IsDead)) {
-                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.Rpc(nameof(this.GameEnded), false, 0);
-                } else {
-                    this.GameEnded(false, 0);
-                }
+            if (!this.playerOne.IsDead || (this.playerTwo != null && !this.playerTwo.IsDead)) {
+                return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.Rpc(nameof(this.GameEnded), false, 0);
+            } else {
+                this.GameEnded(false, 0);
             }
         }
 
         [RemoteSync]
-        public void GameEnded(bool isVictory, int gold) {
-            AudioPlayerSingleton.Instance.SwitchToAmbient(false);
+        public void GameEnded(bool isVictory, int goldCount) {
             this.GetTree().Paused = true;
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameFinished;
+            AudioPlayerSingleton.Instance.SwitchToAmbient(false);
             if (isVictory) {
                 AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Victory);
+                AttributeManagerSingleton.Instance.Gold += goldCount;
+                AttributeManagerSingleton.Instance.Save();
             }
-            this.playerOne.Gui.GameFinished(isVictory, gold);
+            this.playerOne.Gui.GameFinished(isVictory, goldCount);
         }
 
         public void OnTimerTimeout() {
