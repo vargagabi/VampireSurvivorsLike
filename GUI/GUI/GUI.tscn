@@ -636,7 +636,7 @@ margin_bottom = 180.0
 text = "Main Menu"
 
 [connection signal="visibility_changed" from="Control/LevelUpScreen" to="Control/LevelUpScreen" method="OnVisibilityChanged"]
-[connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="PauseGame"]
+[connection signal="pressed" from="Control/PauseScreen/VBoxContainer/ResumeButton" to="Control/PauseScreen" method="OnResumeButtonPressed"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]
 [connection signal="visibility_changed" from="Control/GameFinishedScreen" to="Control/GameFinishedScreen" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Control/GameFinishedScreen/VBoxContainer/Button" to="Control/GameFinishedScreen" method="OnButtonPressed"]

@@ -46,6 +46,10 @@ namespace VampireSurvivorsLike {
             this.hud.SetGold(value);
         }
 
+        public void TogglePauseGame(bool isPaused) {
+           this.pauseScreen.TogglePauseGame(isPaused); 
+        }
+        
         public void OnGameWon() {
             // this.GetTree().Paused = true;
             // this.gameFinishedScreen.SetGold(this.gold);

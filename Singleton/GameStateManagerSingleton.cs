@@ -25,8 +25,12 @@ namespace VampireSurvivorsLike {
             get => this.gameState;
             set {
                 this.gameState = value;
-                // GD.Print($"Game state: {this.gameState}");
+                GD.Print($"-----Game state: {this.gameState}----");
             }
+        }
+
+        public bool IsPaused() {
+            return this.GameState.Equals(GameStateEnum.Paused);
         }
 
     }

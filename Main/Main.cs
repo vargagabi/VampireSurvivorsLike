@@ -50,6 +50,27 @@ namespace VampireSurvivorsLike {
             }
         }
 
+        public override void _Input(InputEvent inputEvent) {
+            if (!inputEvent.IsActionPressed("ui_cancel")) {
+                return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                Rpc(nameof(this.TogglePauseGame), !GameStateManagerSingleton.Instance.IsPaused());
+                return;
+            }
+            this.TogglePauseGame(!GameStateManagerSingleton.Instance.IsPaused());
+        }
+
+        [RemoteSync]
+        public void TogglePauseGame(bool isPaused) {
+            if (GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.Leveling)) {
+                return;
+            }
+            GameStateManagerSingleton.Instance.GameState = isPaused ? GameStateEnum.Paused : GameStateEnum.Playing;
+            this.GetTree().Paused = isPaused;
+            this.playerOne.Gui.TogglePauseGame(isPaused);
+        }
+
         [RemoteSync]
         public async void MultiplayerIncreaseExperience(int value) {
             this.experience += value;
@@ -61,7 +82,7 @@ namespace VampireSurvivorsLike {
                 GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
 
                 await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
-                
+
                 this.isLevelingUp = false;
                 Rpc(nameof(LevelingUpFinished));
                 this.playerOne.Gui.SetCurrentLevel(this.level);
@@ -74,6 +95,7 @@ namespace VampireSurvivorsLike {
             if (!this.isLevelingUp) {
                 Rpc(nameof(this.UnpauseGame));
             }
+            GameStateManagerSingleton.Instance.GameState =GameStateEnum.Playing;
         }
 
         [RemoteSync]
