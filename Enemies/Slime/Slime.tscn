@@ -89,7 +89,9 @@ animations = [ {
 radius = 7.33333
 
 [node name="Enemy1" type="KinematicBody2D"]
+pause_mode = 1
 scale = Vector2( 1.5, 1.5 )
+z_index = 1
 collision_mask = 2
 script = ExtResource( 2 )
 

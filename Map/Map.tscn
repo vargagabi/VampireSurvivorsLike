@@ -475,7 +475,7 @@ format = 1
 tile_data = PoolIntArray( -655354, 0, 0, -524296, 0, 0, -196604, 0, 0, 262149, 0, 0, 393206, 0, 0 )
 
 [node name="Props" type="TileMap" parent="."]
-z_index = 1
+z_index = 2
 tile_set = SubResource( 20 )
 cell_size = Vector2( 32, 32 )
 show_collision = true

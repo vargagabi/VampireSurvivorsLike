@@ -7,8 +7,6 @@ namespace VampireSurvivorsLike {
     public class Player : KinematicBody2D {
 
         private int currentHealth;
-
-        //Counters
         private int healthCounter = 0;
         private int damageCounter = 0;
         private const int ImmunityTime = 25;
@@ -16,19 +14,12 @@ namespace VampireSurvivorsLike {
         private Vector2 Direction { get; set; }
         private float takenDamageValue = 0;
 
-        private float experience = 0;
-        private int currentLevel = 0;
-
         private AnimatedSprite animatedSprite;
         private TextureProgress healthBar;
-        private CircleShape2D pickupArea;
-        private Texture[] textures = new Texture[3];
+        private readonly Texture[] textures = new Texture[3];
         private Sprite directionArrow;
-
-        // private PackedScene FloatingValue { get; set; }
         private GUI gui;
-        public int Gold { get; private set; } = 0;
-        public int EnemiesDefeated { get; private set; } = 0;
+        
         public bool IsDead { get; private set; } = false;
         public ItemManager ItemManager { get; private set; }
 
@@ -88,7 +79,6 @@ namespace VampireSurvivorsLike {
             }
             this.Move();
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
-                //Update puppets
                 this.RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
             }
             if (this.takenDamageValue > 0 && !this.IsDead) {
@@ -174,7 +164,7 @@ namespace VampireSurvivorsLike {
             this.damageCounter++;
             if (this.damageCounter % ImmunityTime == 0) {
                 FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
-                    (int)this.takenDamageValue, this.GetParent());
+                    (int)this.takenDamageValue, this.GetParent().GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.UpdateHealth();
@@ -211,7 +201,7 @@ namespace VampireSurvivorsLike {
         [Puppet]
         public void PuppetTakeDamage(float damage, int currentHealth) {
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
-                this.GetParent());
+                this.GetParent().GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealth();
         }
@@ -230,7 +220,7 @@ namespace VampireSurvivorsLike {
             }
             this.healthCounter = 0;
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f),
-                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent());
+                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent().GetParent());
             this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
                 AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
             this.UpdateHealth();
@@ -244,7 +234,7 @@ namespace VampireSurvivorsLike {
         [Puppet]
         public void PuppetPassiveHeal(int healingValue, int currentHealth) {
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f), healingValue,
-                this.GetParent());
+                this.GetParent().GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealth();
         }
@@ -259,15 +249,15 @@ namespace VampireSurvivorsLike {
             }
             if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent<Main>().Rpc(nameof(Main.IncreaseExperience), value);
+                    this.GetParent().GetParent<Main>().Rpc(nameof(Main.IncreaseExperience), value);
                 } else {
-                    this.GetParent<Main>().IncreaseExperience(value);
+                    this.GetParent().GetParent<Main>().IncreaseExperience(value);
                 }
             } else if (type.Equals(ItemDropsEnum.Gold)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent<Main>().Rpc(nameof(Main.AddGold), value);
+                    this.GetParent().GetParent<Main>().Rpc(nameof(Main.AddGold), value);
                 } else {
-                    this.GetParent<Main>().AddGold(value);
+                    this.GetParent().GetParent<Main>().AddGold(value);
                 }
             }
         }

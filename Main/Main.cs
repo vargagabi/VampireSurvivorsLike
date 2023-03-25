@@ -6,12 +6,13 @@ namespace VampireSurvivorsLike {
 
     public class Main : Node2D {
 
-        private const int GameTimeInMinutes = 1;
+        private const int GameTimeInMinutes = 10;
         private int minutesPassed = 0;
         private Player playerOne;
         private Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;
+        public YSort entities;
         private int levelingCounter = 0;
 
         private int level = 0;
@@ -27,6 +28,7 @@ namespace VampireSurvivorsLike {
             GD.Print("Main ready...");
             this.map = GetNode<Map>("Map");
             this.mobSpawner = GetNode<MobSpawner>("MobSpawner");
+            this.entities = GetNode<YSort>("Entities");
 
             //Create the player(s)
             this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
@@ -36,7 +38,7 @@ namespace VampireSurvivorsLike {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.GetTree().NetworkPeer != null) {
                 this.ConfigureMultiplayer();
             }
-            this.AddChild(this.playerOne);
+            this.entities.AddChild(this.playerOne);
             this.map.AddPlayer(this.playerOne);
             this.mobSpawner.PlayerOne = this.playerOne;
             this.playerOne.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
@@ -176,7 +178,7 @@ namespace VampireSurvivorsLike {
 
             this.SetNetworkMasters();
 
-            this.AddChild(this.playerTwo);
+            this.entities.AddChild(this.playerTwo);
             this.map.AddPlayer(this.playerTwo);
             this.mobSpawner.PlayerTwo = this.playerTwo;
             this.playerTwo.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));

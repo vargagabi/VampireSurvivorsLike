@@ -3,6 +3,7 @@
 [ext_resource path="res://Enemies/MobSpawner/MobSpawner.cs" type="Script" id=2]
 
 [node name="MobSpawner" type="Node2D"]
+pause_mode = 1
 script = ExtResource( 2 )
 
 [node name="YSort" type="YSort" parent="."]
