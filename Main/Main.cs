@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using VampireSurvivorsLike.ItemDrops;
 
 namespace VampireSurvivorsLike {
 
@@ -11,6 +12,7 @@ namespace VampireSurvivorsLike {
         public Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;
+        private int levelingCounter = 0;
 
         //multiplayer variables
         private int level = 0;
@@ -51,6 +53,12 @@ namespace VampireSurvivorsLike {
         }
 
         public override void _Input(InputEvent inputEvent) {
+            if (inputEvent.IsActionPressed("left_click")) {
+                ItemDropManager.Instance.CreateGold(100, this.playerOne.GlobalPosition);
+            }
+            if (inputEvent.IsActionPressed("right_click")) {
+                ItemDropManager.Instance.CreateExperienceOrb(10, this.playerOne.GlobalPosition);
+            }
             if (!inputEvent.IsActionPressed("ui_cancel")) {
                 return;
             }
@@ -59,6 +67,35 @@ namespace VampireSurvivorsLike {
                 return;
             }
             this.TogglePauseGame(!GameStateManagerSingleton.Instance.IsPaused());
+        }
+
+        public override void _Process(float delta) {
+            if (this.levelingCounter++ % 50 == 0 && ExpToLvl(this.experience) > this.level) {
+                this.levelingCounter = 0;
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    Rpc(nameof(this.LevelUp));
+                } else {
+                    this.LevelUp();
+                }
+            }
+        }
+
+        [RemoteSync]
+        public async void LevelUp() {
+            if (this.isLevelingUp || GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.Leveling)) {
+                return;
+            }
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
+            int levelIncreases = ExpToLvl(this.experience) - this.level;
+            this.isLevelingUp = true;
+            this.GetTree().Paused = true;
+            this.level += levelIncreases;
+
+            await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
+
+            this.isLevelingUp = false;
+            Rpc(nameof(LevelingUpFinished));
+            this.playerOne.Gui.SetCurrentLevel(this.level);
         }
 
         [RemoteSync]
@@ -72,21 +109,8 @@ namespace VampireSurvivorsLike {
         }
 
         [RemoteSync]
-        public async void MultiplayerIncreaseExperience(int value) {
+        public void IncreaseExperience(int value) {
             this.experience += value;
-            int levelIncreases = Main.ExpToLvl(this.experience) - this.level;
-            if (Main.ExpToLvl(this.experience) > this.level) {
-                this.isLevelingUp = true;
-                this.GetTree().Paused = true;
-                this.level += levelIncreases;
-                GameStateManagerSingleton.Instance.GameState = GameStateEnum.Leveling;
-
-                await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
-
-                this.isLevelingUp = false;
-                Rpc(nameof(LevelingUpFinished));
-                this.playerOne.Gui.SetCurrentLevel(this.level);
-            }
             this.playerOne.Gui.SetCurrentExperience(this.experience);
         }
 
@@ -95,11 +119,12 @@ namespace VampireSurvivorsLike {
             if (!this.isLevelingUp) {
                 Rpc(nameof(this.UnpauseGame));
             }
-            GameStateManagerSingleton.Instance.GameState =GameStateEnum.Playing;
+            GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
         }
 
         [RemoteSync]
         public void MultiplayerAddGold(int gold) {
+            GD.Print($"Gold added {gold}");
             this.gold += gold;
             this.playerOne.Gui.SetGoldCount(this.gold);
         }
@@ -161,7 +186,7 @@ namespace VampireSurvivorsLike {
 
                 if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                     GD.Print("Send status to server");
-                    this.RpcId(1, nameof(this.SendStatus), 100, 100);
+                    this.RpcId(1, nameof(this.SendStatus), 0, 0);
                 }
 
                 // this.playerOne.Gui.OnGameWon();

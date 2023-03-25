@@ -17,7 +17,7 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             GD.Randomize();
             this.SpawnCounter = 0;
-            this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
+            // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
             // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
             this.ySort = this.GetChild<YSort>(0);
         }

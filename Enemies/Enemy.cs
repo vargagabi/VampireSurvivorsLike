@@ -133,7 +133,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnTimerTimeout() {
-            Rpc(nameof(this.SetPuppetPosition), this.GlobalPosition, this.AnimatedSprite.Frame);
+            this.RpcUnreliable(nameof(this.SetPuppetPosition), this.GlobalPosition, this.AnimatedSprite.Frame);
         }
 
     }

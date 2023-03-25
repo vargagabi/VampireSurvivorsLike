@@ -66,7 +66,7 @@ namespace VampireSurvivorsLike.ItemDrops {
             if (this.isMoving || !(body.GetParent() is Player playerBody)) {
                 return;
             }
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !playerBody.IsNetworkMaster()) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 return;
             }
             this.player = playerBody;

@@ -180,7 +180,7 @@ namespace VampireSurvivorsLike {
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.UpdateHealth();
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
+                    RpcUnreliable(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
                 }
             }
 
@@ -230,7 +230,7 @@ namespace VampireSurvivorsLike {
                 AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
             this.UpdateHealth();
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(this.PuppetPassiveHeal), AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(),
+                RpcUnreliable(nameof(this.PuppetPassiveHeal), AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(),
                     this.currentHealth);
             }
         }
@@ -251,6 +251,9 @@ namespace VampireSurvivorsLike {
          * After successfully leveling up the CurrentLevel and the XP bar are set to the correct values
          */
         private async void CheckLevelUp() {
+            if (GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.Leveling)) {
+                return;
+            }
             if (Main.ExpToLvl(this.experience) > this.currentLevel) {
                 this.GetTree().Paused = true;
                 int levelIncrease = Main.ExpToLvl(this.experience) - this.currentLevel;
@@ -274,12 +277,12 @@ namespace VampireSurvivorsLike {
          * Refreshes the xp using [CurrentExperience]
          */
         public void OnPickedUp(int value, ItemDropsEnum type) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 return;
             }
             if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent<Main>().Rpc(nameof(Main.MultiplayerIncreaseExperience), value);
+                    this.GetParent<Main>().Rpc(nameof(Main.IncreaseExperience), value);
                 } else {
                     this.experience += value;
                     this.CheckLevelUp();
@@ -288,8 +291,7 @@ namespace VampireSurvivorsLike {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     this.GetParent<Main>().Rpc(nameof(Main.MultiplayerAddGold), value);
                 } else {
-                    this.Gold += value;
-                    this.gui.SetGoldCount(this.Gold);
+                    this.GetParent<Main>().MultiplayerAddGold(value);
                 }
             }
         }
