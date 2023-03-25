@@ -10,7 +10,7 @@ namespace VampireSurvivorsLike {
         private const int MaxNumberOfPeers = 1;
 
         private LineEdit address;
-        private LineEdit port;
+        private SpinBox port;
         private NetworkedMultiplayerENet peer;
         private Button hostButton;
         private Button joinButton;
@@ -20,7 +20,7 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             GD.Print("Network ready...");
             this.address = GetNode<LineEdit>("Control/VBoxContainer/AddressLineEdit");
-            this.port = GetNode<LineEdit>("Control/VBoxContainer/PortContainer/LineEdit");
+            this.port = GetNode<SpinBox>("Control/VBoxContainer/PortContainer/SpinBox");
             this.hostButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/HostButton");
             this.joinButton = GetNode<Button>("Control/VBoxContainer/HBoxContainer/JoinButton");
             this.address.Text = this.GetIpAddress();
@@ -116,14 +116,14 @@ namespace VampireSurvivorsLike {
             this.peer = new NetworkedMultiplayerENet();
             this.peer.CompressionMode = NetworkedMultiplayerENet.CompressionModeEnum.RangeCoder;
             this.peer.SetBindIp(this.address.Text);
-            Error err = this.peer.CreateServer(this.port.Text.ToInt(), MaxNumberOfPeers);
+            Error err = this.peer.CreateServer((int)this.port.Value, MaxNumberOfPeers);
             int i = 0;
             while (err != Error.Ok && ++i < 9000) {
                 err = this.peer.CreateServer(DefaultPort + i, MaxNumberOfPeers);
             }
             if (i > 0) {
-                ShowStatus($"Failed to open server on port: {this.port.Text}\nNew port is: {DefaultPort + i}");
-                this.port.Text = (DefaultPort + i).ToString();
+                ShowStatus($"Failed to open server on port: {this.port.Value}\nNew port is: {DefaultPort + i}");
+                this.port.Value = DefaultPort + i;
             }
             GD.Print(i);
             if (err != Error.Ok) {
@@ -148,7 +148,7 @@ namespace VampireSurvivorsLike {
             }
             this.peer = new NetworkedMultiplayerENet();
             this.peer.CompressionMode = NetworkedMultiplayerENet.CompressionModeEnum.RangeCoder;
-            Error err = this.peer.CreateClient(ip, this.port.Text.ToInt());
+            Error err = this.peer.CreateClient(ip, (int)this.port.Value);
             if (err != Error.Ok) {
                 GD.Print(err);
                 this.ShowStatus(err.ToString());

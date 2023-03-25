@@ -58,18 +58,19 @@ size_flags_vertical = 7
 alignment = 1
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/PortContainer"]
-margin_left = 152.0
+margin_left = 144.0
 margin_top = 5.0
-margin_right = 225.0
+margin_right = 217.0
 margin_bottom = 28.0
 text = "Port: "
 align = 1
 
-[node name="LineEdit" type="LineEdit" parent="Control/VBoxContainer/PortContainer"]
-margin_left = 229.0
-margin_right = 347.0
+[node name="SpinBox" type="SpinBox" parent="Control/VBoxContainer/PortContainer"]
+margin_left = 221.0
+margin_right = 355.0
 margin_bottom = 33.0
-text = "1234"
+max_value = 50000.0
+rounded = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
 margin_top = 90.0
