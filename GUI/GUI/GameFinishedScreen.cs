@@ -34,8 +34,10 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnButtonPressed() {
-            GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
+            GetTree().Paused = false;
+            this.GetTree().Root.GetNode<Network>("Network").ConnectionClosed();
             this.GetTree().Root.GetNode("Main").QueueFree();
+            GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
         }
 
     }

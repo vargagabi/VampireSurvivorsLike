@@ -10,7 +10,7 @@ namespace VampireSurvivorsLike {
         private Control images;
         private Control shop;
         private Button lastButtonInFocus;
-        private Control multiplayer;
+        private Control network;
 
         public override void _Ready() {
             mainMenu = GetNode<CenterContainer>("MainMenu");
@@ -18,7 +18,7 @@ namespace VampireSurvivorsLike {
             this.images = GetNode<Control>("Images");
             this.shop = GetNode<Control>("Shop");
             this.lastButtonInFocus = mainMenu.GetChild(0).GetChild<Button>(0);
-            this.multiplayer = this.GetChild<Control>(5);
+            this.network = this.GetTree().Root.GetNode<Control>("Network/Control");
 
             for (int i = 0; i < this.images.GetChildCount() - 1; i++) {
                 Animation animation = new Animation();
@@ -38,20 +38,26 @@ namespace VampireSurvivorsLike {
             }
             this.animationPlayer.Play("0");
             GetNode<AnimationPlayer>("FadeAnimationPlayer").Play("Fade");
+            this.network.Connect("visibility_changed", this, nameof(this.OnNetworkVisibilityChanged));
+            this.network.GetParent<Network>().Connect(nameof(Network.StatusClose), this, nameof(OnStatusClosed));
         }
 
         public override void _Input(InputEvent @event) {
             if (@event.IsActionReleased("ui_cancel")) {
                 this.mainMenu.Visible = true;
                 this.shop.Visible = false;
+                this.network.GetParent<Network>().OnBackButtonPressed();
                 this.lastButtonInFocus.GrabFocus();
             }
+        }
+
+        public void OnStatusClosed() {
+            this.lastButtonInFocus.GrabFocus();
         }
 
         public void OnStartButtonPressed() {
             GameStateManagerSingleton.Instance.IsMultiplayer = false;
             LevelUpManagerSingleton.Instance.Reset();
-            // ItemManagerSingleton.Instance.Reset();
             GetTree().ChangeScene("res://Main/Main.tscn");
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(0);
             AudioPlayerSingleton.Instance.SwitchToAction(false);
@@ -61,7 +67,7 @@ namespace VampireSurvivorsLike {
             GameStateManagerSingleton.Instance.IsMultiplayer = true;
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(1);
             this.mainMenu.Visible = false;
-            this.multiplayer.Visible = true;
+            this.network.Visible = true;
         }
 
         public void OnShopButtonPressed() {
@@ -92,10 +98,19 @@ namespace VampireSurvivorsLike {
             AttributeManagerSingleton.Instance.Save();
             this.mainMenu.Visible = true;
             this.shop.Visible = false;
-            this.multiplayer.Visible = false;
+            this.network.Visible = false;
             this.lastButtonInFocus.GrabFocus();
         }
 
+        public void OnNetworkVisibilityChanged() {
+            GD.Print("network visibility");
+            if (this.network.Visible) {
+                return;
+            }
+            this.mainMenu.Visible = true;
+            this.shop.Visible = false;
+            this.lastButtonInFocus.GrabFocus();
+        }
 
     }
 

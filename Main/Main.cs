@@ -35,7 +35,6 @@ namespace VampireSurvivorsLike {
             this.playerOne.Name = "Player";
             LevelUpManagerSingleton.Instance.Player = this.playerOne;
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.GetTree().NetworkPeer != null) {
-                GD.Print("hello three inside");
                 this.ConfigureMultiplayer();
             }
             this.AddChild(this.playerOne);
