@@ -70,6 +70,7 @@ margin_left = 221.0
 margin_right = 355.0
 margin_bottom = 33.0
 max_value = 50000.0
+value = 1234.0
 rounded = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]

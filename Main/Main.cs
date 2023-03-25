@@ -68,8 +68,11 @@ namespace VampireSurvivorsLike {
         }
 
         public override void _Process(float delta) {
-            if (this.levelingCounter++ % 50 == 0 && ExpToLvl(this.experience) > this.level) {
-                this.levelingCounter = 0;
+            if (this.levelingCounter++ % 25 != 0) {
+                return;
+            }
+            this.levelingCounter = 0;
+            if (ExpToLvl(this.experience) > this.level && !this.playerOne.IsDead) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     Rpc(nameof(this.LevelUp));
                 } else {
@@ -88,6 +91,11 @@ namespace VampireSurvivorsLike {
             this.isLevelingUp = true;
             this.GetTree().Paused = true;
             this.level += levelIncreases;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.playerOne.IsDead) {
+                this.Rpc(nameof(this.LevelingUpFinished));
+                this.isLevelingUp = false;
+                return;
+            }
 
             await LevelUpManagerSingleton.Instance.OnPlayerLevelUp(levelIncreases);
 
@@ -98,6 +106,8 @@ namespace VampireSurvivorsLike {
                 this.LevelingUpFinished();
             }
             this.playerOne.Gui.SetCurrentLevel(this.level);
+            this.playerOne.Gui.SetCurrentExperience((int)(100 * (this.experience - LvlToExp(this.level))
+                                                          / (LvlToExp(this.level + 1) - LvlToExp(this.level))));
         }
 
         [RemoteSync]
@@ -113,7 +123,8 @@ namespace VampireSurvivorsLike {
         [RemoteSync]
         public void IncreaseExperience(int value) {
             this.experience += value;
-            this.playerOne.Gui.SetCurrentExperience(this.experience);
+            this.playerOne.Gui.SetCurrentExperience((int)(100 * (this.experience - LvlToExp(this.level))
+                                                          / (LvlToExp(this.level + 1) - LvlToExp(this.level))));
         }
 
         [Remote]
