@@ -11,6 +11,7 @@ namespace VampireSurvivorsLike {
         private Control shop;
         private Button lastButtonInFocus;
         private Control network;
+        private Control settings;
 
         public override void _Ready() {
             mainMenu = GetNode<CenterContainer>("MainMenu");
@@ -19,6 +20,7 @@ namespace VampireSurvivorsLike {
             this.shop = GetNode<Control>("Shop");
             this.lastButtonInFocus = mainMenu.GetChild(0).GetChild<Button>(0);
             this.network = this.GetTree().Root.GetNode<Control>("Network/Control");
+            this.settings = this.GetNode<Settings>("Settings");
 
             for (int i = 0; i < this.images.GetChildCount() - 1; i++) {
                 Animation animation = new Animation();
@@ -79,6 +81,8 @@ namespace VampireSurvivorsLike {
 
         public void OnSettingsButtonPressed() {
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(3);
+            this.mainMenu.Visible = false;
+            this.settings.Visible = true;
         }
 
         public void OnQuitButtonPressed() {
@@ -99,6 +103,7 @@ namespace VampireSurvivorsLike {
             this.mainMenu.Visible = true;
             this.shop.Visible = false;
             this.network.Visible = false;
+            this.settings.Visible = false;
             this.lastButtonInFocus.GrabFocus();
         }
 

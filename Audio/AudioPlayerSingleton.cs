@@ -57,21 +57,6 @@ namespace VampireSurvivorsLike {
             this.GetAudioFiles();
         }
 
-        private void getStreamData() {
-            GD.Print("---");
-            foreach (var player in this.audioPlayers) {
-                String name = "noname";
-                float pos = 0;
-                if (player.Value.Stream != null) {
-                    name = player.Value.Stream.ResourcePath;
-                    pos = player.Value.GetPlaybackPosition() / player.Value.Stream.GetLength();
-                }
-                GD.Print(
-                    $"{player.Key}: {player.Value.Playing} | {!player.Value.StreamPaused} | {player.Value.VolumeDb} | {pos} | {name}");
-            }
-        }
-
-
         private void GetAudioFiles() {
             Directory directory = new Directory();
             foreach (string audioType in this.directoryPaths) {
@@ -88,6 +73,21 @@ namespace VampireSurvivorsLike {
                         this.fileMap[audioType].Add(file);
                     }
                 }
+            }
+        }
+
+        public void SetVolume(int percent) {
+            GD.Print($"percent; {percent}");
+            int minVolume = -40;
+            int maxVolume = 0;
+            float volume = minVolume + (maxVolume - minVolume) * (percent * 0.01f);
+            GD.Print($"Final volume: {minVolume + (maxVolume - minVolume) * (percent * 0.01f)}");
+            foreach (AudioStreamPlayer player in this.audioPlayers.Values) {
+                if (volume <= minVolume) {
+                    player.VolumeDb = -80;
+                    return;
+                }
+                player.VolumeDb = minVolume + (maxVolume - minVolume) * (percent * 0.01f);
             }
         }
 

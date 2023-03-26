@@ -20,6 +20,7 @@ AttributeManager="*res://Singleton/AttributeManagerSingleton.cs"
 AudioPlayer="*res://Audio/AudioPlayer.tscn"
 ItemDropManager="*res://ItemDrops/ItemDropManager.cs"
 Network="*res://Networking/Network.tscn"
+SettingsManager="*res://Singleton/SettingsManager.cs"
 
 [debug]
 
