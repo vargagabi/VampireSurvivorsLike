@@ -164,7 +164,7 @@ namespace VampireSurvivorsLike {
             this.damageCounter++;
             if (this.damageCounter % ImmunityTime == 0) {
                 FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
-                    (int)this.takenDamageValue, this.GetParent().GetParent());
+                    (int)this.takenDamageValue, this.GetParent().GetParent().GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.UpdateHealth();
@@ -201,7 +201,7 @@ namespace VampireSurvivorsLike {
         [Puppet]
         public void PuppetTakeDamage(float damage, int currentHealth) {
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f), (int)damage,
-                this.GetParent().GetParent());
+                this.GetParent().GetParent().GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealth();
         }
@@ -220,7 +220,7 @@ namespace VampireSurvivorsLike {
             }
             this.healthCounter = 0;
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f),
-                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent().GetParent());
+                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent().GetParent().GetParent());
             this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
                 AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
             this.UpdateHealth();
@@ -234,7 +234,7 @@ namespace VampireSurvivorsLike {
         [Puppet]
         public void PuppetPassiveHeal(int healingValue, int currentHealth) {
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f), healingValue,
-                this.GetParent().GetParent());
+                this.GetParent().GetParent().GetParent());
             this.currentHealth = currentHealth;
             this.UpdateHealth();
         }
@@ -249,15 +249,15 @@ namespace VampireSurvivorsLike {
             }
             if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent().GetParent<Main>().Rpc(nameof(Main.IncreaseExperience), value);
+                    this.GetParent().GetParent().GetParent<Main>().Rpc(nameof(Main.IncreaseExperience), value);
                 } else {
-                    this.GetParent().GetParent<Main>().IncreaseExperience(value);
+                    this.GetParent().GetParent().GetParent<Main>().IncreaseExperience(value);
                 }
             } else if (type.Equals(ItemDropsEnum.Gold)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.GetParent().GetParent<Main>().Rpc(nameof(Main.AddGold), value);
+                    this.GetParent().GetParent().GetParent<Main>().Rpc(nameof(Main.AddGold), value);
                 } else {
-                    this.GetParent().GetParent<Main>().AddGold(value);
+                    this.GetParent().GetParent().GetParent<Main>().AddGold(value);
                 }
             }
         }

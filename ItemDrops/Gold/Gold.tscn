@@ -78,6 +78,8 @@ height = 2.0
 
 [node name="Gold" type="Node2D"]
 pause_mode = 1
+z_index = 2
+z_as_relative = false
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

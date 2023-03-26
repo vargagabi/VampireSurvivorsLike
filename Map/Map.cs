@@ -14,12 +14,14 @@ namespace VampireSurvivorsLike {
         private int renderDistance;
         private List<Player> players = new List<Player>();
 
+        private Vector2 minmax = new Vector2(float.MaxValue, float.MinValue);
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Print("Map ready....");
             this.ground = this.GetChild<TileMap>(0);
-            this.tree = this.GetChild<TileMap>(1);
-            this.props = this.GetChild<TileMap>(2);
+            this.tree = this.GetChild(1).GetChild<TileMap>(0);
+            this.props = this.GetChild(1).GetChild<TileMap>(1);
             this.renderDistance = 25;
 
             this.noise = new OpenSimplexNoise();
@@ -31,8 +33,8 @@ namespace VampireSurvivorsLike {
 
             this.otherNoise = new OpenSimplexNoise();
             this.otherNoise.Seed = new Random().Next();
-            this.otherNoise.Octaves = 8;
-            this.otherNoise.Period = 5f;
+            this.otherNoise.Octaves = 1;
+            this.otherNoise.Period = 0.01f;
             this.otherNoise.Persistence = 0.8f;
             this.otherNoise.Lacunarity = 3f;
         }
@@ -68,8 +70,10 @@ namespace VampireSurvivorsLike {
                     }
                     this.ground.SetCell(posX, posY, 0, false, false, false,
                         new Vector2((int)GD.RandRange(0, 8), (int)GD.RandRange(0, 4)));
-                    if (otherNoiseValue > 0.40 && otherNoiseValue < 0.42 && this.props.GetCell(posX, posY) == -1) {
-                        this.props.SetCell(posX, posY, (int)((otherNoiseValue * groundNoiseValue + 1) * 7));
+
+                    
+                    if (otherNoiseValue < -0.78 && this.props.GetCell(posX, posY) == TileMap.InvalidCell) {
+                        this.props.SetCell(posX, posY, (int)((groundNoiseValue * otherNoiseValue + 1) * 3.5));
                     }
                 }
             }

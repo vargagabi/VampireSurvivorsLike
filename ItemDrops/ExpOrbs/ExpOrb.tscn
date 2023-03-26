@@ -60,6 +60,8 @@ radius = 13.8067
 
 [node name="ExpOrb" type="Node2D"]
 scale = Vector2( 0.8, 0.8 )
+z_index = 2
+z_as_relative = false
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true

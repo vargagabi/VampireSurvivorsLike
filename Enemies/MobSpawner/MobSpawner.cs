@@ -17,9 +17,9 @@ namespace VampireSurvivorsLike {
             GD.Randomize();
             this.SpawnCounter = 0;
 
-            // this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
+            this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
             this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
-            this.ySort = this.GetParent().GetNode<YSort>("Entities");
+            this.ySort = this.GetParent().GetNode<YSort>("World/Entities");
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.

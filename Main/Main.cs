@@ -26,9 +26,9 @@ namespace VampireSurvivorsLike {
 
         public override void _Ready() {
             GD.Print("Main ready...");
-            this.map = GetNode<Map>("Map");
+            this.map = GetNode<Map>("World");
             this.mobSpawner = GetNode<MobSpawner>("MobSpawner");
-            this.entities = GetNode<YSort>("Entities");
+            this.entities = GetNode<YSort>("World/Entities");
 
             //Create the player(s)
             this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
