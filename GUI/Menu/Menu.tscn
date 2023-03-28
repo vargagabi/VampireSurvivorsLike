@@ -7,7 +7,7 @@
 [ext_resource path="res://Assets/MainMenu/path5_pixelated.png" type="Texture" id=5]
 [ext_resource path="res://Assets/MainMenu/path1_pixelated.png" type="Texture" id=6]
 [ext_resource path="res://Shop/Shop.cs" type="Script" id=7]
-[ext_resource path="res://GUI/Menu/Settings.cs" type="Script" id=8]
+[ext_resource path="res://GUI/Menu/Settings.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Animation" id=3]
 resource_name = "Fade"
@@ -276,179 +276,8 @@ margin_right = 183.0
 margin_bottom = 52.0
 text = "Gold"
 
-[node name="Settings" type="Control" parent="."]
+[node name="Settings" parent="." instance=ExtResource( 8 )]
 visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource( 8 )
-
-[node name="CenterContainer" type="CenterContainer" parent="Settings"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="ColorRect2" type="ColorRect" parent="Settings/CenterContainer"]
-margin_left = 390.0
-margin_top = 205.0
-margin_right = 890.0
-margin_bottom = 515.0
-rect_min_size = Vector2( 500, 310 )
-color = Color( 0.407843, 0.407843, 0.407843, 1 )
-
-[node name="ColorRect" type="ColorRect" parent="Settings/CenterContainer"]
-margin_left = 395.0
-margin_top = 210.0
-margin_right = 885.0
-margin_bottom = 510.0
-rect_min_size = Vector2( 490, 300 )
-color = Color( 0.227451, 0.219608, 0.219608, 1 )
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Settings/CenterContainer"]
-margin_left = 440.0
-margin_top = 220.0
-margin_right = 840.0
-margin_bottom = 500.0
-rect_min_size = Vector2( 400, 280 )
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/separation = 20
-
-[node name="Label" type="Label" parent="Settings/CenterContainer/VBoxContainer"]
-margin_right = 400.0
-margin_bottom = 23.0
-text = "Settings"
-align = 1
-valign = 1
-
-[node name="HSeparator2" type="HSeparator" parent="Settings/CenterContainer/VBoxContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 43.0
-margin_right = 400.0
-margin_bottom = 62.0
-custom_constants/separation = 19
-
-[node name="SettingsContainer" type="GridContainer" parent="Settings/CenterContainer/VBoxContainer"]
-margin_top = 82.0
-margin_right = 400.0
-margin_bottom = 256.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_constants/vseparation = 20
-columns = 4
-
-[node name="Label" type="Label" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_right = 73.0
-margin_bottom = 32.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "Sound"
-valign = 1
-
-[node name="SoundCheckButton" type="CheckButton" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_left = 86.0
-margin_right = 150.0
-margin_bottom = 32.0
-size_flags_horizontal = 10
-size_flags_vertical = 5
-pressed = true
-
-[node name="SoundSlider" type="HSlider" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_left = 154.0
-margin_right = 354.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 200, 0 )
-size_flags_horizontal = 3
-size_flags_vertical = 5
-value = 1.0
-rounded = true
-tick_count = 11
-ticks_on_borders = true
-
-[node name="SoundValueLabel" type="Label" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_left = 358.0
-margin_right = 400.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 42, 0 )
-size_flags_horizontal = 8
-size_flags_vertical = 5
-text = "100"
-align = 2
-valign = 1
-
-[node name="Label2" type="Label" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_top = 52.0
-margin_right = 73.0
-margin_bottom = 84.0
-size_flags_vertical = 5
-text = "Music"
-valign = 1
-
-[node name="MusicCheckButton" type="CheckButton" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_left = 86.0
-margin_top = 52.0
-margin_right = 150.0
-margin_bottom = 84.0
-size_flags_horizontal = 10
-size_flags_vertical = 5
-pressed = true
-
-[node name="MusicSlider" type="HSlider" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-margin_left = 154.0
-margin_top = 52.0
-margin_right = 354.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 200, 0 )
-size_flags_horizontal = 3
-size_flags_vertical = 5
-rounded = true
-tick_count = 11
-ticks_on_borders = true
-
-[node name="MusicValueLabel" type="Label" parent="Settings/CenterContainer/VBoxContainer/SettingsContainer"]
-self_modulate = Color( 0.601563, 0.601563, 0.601563, 1 )
-margin_left = 358.0
-margin_top = 52.0
-margin_right = 400.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 42, 0 )
-size_flags_horizontal = 8
-size_flags_vertical = 5
-text = "100"
-align = 2
-valign = 1
-
-[node name="HSeparator" type="HSeparator" parent="Settings/CenterContainer/VBoxContainer"]
-margin_top = 276.0
-margin_right = 400.0
-margin_bottom = 280.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Settings"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -147.0
-margin_bottom = -101.0
-custom_constants/separation = 200
-alignment = 1
-
-[node name="SaveButton" type="Button" parent="Settings/HBoxContainer"]
-margin_left = 254.0
-margin_right = 540.0
-margin_bottom = 46.0
-rect_min_size = Vector2( 286, 46 )
-text = "Reset"
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="BackButton" type="Button" parent="Settings/HBoxContainer"]
-margin_left = 740.0
-margin_right = 1026.0
-margin_bottom = 46.0
-rect_min_size = Vector2( 286, 46 )
-text = "Back"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
@@ -459,10 +288,4 @@ __meta__ = {
 [connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Shop/BackButton" to="." method="OnBackButtonPressed"]
 [connection signal="pressed" from="Shop/ResetButton" to="Shop" method="OnResetButtonPressed"]
-[connection signal="toggled" from="Settings/CenterContainer/VBoxContainer/SettingsContainer/SoundCheckButton" to="Settings" method="OnSoundButtonToggled"]
-[connection signal="value_changed" from="Settings/CenterContainer/VBoxContainer/SettingsContainer/SoundSlider" to="Settings" method="OnSoundValueChanged"]
-[connection signal="toggled" from="Settings/CenterContainer/VBoxContainer/SettingsContainer/MusicCheckButton" to="Settings" method="OnMusicButtonToggled"]
-[connection signal="value_changed" from="Settings/CenterContainer/VBoxContainer/SettingsContainer/MusicSlider" to="Settings" method="OnMusicValueChanged"]
-[connection signal="pressed" from="Settings/HBoxContainer/SaveButton" to="Settings" method="OnResetButtonPressed"]
-[connection signal="pressed" from="Settings/HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]
-[connection signal="pressed" from="Settings/HBoxContainer/BackButton" to="Settings" method="OnBackButtonPressed"]
+[connection signal="BackButtonPress" from="Settings" to="." method="OnBackButtonPressed"]

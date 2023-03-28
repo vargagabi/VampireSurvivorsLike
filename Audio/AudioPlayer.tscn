@@ -20,4 +20,3 @@ script = ExtResource( 1 )
 
 [connection signal="finished" from="AmbientAudioPlayer" to="." method="OnAudioFinished"]
 [connection signal="finished" from="ActionAudioPlayer" to="." method="OnAudioFinished"]
-[connection signal="finished" from="EffectAudioPlayer" to="." method="OnAudioFinished"]

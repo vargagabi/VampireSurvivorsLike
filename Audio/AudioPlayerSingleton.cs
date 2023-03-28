@@ -45,9 +45,9 @@ namespace VampireSurvivorsLike {
                 this.tweens[type].Connect("tween_completed", this, "OnTweenCompleted");
             }
 
-            this.audioPlayers["Ambient"].VolumeDb = SettingsManager.Instance.GetValue(SettingsEnum.Music);
-            this.audioPlayers["Action"].VolumeDb = SettingsManager.Instance.GetValue(SettingsEnum.Music);
-            this.audioPlayers["Effect"].VolumeDb = SettingsManager.Instance.GetValue(SettingsEnum.Sound);
+            this.audioPlayers["Ambient"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+            this.audioPlayers["Action"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+            this.audioPlayers["Effect"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Sound));
             this.GetAudioFiles();
         }
 
@@ -118,7 +118,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void SwitchToAmbient(bool continueLastStream = true) {
-            GD.Print("Play ambient method");
+            GD.Print("Play ambient music");
             this.RemoveTweens();
             this.currentlyPlaying = "Ambient";
 
@@ -134,6 +134,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void SwitchToAction(bool continueLastStream = true) {
+            GD.Print("Play action music");
             this.RemoveTweens();
             this.currentlyPlaying = "Action";
 
@@ -149,6 +150,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void PlayEffect(AudioEffectEnum effect) {
+            GD.Print($"Play {effect} effect");
             this.audioPlayers["Effect"].Stream =
                 ResourceLoader.Load<AudioStream>($"res://Audio/Effect/{effect.ToString()}.ogg");
             this.audioPlayers["Effect"].Play();

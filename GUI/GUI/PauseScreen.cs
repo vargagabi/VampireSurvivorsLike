@@ -26,6 +26,10 @@ namespace VampireSurvivorsLike {
             this.GetTree().Root.GetNode<Main>("Main").TogglePauseGame(false);
         }
 
+        public void OnSettingsButtonPressed() {
+            this.Visible = false;
+        }
+        
         public void OnQuitButtonPressed() {
             GetTree().Paused = false;
             this.GetTree().Root.GetNode<Network>("Network").ConnectionClosed();

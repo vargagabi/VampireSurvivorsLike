@@ -1,0 +1,183 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://GUI/Menu/Settings.cs" type="Script" id=1]
+
+[node name="Settings" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect2" type="ColorRect" parent="CenterContainer"]
+margin_left = 390.0
+margin_top = 205.0
+margin_right = 890.0
+margin_bottom = 515.0
+rect_min_size = Vector2( 500, 310 )
+color = Color( 0.407843, 0.407843, 0.407843, 1 )
+
+[node name="ColorRect" type="ColorRect" parent="CenterContainer"]
+margin_left = 395.0
+margin_top = 210.0
+margin_right = 885.0
+margin_bottom = 510.0
+rect_min_size = Vector2( 490, 300 )
+color = Color( 0.227451, 0.219608, 0.219608, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 440.0
+margin_top = 220.0
+margin_right = 840.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 400, 280 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_right = 400.0
+margin_bottom = 23.0
+text = "Settings"
+align = 1
+valign = 1
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 43.0
+margin_right = 400.0
+margin_bottom = 62.0
+custom_constants/separation = 19
+
+[node name="SettingsContainer" type="GridContainer" parent="CenterContainer/VBoxContainer"]
+margin_top = 82.0
+margin_right = 400.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/vseparation = 20
+columns = 4
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_right = 70.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 5
+text = "Sound"
+valign = 1
+
+[node name="SoundCheckButton" type="CheckButton" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_left = 74.0
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 10
+size_flags_vertical = 5
+pressed = true
+
+[node name="SoundSlider" type="HSlider" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_left = 154.0
+margin_right = 354.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 5
+value = 1.0
+rounded = true
+tick_count = 11
+ticks_on_borders = true
+
+[node name="SoundValueLabel" type="Label" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_left = 358.0
+margin_right = 400.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 42, 0 )
+size_flags_horizontal = 8
+size_flags_vertical = 5
+text = "100"
+align = 2
+valign = 1
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_top = 60.0
+margin_right = 70.0
+margin_bottom = 100.0
+size_flags_vertical = 5
+text = "Music"
+valign = 1
+
+[node name="MusicCheckButton" type="CheckButton" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_left = 74.0
+margin_top = 60.0
+margin_right = 150.0
+margin_bottom = 100.0
+size_flags_horizontal = 10
+size_flags_vertical = 5
+pressed = true
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+margin_left = 154.0
+margin_top = 60.0
+margin_right = 354.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 5
+rounded = true
+tick_count = 11
+ticks_on_borders = true
+
+[node name="MusicValueLabel" type="Label" parent="CenterContainer/VBoxContainer/SettingsContainer"]
+self_modulate = Color( 0.601563, 0.601563, 0.601563, 1 )
+margin_left = 358.0
+margin_top = 60.0
+margin_right = 400.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 42, 0 )
+size_flags_horizontal = 8
+size_flags_vertical = 5
+text = "100"
+align = 2
+valign = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+margin_top = 276.0
+margin_right = 400.0
+margin_bottom = 280.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -147.0
+margin_bottom = -101.0
+custom_constants/separation = 200
+alignment = 1
+
+[node name="SaveButton" type="Button" parent="HBoxContainer"]
+margin_left = 254.0
+margin_right = 540.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 286, 46 )
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="BackButton" type="Button" parent="HBoxContainer"]
+margin_left = 740.0
+margin_right = 1026.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 286, 46 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="toggled" from="CenterContainer/VBoxContainer/SettingsContainer/SoundCheckButton" to="." method="OnSoundButtonToggled"]
+[connection signal="value_changed" from="CenterContainer/VBoxContainer/SettingsContainer/SoundSlider" to="." method="OnSoundValueChanged"]
+[connection signal="toggled" from="CenterContainer/VBoxContainer/SettingsContainer/MusicCheckButton" to="." method="OnMusicButtonToggled"]
+[connection signal="value_changed" from="CenterContainer/VBoxContainer/SettingsContainer/MusicSlider" to="." method="OnMusicValueChanged"]
+[connection signal="pressed" from="HBoxContainer/SaveButton" to="." method="OnResetButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]

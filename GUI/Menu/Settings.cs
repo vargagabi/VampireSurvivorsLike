@@ -7,6 +7,8 @@ namespace VampireSurvivorsLike {
 
         private string path = "CenterContainer/VBoxContainer/SettingsContainer/";
 
+        [Signal] public delegate void BackButtonPress();
+
         public override void _Ready() {
             this.SetValues();
         }
@@ -45,13 +47,15 @@ namespace VampireSurvivorsLike {
         public void OnSoundValueChanged(float value) {
             this.GetNode<Label>($"{this.path}/SoundValueLabel").Text =
                 ((int)(value)).ToString();
-            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Sound.ToString()), SettingsEnum.Sound.ToString());
+            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Sound.ToString()),
+                SettingsEnum.Sound.ToString());
         }
 
         public void OnMusicValueChanged(float value) {
             this.GetNode<Label>($"{this.path}/MusicValueLabel").Text =
                 ((int)(value)).ToString();
-            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Music.ToString()), SettingsEnum.Music.ToString());
+            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Music.ToString()),
+                SettingsEnum.Music.ToString());
         }
 
         public void OnSoundButtonToggled(bool value) {
@@ -63,11 +67,17 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnBackButtonPressed() {
+            this.Visible = false;
+            this.EmitSignal(nameof(BackButtonPress));
             foreach (string setting in Enum.GetNames(typeof(SettingsEnum))) {
                 GD.Print(setting);
                 SettingsManager.Instance.SetValue(this.GetSettingValues(setting), setting);
             }
             SettingsManager.Instance.Save();
+        }
+
+        public void OnSettingsButtonPressed() {
+            this.Visible = true;
         }
 
         public void OnResetButtonPressed() {
