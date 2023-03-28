@@ -23,7 +23,7 @@ public class FireRing : Weapon {
     // n = sqrt (e/2)
 
     public override void _Input(InputEvent @event) {
-        if (@event.IsActionPressed("ui_space")) {
+        if (@event.IsActionPressed("Space")) {
             this.AddChild(this.GetChild(0).Duplicate());
             GD.Print("FIRERING!");
         }

@@ -96,7 +96,7 @@ namespace VampireSurvivorsLike {
             int xInput = (Input.IsActionPressed("ui_right") ? 1 : 0) - (Input.IsActionPressed("ui_left") ? 1 : 0);
             int yInput = (Input.IsActionPressed("ui_down") ? 1 : 0) - (Input.IsActionPressed("ui_up") ? 1 : 0);
             Vector2 velocity = new Vector2(xInput, yInput).Normalized();
-            if (!Input.IsActionPressed("ui_space") && !velocity.Equals(Vector2.Zero)) {
+            if (!Input.IsActionPressed("ui_hold") && !velocity.Equals(Vector2.Zero)) {
                 this.Direction = velocity;
             }
             if (velocity.x == 0 && velocity.y != 0) {

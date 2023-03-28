@@ -47,6 +47,12 @@ namespace VampireSurvivorsLike {
             this.GetNode<PauseScreen>("Control/PauseScreen").TogglePauseGame(isPaused);
         }
 
+        public bool GetSettingsVisible() {
+            bool visible = this.GetNode<Settings>("Control/Settings").Visible;
+            this.GetNode<Settings>("Control/Settings").Visible = false;
+            return visible;
+        }
+
     }
 
 }

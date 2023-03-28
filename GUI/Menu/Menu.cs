@@ -49,6 +49,7 @@ namespace VampireSurvivorsLike {
                 this.mainMenu.Visible = true;
                 this.shop.Visible = false;
                 this.network.GetParent<Network>().OnBackButtonPressed();
+                this.settings.Visible = false;
                 this.lastButtonInFocus.GrabFocus();
             }
         }

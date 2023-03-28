@@ -52,13 +52,10 @@ namespace VampireSurvivorsLike {
         }
 
         public override void _Input(InputEvent inputEvent) {
-            if (inputEvent.IsActionPressed("left_click")) {
-                ItemDropManager.Instance.CreateGold(100, this.playerOne.GlobalPosition);
+            if (!inputEvent.IsActionPressed("ui_cancel") || inputEvent.IsEcho()) {
+                return;
             }
-            if (inputEvent.IsActionPressed("right_click")) {
-                ItemDropManager.Instance.CreateExperienceOrb(10, this.playerOne.GlobalPosition);
-            }
-            if (!inputEvent.IsActionPressed("ui_cancel")) {
+            if (this.playerOne.Gui.GetSettingsVisible()) {
                 return;
             }
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {

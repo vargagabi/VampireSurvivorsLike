@@ -39,8 +39,22 @@ namespace VampireSurvivorsLike {
                 GD.Print(err);
                 return;
             }
-            foreach (string key in file.GetSectionKeys("Settings")) {
-                if (file.GetValue("Settings", key) is int intValue) {
+            foreach (string key in file.GetSectionKeys("Controls")) {
+                if (file.GetValue("Controls", key) is int intValue) {
+                    this.settings.Add(key, intValue);
+                    if (intValue < 0) {
+                        InputEventMouseButton mouse = new InputEventMouseButton();
+                        mouse.ButtonIndex = Math.Abs(intValue);
+                        this.SetActionKey(key, mouse);
+                    } else {
+                        InputEventKey eventKey = new InputEventKey();
+                        eventKey.Scancode = (uint)intValue;
+                        this.SetActionKey(key, eventKey);
+                    }
+                }
+            }
+            foreach (string key in file.GetSectionKeys("Audio")) {
+                if (file.GetValue("Audio", key) is int intValue) {
                     this.settings.Add(key, intValue);
                 }
             }
@@ -49,7 +63,12 @@ namespace VampireSurvivorsLike {
         public void Save() {
             ConfigFile file = new ConfigFile();
             foreach (KeyValuePair<string, int> value in this.settings) {
-                file.SetValue("Settings", value.Key, value.Value);
+                if (value.Key.Equals(SettingsEnum.Sound.ToString()) ||
+                    value.Key.Equals(SettingsEnum.Music.ToString())) {
+                    file.SetValue("Audio", value.Key, value.Value);
+                } else {
+                    file.SetValue("Controls", value.Key, value.Value);
+                }
             }
             file.Save(savePath);
         }
@@ -64,7 +83,18 @@ namespace VampireSurvivorsLike {
             return new Dictionary<string, int> {
                 { SettingsEnum.Sound.ToString(), 100 },
                 { SettingsEnum.Music.ToString(), 100 },
+                { SettingsEnum.ui_up.ToString(), 119 },
+                { SettingsEnum.ui_down.ToString(), 115 },
+                { SettingsEnum.ui_left.ToString(), 97 },
+                { SettingsEnum.ui_right.ToString(), 100 },
+                { SettingsEnum.ui_hold.ToString(), 32 },
+                { SettingsEnum.ui_select.ToString(), 32 },
             };
+        }
+
+        public void SetActionKey(string action, InputEvent @event) {
+            InputMap.ActionEraseEvents(action);
+            InputMap.ActionAddEvent(action, @event);
         }
 
         public void SetValue(int value, string setting) {
