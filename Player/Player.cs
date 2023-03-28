@@ -19,7 +19,7 @@ namespace VampireSurvivorsLike {
         private readonly Texture[] textures = new Texture[3];
         private Sprite directionArrow;
         private GUI gui;
-        
+
         public bool IsDead { get; private set; } = false;
         public ItemManager ItemManager { get; private set; }
 
@@ -81,9 +81,7 @@ namespace VampireSurvivorsLike {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
                 this.RpcUnreliable(nameof(this.MovePuppet), this.GlobalPosition, this.Direction);
             }
-            if (this.takenDamageValue > 0 && !this.IsDead) {
-                this.TakeDamage();
-            }
+            this.TakeDamage();
             if (this.currentHealth < AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue() && !this.IsDead) {
                 this.PassiveHeal();
             }
@@ -161,26 +159,29 @@ namespace VampireSurvivorsLike {
          * Health Bar
          */
         private void TakeDamage() {
-            this.damageCounter++;
-            if (this.damageCounter % ImmunityTime == 0) {
+            if (this.takenDamageValue <= 0 || this.IsDead) {
+                return;
+            }
+            if (this.damageCounter++ / ImmunityTime == 1) {
+                AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.PlayerHit);
                 FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.14f, 0.14f),
                     (int)this.takenDamageValue, this.GetParent().GetParent().GetParent());
                 this.damageCounter = 0;
                 this.currentHealth = Math.Max(0, this.currentHealth - (int)this.takenDamageValue);
                 this.UpdateHealth();
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    RpcUnreliable(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
+                    this.RpcUnreliable(nameof(this.PuppetTakeDamage), this.takenDamageValue, this.currentHealth);
                 }
             }
-
-            if (this.currentHealth <= 0) {
-                AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Death);
-                if (!GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.IsDead = true;
-                    EmitSignal(nameof(OnPlayerDeath));
-                } else {
-                    Rpc(nameof(this.PuppetDeath));
-                }
+            if (this.currentHealth > 0) {
+                return;
+            }
+            AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.Death);
+            if (!GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.IsDead = true;
+                this.EmitSignal(nameof(OnPlayerDeath));
+            } else {
+                this.Rpc(nameof(this.PuppetDeath));
             }
         }
 
@@ -220,7 +221,8 @@ namespace VampireSurvivorsLike {
             }
             this.healthCounter = 0;
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.53f, 0.88f, 0.38f),
-                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(), this.GetParent().GetParent().GetParent());
+                AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue(),
+                this.GetParent().GetParent().GetParent());
             this.currentHealth = Math.Min(AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue(),
                 AttributeManagerSingleton.Instance.HealthRegen.GetCurrentValue() + this.currentHealth);
             this.UpdateHealth();

@@ -67,10 +67,10 @@ namespace VampireSurvivorsLike {
             };
         }
 
-        public void SetValue(string setting, int value) {
+        public void SetValue(int value, string setting) {
             this.settings[setting] = value;
-            if (setting.Equals(SettingsEnum.Music.ToString())) {
-                AudioPlayerSingleton.Instance.SetVolume(value < 0 ? 0 : value);
+            if (setting.Equals(SettingsEnum.Music.ToString()) || setting.Equals(SettingsEnum.Sound.ToString())) {
+                AudioPlayerSingleton.Instance.SetVolume(value < 0 ? 0 : value, setting);
             }
         }
 

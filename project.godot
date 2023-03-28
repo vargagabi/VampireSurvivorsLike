@@ -17,10 +17,10 @@ config/icon="res://icon.png"
 [autoload]
 
 AttributeManager="*res://Singleton/AttributeManagerSingleton.cs"
+SettingsManager="*res://Singleton/SettingsManager.cs"
 AudioPlayer="*res://Audio/AudioPlayer.tscn"
 ItemDropManager="*res://ItemDrops/ItemDropManager.cs"
 Network="*res://Networking/Network.tscn"
-SettingsManager="*res://Singleton/SettingsManager.cs"
 
 [debug]
 

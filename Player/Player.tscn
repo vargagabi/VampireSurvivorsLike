@@ -149,7 +149,6 @@ shape = SubResource( 21 )
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 0, -11.5 )
 current = true
-zoom = Vector2( 2, 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2( 0, -11.5 )

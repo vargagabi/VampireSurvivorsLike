@@ -210,7 +210,7 @@ namespace VampireSurvivorsLike {
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameFinished;
             AudioPlayerSingleton.Instance.SwitchToAmbient(false);
             if (isVictory) {
-                AudioPlayerSingleton.Instance.PlayEffect(AudioPlayerSingleton.EffectEnum.Victory);
+                AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.Victory);
                 AttributeManagerSingleton.Instance.Gold += goldCount;
                 AttributeManagerSingleton.Instance.Save();
             }

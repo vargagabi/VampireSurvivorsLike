@@ -115,6 +115,7 @@ namespace VampireSurvivorsLike {
             if (this.Health <= 0) {
                 return;
             }
+            AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.EnemyHit);
             this.ShowDamage(damage);
             this.Health -= damage;
         }
