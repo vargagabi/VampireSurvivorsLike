@@ -110,7 +110,7 @@ namespace VampireSurvivorsLike {
             switch (this.Level) {
                 case 0: return "Aura: an ability to damage enemies around you.";
                 case 1: return "Aura: Increase Aura radius by 10%.";
-                case 2: return "Aura: Increase damage by 0.1.";
+                case 2: return "Aura: Increase damage by 1.";
                 case 3: return "Aura: Increase attack speed.";
                 case 4: return "Aura: Increase Aura radius by 10%.";
                 case 5: return "Aura: Increase experience dropped by enemies killed by Aura.";

@@ -22,42 +22,20 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
+margin_left = 640.0
+margin_top = 237.0
+margin_right = 640.0
+margin_bottom = 237.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 custom_constants/vseparation = 10
 columns = 3
 
-[node name="Explanation" type="Control" parent="Control"]
-margin_left = 179.0
-margin_top = 578.0
-margin_right = 1079.0
-margin_bottom = 658.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Label" type="Label" parent="Control/Explanation"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -392.0
-margin_top = -40.0
-margin_right = 392.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-text = "c.h, uwmoemt uuuuu uuuuuuuu u u tuhittu  tuhinut nuth itnu itun h tet ntehount eotnhoue "
-valign = 1
-autowrap = true
-
 [node name="BackButton" type="Button" parent="Control"]
-anchor_left = 0.0644444
-anchor_top = 0.058
-anchor_right = 0.286666
-anchor_bottom = 0.122
+anchor_left = 0.136719
+anchor_top = 0.802778
+anchor_right = 0.35894
+anchor_bottom = 0.866778
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": true

@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VampireSurvivorsLike {
 
@@ -76,6 +77,19 @@ namespace VampireSurvivorsLike {
         public void Reset() {
             this.settings = this.GetDefaultSettings();
             this.Save();
+            foreach (var setting in this.settings.Where(setting => setting.Key.Contains('_'))) {
+                if (setting.Value < 0) {
+                    InputEventMouseButton mouse = new InputEventMouseButton();
+                    mouse.ButtonIndex = Math.Abs(setting.Value);
+                    mouse.Pressed = true;
+                    this.SetActionKey(setting.Key, mouse);
+                } else {
+                    InputEventKey eventKey = new InputEventKey();
+                    eventKey.PhysicalScancode = (uint)setting.Value;
+                    eventKey.Pressed = true;
+                    this.SetActionKey(setting.Key, eventKey);
+                }
+            }
         }
 
         // if its negative its disabled

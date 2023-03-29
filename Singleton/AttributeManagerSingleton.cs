@@ -46,7 +46,7 @@ namespace VampireSurvivorsLike {
             this.MaxHealth = new Attribute("MaxHealth", "Increase max health by", 200, 0.1f, "HealthIcon.png");
             this.HealthRegen = new Attribute("HealthRegen", "Increase health regeneration by", 2, 0.5f,
                 "HealthRegenIcon.png");
-            this.Speed = new Attribute("Speed", "Increase speed by", 100, 0.2f, "SpeedIcon.png");
+            this.Speed = new Attribute("Speed", "Increase speed by", 200, 0.1f, "SpeedIcon.png");
             this.PickupArea = new Attribute("PickupArea", "Increase the pickup range by", 25, 0.5f,
                 "PickupAreaIcon.png");
             this.Gold = 500;

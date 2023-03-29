@@ -4,12 +4,10 @@ namespace VampireSurvivorsLike {
 
     public class Shop : Control {
 
-        private Label Explanation { get; set; }
         private GridContainer gridContainer { get; set; }
         private Label GoldLabel { get; set; }
 
         public override void _Ready() {
-            this.Explanation = GetNode<Label>("Explanation/Label");
             this.gridContainer = GetNode<GridContainer>("ScrollContainer/GridContainer");
             this.GoldLabel = GetNode<Label>("MoneyContainer/Label");
             this.GoldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
@@ -35,7 +33,7 @@ namespace VampireSurvivorsLike {
 
         public void OnVisibilityChanged() {
             if (this.Visible) {
-                this.GetNode<Button>("BackButton").GrabFocus();
+                this.GetNode<Button>("HBoxContainer/BackButton").GrabFocus();
             }
         }
 

@@ -194,59 +194,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Shop/ScrollContainer"]
+margin_left = 640.0
 margin_top = 237.0
+margin_right = 640.0
 margin_bottom = 237.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 custom_constants/vseparation = 14
 custom_constants/hseparation = 14
 columns = 3
-
-[node name="Explanation" type="Control" parent="Shop"]
-margin_left = 179.0
-margin_top = 578.0
-margin_right = 1079.0
-margin_bottom = 658.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Label" type="Label" parent="Shop/Explanation"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -392.0
-margin_top = -40.0
-margin_right = 392.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-text = "c.h, uwmoemt uuuuu uuuuuuuu u u tuhittu  tuhinut nuth itnu itun h tet ntehount eotnhoue "
-valign = 1
-autowrap = true
-
-[node name="BackButton" type="Button" parent="Shop"]
-anchor_left = 0.0644444
-anchor_top = 0.058
-anchor_right = 0.286666
-anchor_bottom = 0.122
-text = "Back"
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="ResetButton" type="Button" parent="Shop"]
-anchor_left = 0.44375
-anchor_top = 0.0583333
-anchor_right = 0.665972
-anchor_bottom = 0.122333
-text = "Reset"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="MoneyContainer" type="HBoxContainer" parent="Shop"]
 anchor_left = 1.0
@@ -274,6 +230,62 @@ margin_right = 183.0
 margin_bottom = 52.0
 text = "Gold"
 
+[node name="HBoxContainer" type="HBoxContainer" parent="Shop"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -120.0
+margin_bottom = -70.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="Shop/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 252.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ResetButton" type="Button" parent="Shop/HBoxContainer"]
+margin_left = 256.0
+margin_right = 509.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VSeparator2" type="VSeparator" parent="Shop/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 513.0
+margin_right = 766.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="Shop/HBoxContainer"]
+margin_left = 770.0
+margin_right = 1023.0
+margin_bottom = 50.0
+size_flags_horizontal = 7
+size_flags_vertical = 3
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VSeparator3" type="VSeparator" parent="Shop/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 1027.0
+margin_right = 1280.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="Settings" parent="." instance=ExtResource( 8 )]
 visible = false
 
@@ -284,6 +296,6 @@ visible = false
 [connection signal="pressed" from="MainMenu/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/QuitButton" to="." method="OnQuitButtonPressed"]
 [connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
-[connection signal="pressed" from="Shop/BackButton" to="." method="OnBackButtonPressed"]
-[connection signal="pressed" from="Shop/ResetButton" to="Shop" method="OnResetButtonPressed"]
+[connection signal="pressed" from="Shop/HBoxContainer/ResetButton" to="Shop" method="OnResetButtonPressed"]
+[connection signal="pressed" from="Shop/HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]
 [connection signal="BackButtonPress" from="Settings" to="." method="OnBackButtonPressed"]
