@@ -21,7 +21,7 @@ namespace VampireSurvivorsLike {
 
         public void init(String name, int progress, int maxLevel, Texture iconTexture, int cost, Shop receiver) {
             this.NameLabel.Text = name;
-            this.CostLabel.Text = cost.ToString();
+            this.CostLabel.Text = progress >= maxLevel? "Max" : cost.ToString();
             this.LevelProgress.Value = progress;
             this.Icon.Texture = iconTexture;
             this.Receiver = receiver;
@@ -50,8 +50,12 @@ namespace VampireSurvivorsLike {
             if (AttributeManagerSingleton.Instance.IncreaseBaseLevel(this.NameLabel.Text)) {
                 this.LevelProgress.Value =
                     AttributeManagerSingleton.Instance.GetAttributeBaseLevel(this.NameLabel.Text);
-                this.CostLabel.Text =
-                    AttributeManagerSingleton.Instance.GetAttributeCost(this.NameLabel.Text).ToString();
+                if (this.LevelProgress.Value >= this.maxLevel) {
+                    CostLabel.Text = "Max";
+                } else {
+                    this.CostLabel.Text = AttributeManagerSingleton.Instance.GetAttributeCost(this.NameLabel.Text)
+                        .ToString();
+                }
                 this.EmitSignal(nameof(Purchase), this.NameLabel.Text);
             }
         }

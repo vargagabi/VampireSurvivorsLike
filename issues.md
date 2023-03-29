@@ -1,10 +1,12 @@
 Issues:
-	-Skeletons don't reach player from above, decrease stop distance
-	-No icon for direction pointer
-	-Item level not showing correctly
-	-Make singletons autoload
+	-tree's placement on map is gridlike
 
 Fixed:
+	-when an attribute in shop is maxed shows price
+	-Make singletons autoload
+	-Item level not showing correctly
+	-No icon for direction pointer
+	-Skeletons don't reach player from above, decrease stop distance
 	-Maximum health not updating when selecting reward to increase max health.
 	-Health bar jumps to zero if less than about 25%
 	-Crashing: Pressing esc when selecting reward multiple times crashes the game, and shows the pause screen
@@ -20,9 +22,4 @@ New Feature:
 
 Future plans/ideas:
 	-Create Boss monster
-	-Music, Sounds
-	-Fix menu, add settings, save progress, etc...
 	-Night time
-	-Item that disables tree collision?
-	-chibi anime characters as compainons	
-	-Show attributes when game is paused
