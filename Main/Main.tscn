@@ -59,13 +59,13 @@ points = PoolVector2Array( 60, 140, 52, 140, 52, 128, 60, 128 )
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 52, 144, 44, 144, 44, 136, 52, 136 )
 
-[sub_resource type="ConvexPolygonShape2D" id=7]
+[sub_resource type="ConvexPolygonShape2D" id=22]
 points = PoolVector2Array( 48, 140, 40, 140, 40, 132, 48, 132 )
 
 [sub_resource type="TileSet" id=4]
 0/name = "TX Plant.png 0"
 0/texture = ExtResource( 3 )
-0/tex_offset = Vector2( 0, 0 )
+0/tex_offset = Vector2( 0, -60 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 24, 12, 116, 144 )
 0/tile_mode = 0
@@ -86,7 +86,7 @@ points = PoolVector2Array( 48, 140, 40, 140, 40, 132, 48, 132 )
 0/z_index = 2
 1/name = "TX Plant.png 1"
 1/texture = ExtResource( 3 )
-1/tex_offset = Vector2( 0, 0 )
+1/tex_offset = Vector2( 0, -65 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 160, 8, 96, 144 )
 1/tile_mode = 0
@@ -107,23 +107,23 @@ points = PoolVector2Array( 48, 140, 40, 140, 40, 132, 48, 132 )
 1/z_index = 2
 2/name = "TX Plant.png 2"
 2/texture = ExtResource( 3 )
-2/tex_offset = Vector2( 0, 0 )
+2/tex_offset = Vector2( 0, -65 )
 2/modulate = Color( 1, 1, 1, 1 )
 2/region = Rect2( 292, 8, 84, 144 )
 2/tile_mode = 0
 2/occluder_offset = Vector2( 0, 0 )
 2/navigation_offset = Vector2( 0, 0 )
-2/shape_offset = Vector2( 300, 0 )
-2/shape_transform = Transform2D( 1, 0, 0, 1, 300, 0 )
-2/shape = SubResource( 7 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape = SubResource( 22 )
 2/shape_one_way = false
 2/shape_one_way_margin = 1.0
 2/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
 "one_way_margin": 1.0,
-"shape": SubResource( 7 ),
-"shape_transform": Transform2D( 1, 0, 0, 1, 300, 0 )
+"shape": SubResource( 22 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 2/z_index = 2
 
@@ -348,13 +348,13 @@ tile_data = PoolIntArray( -589834, 0, 65541, -589833, 0, 5, -589832, 0, 131073, 
 z_index = 3
 z_as_relative = false
 tile_set = SubResource( 4 )
-cell_size = Vector2( 113, 141 )
+cell_half_offset = 4
 cell_tile_origin = 2
 cell_y_sort = true
 show_collision = true
 centered_textures = true
+collision_bounce = 1.0
 format = 1
-tile_data = PoolIntArray( -655354, 0, 0, -524296, 0, 0, -196604, 0, 0, 0, 0, 0, 1, 1, 0, 2, 2, 0, 262149, 0, 0, 393206, 0, 0 )
 
 [node name="Props" type="TileMap" parent="World/Entities"]
 z_index = 3
@@ -366,6 +366,6 @@ cell_y_sort = true
 show_collision = true
 centered_textures = true
 format = 1
-tile_data = PoolIntArray( -458749, 9, 0, -131075, 9, 0, 131065, -1073741810, 0, 327666, 11, 0, 327667, 11, 0, 327668, 10, 0, 327669, 13, 0, 327670, 3, 0, 327671, 0, 0, 327672, 13, 0, 327673, 5, 0, 327674, 12, 0, 327675, 5, 0, 327676, 6, 0, 327677, 7, 0, 327678, 14, 0, 458744, 12, 0, 458756, 10, 0 )
+tile_data = PoolIntArray( -458749, 9, 0, -131075, 9, 0, 131065, -1073741810, 0, 327666, 11, 0, 327667, 11, 0, 327668, 10, 0, 327669, 13, 0, 458744, 12, 0, 458756, 10, 0 )
 
 [connection signal="timeout" from="Timer" to="." method="OnTimerTimeout"]

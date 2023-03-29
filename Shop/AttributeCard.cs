@@ -43,6 +43,7 @@ namespace VampireSurvivorsLike {
         public void RefreshInfo() {
             this.LevelProgress.Value = AttributeManagerSingleton.Instance.GetAttributeBaseLevel(this.NameLabel.Text);
             this.CostLabel.Text = AttributeManagerSingleton.Instance.GetAttributeCost(this.NameLabel.Text).ToString();
+            this.Disabled = false;
         }
 
         public void OnButtonPressed() {
