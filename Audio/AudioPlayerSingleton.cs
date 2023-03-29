@@ -45,9 +45,12 @@ namespace VampireSurvivorsLike {
                 this.tweens[type].Connect("tween_completed", this, "OnTweenCompleted");
             }
 
-            this.audioPlayers["Ambient"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
-            this.audioPlayers["Action"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
-            this.audioPlayers["Effect"].VolumeDb = this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Sound));
+            this.audioPlayers["Ambient"].VolumeDb =
+                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+            this.audioPlayers["Action"].VolumeDb =
+                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+            this.audioPlayers["Effect"].VolumeDb =
+                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Sound));
             this.GetAudioFiles();
         }
 
@@ -59,7 +62,6 @@ namespace VampireSurvivorsLike {
                 this.fileMap.Add(audioType, new List<string>());
                 string file;
                 while (!(file = directory.GetNext()).Equals("")) {
-                    GD.Print(file);
                     if (!file.EndsWith(".import")) {
                         this.fileMap[audioType].Add(file);
                     }
@@ -75,6 +77,10 @@ namespace VampireSurvivorsLike {
             if (setting.Equals(SettingsEnum.Music.ToString())) {
                 this.audioPlayers["Ambient"].VolumeDb = volume;
                 this.audioPlayers["Action"].VolumeDb = volume;
+                GD.Print(this.currentlyPlaying);
+                if (!this.currentlyPlaying.Empty()) {
+                    this.ContinueOrPlayRandomAudio(this.currentlyPlaying, true);
+                }
             } else if (setting.Equals(SettingsEnum.Sound.ToString())) {
                 this.audioPlayers["Effect"].VolumeDb = volume;
             }
@@ -85,8 +91,8 @@ namespace VampireSurvivorsLike {
         }
 
         /**
-     * Continue playing track or start a new one from 'type' tracks.
-     */
+         * Continue playing track or start a new one from 'type' tracks.
+         */
         private void ContinueOrPlayRandomAudio(String type, bool continueLastStream) {
             if (!this.directoryPaths.Contains(type)) {
                 throw new ArgumentException($"Audio type {type} does not exist.");
@@ -94,6 +100,7 @@ namespace VampireSurvivorsLike {
             if (continueLastStream && this.audioPlayers[type].Stream != null &&
                 this.audioPlayers[type].GetPlaybackPosition() <
                 this.audioPlayers[type].Stream.GetLength()) {
+                this.audioPlayers[type].StreamPaused = false;
                 return;
             }
             GD.Randomize();
@@ -161,7 +168,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnTweenCompleted(Godot.Object obj, NodePath path) {
-            if (((AudioStreamPlayer)obj).VolumeDb <= -40) {
+            if (((AudioStreamPlayer)obj).VolumeDb <= this.minVolumeDb) {
                 ((AudioStreamPlayer)obj).StreamPaused = true;
             }
         }

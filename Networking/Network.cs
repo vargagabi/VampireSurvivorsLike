@@ -43,7 +43,6 @@ namespace VampireSurvivorsLike {
 
         private string GetIpAddress() {
             foreach (string addr in IP.GetLocalAddresses()) {
-                GD.Print(addr);
                 if (addr.BeginsWith("192.168.")) {
                     return addr;
                 }
@@ -129,9 +128,7 @@ namespace VampireSurvivorsLike {
                 ShowStatus($"Failed to open server on port: {this.port.Value}\nNew port is: {DefaultPort + i}");
                 this.port.Value = DefaultPort + i;
             }
-            GD.Print(i);
             if (err != Error.Ok) {
-                GD.Print(err);
                 return;
             }
 
@@ -154,7 +151,6 @@ namespace VampireSurvivorsLike {
             this.peer.CompressionMode = NetworkedMultiplayerENet.CompressionModeEnum.RangeCoder;
             Error err = this.peer.CreateClient(ip, (int)this.port.Value);
             if (err != Error.Ok) {
-                GD.Print(err);
                 this.ShowStatus(err.ToString());
                 return;
             }

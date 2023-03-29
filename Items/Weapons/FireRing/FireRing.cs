@@ -15,7 +15,6 @@ public class FireRing : Weapon {
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
-        GD.Print("FIRERING!");
     }
 
     // |electrons| = 2 * n^2
@@ -25,7 +24,6 @@ public class FireRing : Weapon {
     public override void _Input(InputEvent @event) {
         if (@event.IsActionPressed("Space")) {
             this.AddChild(this.GetChild(0).Duplicate());
-            GD.Print("FIRERING!");
         }
     }
 

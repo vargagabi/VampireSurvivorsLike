@@ -56,7 +56,6 @@ namespace VampireSurvivorsLike {
         public void ResetAttributes() {
             foreach (PropertyInfo prop in this.GetType().GetProperties()) {
                 if (prop.GetValue(this) is Attribute attribute) {
-                    GD.Print(attribute);
                     attribute.BaseLevel = 0;
                 }
             }

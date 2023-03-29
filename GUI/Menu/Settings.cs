@@ -16,7 +16,6 @@ namespace VampireSurvivorsLike {
             this.scrollContainer = this.GetNode<ScrollContainer>($"{this.path}../");
             this.keySetPopupPanel = this.GetNode<PopupPanel>("KeySetPopupPanel");
             this.GetSavedValues();
-            GD.Print(InputMap.GetActionList("ui_old"));
         }
 
         public override void _Input(InputEvent @event) {
@@ -40,7 +39,6 @@ namespace VampireSurvivorsLike {
         }
 
         private void SetActionValues(string buttonText, string action = null) {
-            GD.Print(InputMap.GetActionList("ui_hold"));
             if (action == null) {
                 action = this.actionToSet.Substring(3);
                 action = char.ToUpper(action[0]) + action.Substring(1);
