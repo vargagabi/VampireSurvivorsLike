@@ -24,6 +24,7 @@ namespace VampireSurvivorsLike {
 
         private void CreateControlSettings() {
             GridContainer container = this.GetNode<GridContainer>(this.path);
+            bool firstRow = true;
             foreach (string setting in Enum.GetNames(typeof(SettingsEnum)).Where(s => s.Contains('_'))) {
                 Label label = new Label();
                 label.SizeFlagsHorizontal = label.SizeFlagsVertical = (int)SizeFlags.Fill;
@@ -40,6 +41,10 @@ namespace VampireSurvivorsLike {
                 container.AddChild(button);
                 container.AddChild(control.Duplicate());
                 button.Connect("pressed", this, $"On{char.ToUpper(setting[3])}{setting.Substring(4)}SetButtonPressed");
+                if (firstRow) {
+                    button.FocusNeighbourTop = new NodePath("../MusicCheckButton");
+                    firstRow = false;
+                }
             }
         }
 

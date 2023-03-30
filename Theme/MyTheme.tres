@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=12 format=2]
+[gd_resource type="Theme" load_steps=21 format=2]
 
 [ext_resource path="res://Fonts/MyFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Textures/Wood Texture 1.png" type="Texture" id=2]
@@ -28,6 +28,18 @@ texture = ExtResource( 2 )
 region_rect = Rect2( 0, 0, 2048, 2048 )
 modulate_color = Color( 1, 1, 1, 0.784314 )
 
+[sub_resource type="StyleBoxEmpty" id=9]
+
+[sub_resource type="StyleBoxEmpty" id=10]
+
+[sub_resource type="StyleBoxEmpty" id=11]
+
+[sub_resource type="StyleBoxEmpty" id=12]
+
+[sub_resource type="StyleBoxEmpty" id=13]
+
+[sub_resource type="StyleBoxEmpty" id=14]
+
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.77, 0.56595, 0.3619, 1 )
 
@@ -40,6 +52,27 @@ texture = ExtResource( 3 )
 region_rect = Rect2( 0, 0, 2048, 2048 )
 modulate_color = Color( 1, 1, 1, 0.65098 )
 
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.380392, 0.243137, 0.054902, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.3, 0.1925, 0.042, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0.25098, 0.160784, 0.0352941, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [resource]
 default_font = ExtResource( 1 )
 Button/styles/disabled = SubResource( 4 )
@@ -47,6 +80,27 @@ Button/styles/focus = SubResource( 2 )
 Button/styles/hover = SubResource( 3 )
 Button/styles/normal = SubResource( 1 )
 Button/styles/pressed = SubResource( 5 )
+CheckButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+CheckButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+CheckButton/colors/font_color_focus = Color( 0.94, 0.94, 0.94, 1 )
+CheckButton/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+CheckButton/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
+CheckButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+CheckButton/constants/check_vadjust = 0
+CheckButton/constants/hseparation = 4
+CheckButton/icons/off = null
+CheckButton/icons/off_disabled = null
+CheckButton/icons/on = null
+CheckButton/icons/on_disabled = null
+CheckButton/styles/disabled = SubResource( 9 )
+CheckButton/styles/focus = SubResource( 10 )
+CheckButton/styles/hover = SubResource( 11 )
+CheckButton/styles/hover_pressed = SubResource( 12 )
+CheckButton/styles/normal = SubResource( 13 )
+CheckButton/styles/pressed = SubResource( 14 )
 ItemList/styles/bg = SubResource( 7 )
 ItemList/styles/selected = SubResource( 6 )
 ItemList/styles/selected_focus = SubResource( 8 )
+VScrollBar/styles/grabber = SubResource( 15 )
+VScrollBar/styles/grabber_highlight = SubResource( 16 )
+VScrollBar/styles/grabber_pressed = SubResource( 17 )

@@ -20,7 +20,7 @@ margin_top = 175.0
 margin_right = 900.0
 margin_bottom = 545.0
 rect_min_size = Vector2( 520, 370 )
-color = Color( 0.407843, 0.407843, 0.407843, 1 )
+color = Color( 0.388235, 0.27451, 0.176471, 1 )
 
 [node name="ColorRect" type="ColorRect" parent="CenterContainer"]
 margin_left = 385.0
@@ -28,7 +28,7 @@ margin_top = 180.0
 margin_right = 895.0
 margin_bottom = 540.0
 rect_min_size = Vector2( 510, 360 )
-color = Color( 0.227451, 0.219608, 0.219608, 1 )
+color = Color( 0.690196, 0.486275, 0.309804, 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 margin_left = 390.0
@@ -41,25 +41,27 @@ size_flags_vertical = 3
 custom_constants/separation = 20
 alignment = 1
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 500.0
-margin_bottom = 23.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+custom_constants/separation = 19
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_top = 39.0
+margin_right = 500.0
+margin_bottom = 62.0
+size_flags_vertical = 1
 text = "Settings"
 align = 1
 valign = 1
-
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
-modulate = Color( 1, 1, 1, 0 )
-margin_top = 43.0
-margin_right = 500.0
-margin_bottom = 62.0
-custom_constants/separation = 19
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer"]
 margin_top = 82.0
 margin_right = 500.0
 margin_bottom = 326.0
-size_flags_horizontal = 7
+size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 scroll_horizontal_enabled = false
@@ -86,6 +88,7 @@ margin_left = 71.0
 margin_right = 147.0
 margin_bottom = 40.0
 focus_neighbour_top = NodePath("../../../../../HBoxContainer/BackButton")
+focus_neighbour_bottom = NodePath("../MusicCheckButton")
 focus_next = NodePath("../SoundSlider")
 focus_previous = NodePath("../../../../../HBoxContainer/BackButton")
 size_flags_horizontal = 10
@@ -97,10 +100,13 @@ margin_left = 151.0
 margin_right = 351.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 0 )
+focus_neighbour_top = NodePath("../SoundCheckButton")
+focus_neighbour_bottom = NodePath("../SoundCheckButton")
+focus_next = NodePath("../SoundCheckButton")
+focus_previous = NodePath("../SoundCheckButton")
 mouse_default_cursor_shape = 10
 size_flags_horizontal = 3
 size_flags_vertical = 5
-value = 1.0
 rounded = true
 tick_count = 11
 ticks_on_borders = true
@@ -129,6 +135,9 @@ margin_left = 71.0
 margin_top = 60.0
 margin_right = 147.0
 margin_bottom = 100.0
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath("../SoundCheckButton")
+focus_neighbour_right = NodePath("../MusicSlider")
 size_flags_horizontal = 10
 size_flags_vertical = 5
 pressed = true
@@ -139,6 +148,10 @@ margin_top = 60.0
 margin_right = 351.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 200, 0 )
+focus_neighbour_top = NodePath("../MusicCheckButton")
+focus_neighbour_bottom = NodePath("../MusicCheckButton")
+focus_next = NodePath("../MusicCheckButton")
+focus_previous = NodePath("../MusicCheckButton")
 mouse_default_cursor_shape = 10
 size_flags_horizontal = 3
 size_flags_vertical = 5
@@ -181,7 +194,7 @@ rect_min_size = Vector2( 286, 46 )
 focus_neighbour_left = NodePath(".")
 focus_neighbour_top = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
 focus_neighbour_right = NodePath("../BackButton")
-focus_neighbour_bottom = NodePath(".")
+focus_neighbour_bottom = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
 focus_next = NodePath("../BackButton")
 focus_previous = NodePath("../BackButton")
 text = "Reset"
@@ -197,7 +210,7 @@ rect_min_size = Vector2( 286, 46 )
 focus_neighbour_left = NodePath("../ResetButton")
 focus_neighbour_top = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
 focus_neighbour_right = NodePath(".")
-focus_neighbour_bottom = NodePath(".")
+focus_neighbour_bottom = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
 focus_next = NodePath("../ResetButton")
 focus_previous = NodePath("../ResetButton")
 text = "Back"
