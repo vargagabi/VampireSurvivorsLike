@@ -62,16 +62,16 @@ namespace VampireSurvivorsLike {
         }
 
         public void Save() {
-            // ConfigFile file = new ConfigFile();
-            // foreach (KeyValuePair<string, object> value in this.settings) {
-            //     if (value.Key.Equals(SettingsEnum.Sound.ToString()) ||
-            //         value.Key.Equals(SettingsEnum.Music.ToString())) {
-            //         file.SetValue("Audio", value.Key, value.Value);
-            //     } else {
-            //         file.SetValue("Controls", value.Key, value.Value);
-            //     }
-            // }
-            // file.Save(savePath);
+            ConfigFile file = new ConfigFile();
+            foreach (KeyValuePair<string, object> value in this.settings) {
+                if (value.Key.Equals(SettingsEnum.Sound.ToString()) ||
+                    value.Key.Equals(SettingsEnum.Music.ToString())) {
+                    file.SetValue("Audio", value.Key, value.Value);
+                } else {
+                    file.SetValue("Controls", value.Key, value.Value);
+                }
+            }
+            file.Save(savePath);
         }
 
         public void Reset() {
@@ -88,17 +88,17 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        // if its negative its disabled
+        // negative audio value means disabled
         private Dictionary<string, object> GetDefaultSettings() {
             return new Dictionary<string, object> {
                 { SettingsEnum.Sound.ToString(), 100 },
                 { SettingsEnum.Music.ToString(), 100 },
-                { SettingsEnum.ui_up.ToString(), KeyList.W }, // 119
-                { SettingsEnum.ui_down.ToString(), KeyList.S }, // 115
-                { SettingsEnum.ui_left.ToString(), KeyList.A }, //  97
-                { SettingsEnum.ui_right.ToString(), KeyList.D }, // 100
-                { SettingsEnum.ui_hold.ToString(), KeyList.Shift }, // 32
-                { SettingsEnum.ui_accept.ToString(), KeyList.Space }, // 32
+                { SettingsEnum.ui_up.ToString(), KeyList.W },
+                { SettingsEnum.ui_down.ToString(), KeyList.S },
+                { SettingsEnum.ui_left.ToString(), KeyList.A },
+                { SettingsEnum.ui_right.ToString(), KeyList.D },
+                { SettingsEnum.ui_hold.ToString(), KeyList.Shift },
+                { SettingsEnum.ui_accept.ToString(), KeyList.Space }
             };
         }
 

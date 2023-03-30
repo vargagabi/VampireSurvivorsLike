@@ -85,6 +85,9 @@ valign = 1
 margin_left = 71.0
 margin_right = 147.0
 margin_bottom = 40.0
+focus_neighbour_top = NodePath("../../../../../HBoxContainer/BackButton")
+focus_next = NodePath("../SoundSlider")
+focus_previous = NodePath("../../../../../HBoxContainer/BackButton")
 size_flags_horizontal = 10
 size_flags_vertical = 5
 pressed = true
@@ -170,11 +173,17 @@ margin_bottom = -101.0
 custom_constants/separation = 200
 alignment = 1
 
-[node name="SaveButton" type="Button" parent="HBoxContainer"]
+[node name="ResetButton" type="Button" parent="HBoxContainer"]
 margin_left = 254.0
 margin_right = 540.0
 margin_bottom = 46.0
 rect_min_size = Vector2( 286, 46 )
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
+focus_neighbour_right = NodePath("../BackButton")
+focus_neighbour_bottom = NodePath(".")
+focus_next = NodePath("../BackButton")
+focus_previous = NodePath("../BackButton")
 text = "Reset"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -185,6 +194,12 @@ margin_left = 740.0
 margin_right = 1026.0
 margin_bottom = 46.0
 rect_min_size = Vector2( 286, 46 )
+focus_neighbour_left = NodePath("../ResetButton")
+focus_neighbour_top = NodePath("../../CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SoundCheckButton")
+focus_neighbour_right = NodePath(".")
+focus_neighbour_bottom = NodePath(".")
+focus_next = NodePath("../ResetButton")
+focus_previous = NodePath("../ResetButton")
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -219,5 +234,5 @@ valign = 1
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnSliderMouseEntered"]
 [connection signal="mouse_exited" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnSliderMouseExited"]
 [connection signal="value_changed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnMusicValueChanged"]
-[connection signal="pressed" from="HBoxContainer/SaveButton" to="." method="OnResetButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/ResetButton" to="." method="OnResetButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]

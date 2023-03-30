@@ -35,11 +35,11 @@ namespace VampireSurvivorsLike {
                 control.SizeFlagsHorizontal = control.SizeFlagsVertical = (int)SizeFlags.Fill;
                 container.AddChild(control);
                 Button button = new Button();
-                button.Name = setting+"Button";
+                button.Name = setting + "Button";
                 button.SizeFlagsHorizontal = button.SizeFlagsVertical = (int)SizeFlags.Fill;
                 container.AddChild(button);
                 container.AddChild(control.Duplicate());
-                button.Connect("pressed",this, $"On{char.ToUpper(setting[3])}{setting.Substring(4)}SetButtonPressed");
+                button.Connect("pressed", this, $"On{char.ToUpper(setting[3])}{setting.Substring(4)}SetButtonPressed");
             }
         }
 
@@ -52,7 +52,6 @@ namespace VampireSurvivorsLike {
                 if (this.keySetPopupPanel.Visible) {
                     this.GetTree().SetInputAsHandled();
                 } else {
-                    // this.EmitSignal(nameof(BackButtonPress));
                     SettingsManager.Instance.Save();
                 }
                 return;
@@ -63,14 +62,15 @@ namespace VampireSurvivorsLike {
             }
 
             this.GetTree().SetInputAsHandled();
-            if ((!this.actionToSet.Equals(SettingsEnum.ui_accept.ToString()) ||
-                !this.actionToSet.Equals(SettingsEnum.ui_hold.ToString())) &&
-                (key.Scancode.Equals((int)KeyList.Escape) || 
-                 key.Scancode.Equals((int)SettingsManager.Instance.GetValue(SettingsEnum.ui_accept)))) {
+            if (!this.actionToSet.Equals(SettingsEnum.ui_accept.ToString()) &&
+                !this.actionToSet.Equals(SettingsEnum.ui_hold.ToString()) &&
+                (key.Scancode.Equals((int)KeyList.Escape) ||
+                 ((int)key.Scancode).Equals((int)SettingsManager.Instance.GetValue(SettingsEnum.ui_accept)))) {
                 this.keySetPopupPanel.GetChild<Label>(0).Text =
                     $"Can't assign the {OS.GetScancodeString(key.Scancode)} button to a direction action.\nPress another button.";
                 return;
             }
+            this.keySetPopupPanel.GetChild<Label>(0).Text = "Press a button.";
             SettingsManager.Instance.SetActionKey(this.actionToSet, key);
             SettingsManager.Instance.SetValue(this.actionToSet, (int)key.Scancode);
             this.SetActionValues(OS.GetScancodeString(key.Scancode));
