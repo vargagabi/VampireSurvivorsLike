@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 namespace VampireSurvivorsLike {
@@ -13,52 +14,87 @@ namespace VampireSurvivorsLike {
         [Signal] public delegate void BackButtonPress();
 
         public override void _Ready() {
+            this.Connect("visibility_changed", this, nameof(this.OnVisibilityChanged));
             this.scrollContainer = this.GetNode<ScrollContainer>($"{this.path}../");
             this.keySetPopupPanel = this.GetNode<PopupPanel>("KeySetPopupPanel");
+
+            this.CreateControlSettings();
             this.GetSavedValues();
         }
 
+        private void CreateControlSettings() {
+            GridContainer container = this.GetNode<GridContainer>(this.path);
+            foreach (string setting in Enum.GetNames(typeof(SettingsEnum)).Where(s => s.Contains('_'))) {
+                Label label = new Label();
+                label.SizeFlagsHorizontal = label.SizeFlagsVertical = (int)SizeFlags.Fill;
+                label.Align = Label.AlignEnum.Left;
+                label.Valign = Label.VAlign.Center;
+                label.Text = setting.Substring(3);
+                container.AddChild(label);
+                Control control = new Control();
+                control.SizeFlagsHorizontal = control.SizeFlagsVertical = (int)SizeFlags.Fill;
+                container.AddChild(control);
+                Button button = new Button();
+                button.Name = setting+"Button";
+                button.SizeFlagsHorizontal = button.SizeFlagsVertical = (int)SizeFlags.Fill;
+                container.AddChild(button);
+                container.AddChild(control.Duplicate());
+                button.Connect("pressed",this, $"On{char.ToUpper(setting[3])}{setting.Substring(4)}SetButtonPressed");
+            }
+        }
+
+        public void OnVisibilityChanged() {
+            this.GetNode<Button>("HBoxContainer/BackButton").GrabFocus();
+        }
+
         public override void _Input(InputEvent @event) {
-            if (@event.IsActionPressed("ui_cancel") && this.Visible && !this.keySetPopupPanel.Visible) {
-                this.EmitSignal(nameof(BackButtonPress));
-                SettingsManager.Instance.Save();
+            if (@event.IsActionPressed("ui_cancel") && this.Visible) {
+                if (this.keySetPopupPanel.Visible) {
+                    this.GetTree().SetInputAsHandled();
+                } else {
+                    // this.EmitSignal(nameof(BackButtonPress));
+                    SettingsManager.Instance.Save();
+                }
                 return;
             }
-            if (!this.keySetPopupPanel.Visible || this.actionToSet == null) {
+            if (!(@event is InputEventKey key) || key.Echo || !this.keySetPopupPanel.Visible ||
+                this.actionToSet == null) {
                 return;
             }
-            if (@event is InputEventMouseButton mouse && !mouse.IsEcho()) {
-                SettingsManager.Instance.SetActionKey(this.actionToSet, mouse);
-                SettingsManager.Instance.SetValue(-mouse.ButtonIndex, this.actionToSet);
-                this.SetActionValues(((ButtonList)mouse.ButtonIndex) + " msb");
-            } else if (@event is InputEventKey key && !key.Echo) {
-                SettingsManager.Instance.SetActionKey(this.actionToSet, key);
-                SettingsManager.Instance.SetValue((int)key.Scancode, this.actionToSet);
-                this.SetActionValues(OS.GetScancodeString(key.Scancode));
+
+            this.GetTree().SetInputAsHandled();
+            if ((!this.actionToSet.Equals(SettingsEnum.ui_accept.ToString()) ||
+                !this.actionToSet.Equals(SettingsEnum.ui_hold.ToString())) &&
+                (key.Scancode.Equals((int)KeyList.Escape) || 
+                 key.Scancode.Equals((int)SettingsManager.Instance.GetValue(SettingsEnum.ui_accept)))) {
+                this.keySetPopupPanel.GetChild<Label>(0).Text =
+                    $"Can't assign the {OS.GetScancodeString(key.Scancode)} button to a direction action.\nPress another button.";
+                return;
             }
+            SettingsManager.Instance.SetActionKey(this.actionToSet, key);
+            SettingsManager.Instance.SetValue(this.actionToSet, (int)key.Scancode);
+            this.SetActionValues(OS.GetScancodeString(key.Scancode));
         }
 
         private void SetActionValues(string buttonText, string action = null) {
             if (action == null) {
-                action = this.actionToSet.Substring(3);
-                action = char.ToUpper(action[0]) + action.Substring(1);
+                action = this.actionToSet;
             }
-            this.GetNode<Button>($"{this.path}/{action}Button").Text =
-                buttonText;
+
+            this.GetNode<Button>($"{this.path}/{action}Button").Text = buttonText;
             this.keySetPopupPanel.Visible = false;
             this.actionToSet = null;
         }
 
         private void GetSavedValues() {
             foreach (SettingsEnum setting in Enum.GetValues(typeof(SettingsEnum))) {
-                int value = SettingsManager.Instance.GetValue(setting);
+                int value = (int)SettingsManager.Instance.GetValue(setting);
                 if (setting.Equals(SettingsEnum.Sound) || setting.Equals(SettingsEnum.Music)) {
                     this.SetSliderValues(value > 0, Math.Abs(value), setting.ToString());
                     continue;
                 }
                 string key = value >= 0 ? OS.GetScancodeString((uint)value) : ((ButtonList)value).ToString();
-                string action = setting.ToString().Substring(3);
-                action = char.ToUpper(action[0]) + action.Substring(1);
+                string action = setting.ToString();
                 this.SetActionValues(key, action);
             }
         }
@@ -86,21 +122,21 @@ namespace VampireSurvivorsLike {
             this.GetNode<HSlider>($"{this.path}/{button}Slider").Editable = value;
             this.GetNode<Label>($"{this.path}/{button}ValueLabel").SelfModulate =
                 !value ? new Color(0.6f, 0.6f, 0.6f) : new Color(1, 1, 1);
-            SettingsManager.Instance.SetValue(this.GetSettingValues(button), button);
+            SettingsManager.Instance.SetValue(button, this.GetSettingValues(button));
         }
 
         public void OnSoundValueChanged(float value) {
             this.GetNode<Label>($"{this.path}/SoundValueLabel").Text =
                 ((int)(value)).ToString();
-            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Sound.ToString()),
-                SettingsEnum.Sound.ToString());
+            SettingsManager.Instance.SetValue(SettingsEnum.Sound.ToString(),
+                this.GetSettingValues(SettingsEnum.Sound.ToString()));
         }
 
         public void OnMusicValueChanged(float value) {
             this.GetNode<Label>($"{this.path}/MusicValueLabel").Text =
                 ((int)(value)).ToString();
-            SettingsManager.Instance.SetValue(this.GetSettingValues(SettingsEnum.Music.ToString()),
-                SettingsEnum.Music.ToString());
+            SettingsManager.Instance.SetValue(SettingsEnum.Music.ToString(),
+                this.GetSettingValues(SettingsEnum.Music.ToString()));
         }
 
         public void OnSoundButtonToggled(bool value) {
@@ -159,7 +195,7 @@ namespace VampireSurvivorsLike {
             this.keySetPopupPanel.PopupCentered();
         }
 
-        public void OnSelectSetButtonPressed() {
+        public void OnAcceptSetButtonPressed() {
             this.actionToSet = "ui_select";
             this.keySetPopupPanel.PopupCentered();
         }

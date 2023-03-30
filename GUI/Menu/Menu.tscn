@@ -135,6 +135,7 @@ margin_top = 80.0
 margin_right = 260.0
 margin_bottom = 280.0
 rect_min_size = Vector2( 200, 200 )
+mouse_filter = 0
 alignment = 1
 
 [node name="StartButton" type="Button" parent="MainMenu/VBoxContainer"]

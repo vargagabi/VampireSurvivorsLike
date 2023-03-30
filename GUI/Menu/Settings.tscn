@@ -65,16 +65,16 @@ follow_focus = true
 scroll_horizontal_enabled = false
 
 [node name="SettingsContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/ScrollContainer"]
-margin_left = 39.0
-margin_right = 449.0
-margin_bottom = 394.0
+margin_left = 51.0
+margin_right = 448.0
+margin_bottom = 244.0
 size_flags_horizontal = 6
 size_flags_vertical = 3
 custom_constants/vseparation = 20
 columns = 4
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_right = 80.0
+margin_right = 67.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
@@ -82,16 +82,16 @@ text = "Sound"
 valign = 1
 
 [node name="SoundCheckButton" type="CheckButton" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_right = 160.0
+margin_left = 71.0
+margin_right = 147.0
 margin_bottom = 40.0
 size_flags_horizontal = 10
 size_flags_vertical = 5
 pressed = true
 
 [node name="SoundSlider" type="HSlider" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_right = 364.0
+margin_left = 151.0
+margin_right = 351.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 0 )
 mouse_default_cursor_shape = 10
@@ -103,8 +103,8 @@ tick_count = 11
 ticks_on_borders = true
 
 [node name="SoundValueLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_right = 410.0
+margin_left = 355.0
+margin_right = 397.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 42, 0 )
 size_flags_horizontal = 8
@@ -115,25 +115,25 @@ valign = 1
 
 [node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
 margin_top = 60.0
-margin_right = 80.0
+margin_right = 67.0
 margin_bottom = 100.0
 size_flags_vertical = 5
 text = "Music"
 valign = 1
 
 [node name="MusicCheckButton" type="CheckButton" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
+margin_left = 71.0
 margin_top = 60.0
-margin_right = 160.0
+margin_right = 147.0
 margin_bottom = 100.0
 size_flags_horizontal = 10
 size_flags_vertical = 5
 pressed = true
 
 [node name="MusicSlider" type="HSlider" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
+margin_left = 151.0
 margin_top = 60.0
-margin_right = 364.0
+margin_right = 351.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 200, 0 )
 mouse_default_cursor_shape = 10
@@ -145,9 +145,9 @@ ticks_on_borders = true
 
 [node name="MusicValueLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
 self_modulate = Color( 0.601563, 0.601563, 0.601563, 1 )
-margin_left = 368.0
+margin_left = 355.0
 margin_top = 60.0
-margin_right = 410.0
+margin_right = 397.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 42, 0 )
 size_flags_horizontal = 8
@@ -155,206 +155,6 @@ size_flags_vertical = 5
 text = "100"
 align = 2
 valign = 1
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 120.0
-margin_right = 80.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Left"
-valign = 1
-
-[node name="LeftLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 120.0
-margin_right = 160.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "A"
-align = 1
-valign = 1
-
-[node name="LeftButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 120.0
-margin_right = 364.0
-margin_bottom = 149.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-text = "Set"
-
-[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 120.0
-margin_right = 410.0
-margin_bottom = 149.0
-
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 169.0
-margin_right = 80.0
-margin_bottom = 198.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Right"
-valign = 1
-
-[node name="RightLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 169.0
-margin_right = 160.0
-margin_bottom = 198.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "A"
-align = 1
-valign = 1
-
-[node name="RightButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 169.0
-margin_right = 364.0
-margin_bottom = 198.0
-text = "Set"
-
-[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 169.0
-margin_right = 410.0
-margin_bottom = 198.0
-
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 218.0
-margin_right = 80.0
-margin_bottom = 247.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Up"
-valign = 1
-
-[node name="UpLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 218.0
-margin_right = 160.0
-margin_bottom = 247.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "A"
-align = 1
-valign = 1
-
-[node name="UpButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 218.0
-margin_right = 364.0
-margin_bottom = 247.0
-text = "Set"
-
-[node name="Control3" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 218.0
-margin_right = 410.0
-margin_bottom = 247.0
-
-[node name="Label6" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 267.0
-margin_right = 80.0
-margin_bottom = 296.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Down"
-valign = 1
-
-[node name="DownLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 267.0
-margin_right = 160.0
-margin_bottom = 296.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "A"
-align = 1
-valign = 1
-
-[node name="DownButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 267.0
-margin_right = 364.0
-margin_bottom = 296.0
-text = "Set"
-
-[node name="Control4" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 267.0
-margin_right = 410.0
-margin_bottom = 296.0
-
-[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 316.0
-margin_right = 80.0
-margin_bottom = 345.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Hold"
-valign = 1
-
-[node name="DownLabel2" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 316.0
-margin_right = 160.0
-margin_bottom = 345.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "A"
-align = 1
-valign = 1
-
-[node name="HoldButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 316.0
-margin_right = 364.0
-margin_bottom = 345.0
-text = "Set"
-
-[node name="Control5" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 316.0
-margin_right = 410.0
-margin_bottom = 345.0
-
-[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_top = 365.0
-margin_right = 80.0
-margin_bottom = 394.0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Select"
-valign = 1
-
-[node name="SelectLabel" type="Label" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 84.0
-margin_top = 365.0
-margin_right = 160.0
-margin_bottom = 394.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "A"
-align = 1
-valign = 1
-
-[node name="SelectButton" type="Button" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 164.0
-margin_top = 365.0
-margin_right = 364.0
-margin_bottom = 394.0
-text = "Set"
-
-[node name="Control6" type="Control" parent="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer"]
-margin_left = 368.0
-margin_top = 365.0
-margin_right = 410.0
-margin_bottom = 394.0
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
 margin_top = 346.0
@@ -393,6 +193,7 @@ __meta__ = {
 [node name="KeySetPopupPanel" type="PopupPanel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+input_pass_on_modal_close_click = false
 custom_styles/panel = SubResource( 1 )
 
 [node name="Label" type="Label" parent="KeySetPopupPanel"]
@@ -418,11 +219,5 @@ valign = 1
 [connection signal="mouse_entered" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnSliderMouseEntered"]
 [connection signal="mouse_exited" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnSliderMouseExited"]
 [connection signal="value_changed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/MusicSlider" to="." method="OnMusicValueChanged"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/LeftButton" to="." method="OnLeftSetButtonPressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/RightButton" to="." method="OnRightSetButtonPressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/UpButton" to="." method="OnUpSetButtonPressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/DownButton" to="." method="OnDownSetButtonPressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/HoldButton" to="." method="OnHoldSetButtonPressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ScrollContainer/SettingsContainer/SelectButton" to="." method="OnSelectSetButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/SaveButton" to="." method="OnResetButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]

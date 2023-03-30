@@ -46,11 +46,11 @@ namespace VampireSurvivorsLike {
             }
 
             this.audioPlayers["Ambient"].VolumeDb =
-                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
             this.audioPlayers["Action"].VolumeDb =
-                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music));
+                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
             this.audioPlayers["Effect"].VolumeDb =
-                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Sound));
+                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Sound));
             this.GetAudioFiles();
         }
 
@@ -134,7 +134,7 @@ namespace VampireSurvivorsLike {
             }
             this.InterpolateVolume("Action", -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
             this.InterpolateVolume("Ambient",
-                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
+                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
                 Tween.TransitionType.Expo, Tween.EaseType.In);
 
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
@@ -150,7 +150,7 @@ namespace VampireSurvivorsLike {
             }
             this.InterpolateVolume("Ambient", -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
             this.InterpolateVolume("Action",
-                this.GetVolumeFromPercent(SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
+                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
                 Tween.TransitionType.Linear, Tween.EaseType.In);
 
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
