@@ -12,7 +12,6 @@ config_version=4
 
 config/name="VampireSurvivorsLike"
 run/main_scene="res://GUI/Menu/Menu.tscn"
-config/icon="res://icon.png"
 
 [autoload]
 

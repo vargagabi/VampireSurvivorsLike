@@ -60,7 +60,7 @@ valign = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer"]
 margin_top = 82.0
 margin_right = 500.0
-margin_bottom = 326.0
+margin_bottom = 350.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
@@ -69,7 +69,7 @@ scroll_horizontal_enabled = false
 [node name="SettingsContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/ScrollContainer"]
 margin_left = 51.0
 margin_right = 448.0
-margin_bottom = 244.0
+margin_bottom = 268.0
 size_flags_horizontal = 6
 size_flags_vertical = 3
 custom_constants/vseparation = 20
@@ -171,11 +171,6 @@ size_flags_vertical = 5
 text = "100"
 align = 2
 valign = 1
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
-margin_top = 346.0
-margin_right = 500.0
-margin_bottom = 350.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_top = 1.0

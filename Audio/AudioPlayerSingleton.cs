@@ -11,7 +11,50 @@ namespace VampireSurvivorsLike {
 
 
         private readonly Dictionary<string, List<string>> fileMap =
-            new Dictionary<string, List<string>>();
+            new Dictionary<string, List<string>> {
+                {
+                    "Ambient", new List<string> {
+                        "Ambient_1.ogg",
+                        "Ambient_10.ogg",
+                        "Ambient_2.ogg",
+                        "Ambient_3.ogg",
+                        "Ambient_4.ogg",
+                        "Ambient_5.ogg",
+                        "Ambient_6.ogg",
+                        "Ambient_7.ogg",
+                        "Ambient_8.ogg",
+                        "Ambient_9.ogg",
+                        "Light_Ambient_1.ogg",
+                        "Light_Ambient_2.ogg",
+                        "Light_Ambient_3.ogg",
+                        "Light_Ambient_4.ogg",
+                        "Light_Ambient_5.ogg",
+                        "Night_Ambient_1.ogg",
+                        "Night_Ambient_2.ogg",
+                        "Night_Ambient_3.ogg",
+                        "Night_Ambient_4.ogg",
+                        "Night_Ambient_5.ogg",
+                    }
+                }, {
+                    "Action", new List<string> {
+                        "Action_1.ogg",
+                        "Action_2.ogg",
+                        "Action_3.ogg",
+                        "Action_4.ogg",
+                        "Action_5.ogg",
+                    }
+                }, {
+                    "Effect", new List<string> {
+                        "Complete.ogg",
+                        "Death.ogg",
+                        "EnemyDeath.ogg",
+                        "EnemyHit.ogg",
+                        "PlayerHit.ogg",
+                        "Strange.ogg",
+                        "Victory.ogg",
+                    }
+                }
+            };
         private readonly Dictionary<string, AudioStreamPlayer> audioPlayers =
             new Dictionary<string, AudioStreamPlayer>();
         private readonly Dictionary<string, Tween> tweens =
@@ -51,22 +94,6 @@ namespace VampireSurvivorsLike {
                 this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
             this.audioPlayers["Effect"].VolumeDb =
                 this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Sound));
-            this.GetAudioFiles();
-        }
-
-        private void GetAudioFiles() {
-            Directory directory = new Directory();
-            foreach (string audioType in this.directoryPaths) {
-                directory.Open("res://Audio/" + audioType);
-                directory.ListDirBegin(true, true);
-                this.fileMap.Add(audioType, new List<string>());
-                string file;
-                while (!(file = directory.GetNext()).Equals("")) {
-                    if (!file.EndsWith(".import")) {
-                        this.fileMap[audioType].Add(file);
-                    }
-                }
-            }
         }
 
         public void SetVolume(int percent, string setting) {
@@ -77,7 +104,6 @@ namespace VampireSurvivorsLike {
             if (setting.Equals(SettingsEnum.Music.ToString())) {
                 this.audioPlayers["Ambient"].VolumeDb = volume;
                 this.audioPlayers["Action"].VolumeDb = volume;
-                GD.Print(this.currentlyPlaying);
                 if (!this.currentlyPlaying.Empty()) {
                     this.ContinueOrPlayRandomAudio(this.currentlyPlaying, true);
                 }

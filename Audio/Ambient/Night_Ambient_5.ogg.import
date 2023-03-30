@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Night_Ambient_5.ogg-392da694edd353047195d47a95cdec7d.oggstr"
+
+[deps]
+
+source_file="res://Audio/Ambient/Night_Ambient_5.ogg"
+dest_files=[ "res://.import/Night_Ambient_5.ogg-392da694edd353047195d47a95cdec7d.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

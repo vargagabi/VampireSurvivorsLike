@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Light_Ambient_4.ogg-a88ad736b08bba8998f1f849eb71281b.oggstr"
+
+[deps]
+
+source_file="res://Audio/Ambient/Light_Ambient_4.ogg"
+dest_files=[ "res://.import/Light_Ambient_4.ogg-a88ad736b08bba8998f1f849eb71281b.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
