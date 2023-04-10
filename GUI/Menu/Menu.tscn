@@ -299,4 +299,5 @@ visible = false
 [connection signal="visibility_changed" from="Shop" to="Shop" method="OnVisibilityChanged"]
 [connection signal="pressed" from="Shop/HBoxContainer/ResetButton" to="Shop" method="OnResetButtonPressed"]
 [connection signal="pressed" from="Shop/HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]
+[connection signal="pressed" from="Shop/HBoxContainer/BackButton" to="Shop" method="OnBackButtonPressed"]
 [connection signal="BackButtonPress" from="Settings" to="." method="OnBackButtonPressed"]

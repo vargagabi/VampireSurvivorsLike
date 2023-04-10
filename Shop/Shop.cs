@@ -4,14 +4,14 @@ namespace VampireSurvivorsLike {
 
     public class Shop : Control {
 
-        private GridContainer gridContainer { get; set; }
-        private Label GoldLabel { get; set; }
+        private GridContainer gridContainer;
+        private Label goldLabel;
 
         public override void _Ready() {
             this.gridContainer = GetNode<GridContainer>("ScrollContainer/GridContainer");
-            this.GoldLabel = GetNode<Label>("MoneyContainer/Label");
-            this.GoldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
-            FillAttributes(this.gridContainer);
+            this.goldLabel = GetNode<Label>("MoneyContainer/Label");
+            this.goldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
+            this.FillAttributes(this.gridContainer);
         }
 
         private void FillAttributes(GridContainer container) {
@@ -28,7 +28,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnPurchase(string name) {
-            this.GoldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
+            this.goldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
         }
 
         public void OnVisibilityChanged() {
@@ -39,10 +39,15 @@ namespace VampireSurvivorsLike {
 
         public void OnResetButtonPressed() {
             AttributeManagerSingleton.Instance.ResetAttributes();
-            this.GoldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
+            this.goldLabel.Text = AttributeManagerSingleton.Instance.Gold.ToString();
             foreach (AttributeCard card in this.gridContainer.GetChildren()) {
                 card.RefreshInfo();
             }
+        }
+
+        public void OnBackButtonPressed() {
+            AttributeManagerSingleton.Instance.Save();
+            this.Visible = false;
         }
 
     }
