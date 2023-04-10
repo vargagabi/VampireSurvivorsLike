@@ -1,5 +1,5 @@
 Issues:
-
+	-you can hear the effects sound even when disabled
 	-in multiplayer, pause game -> settings -> other player resumes game settings menu still visible
 Fixed:
 	-tree's placement on map is gridlike

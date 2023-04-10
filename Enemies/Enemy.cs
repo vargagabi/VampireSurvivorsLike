@@ -6,27 +6,18 @@ namespace VampireSurvivorsLike {
 
     public class Enemy : KinematicBody2D {
 
-        public static int mobCount = 0;
-        protected int Health { get; set; }
+        public static int MobCount = 0;
+        public int SpawnRate { get; protected set; }
+        public float SpawnDistance { get; protected set; }
         public int Strength { get; protected set; }
-        protected int ExpValue { get; set; }
-        protected float Speed { get; set; }
-        public int SpawnRate { get; set; }
-        public float SpawnDistance { get; set; }
         public Vector2 SpawnTime { get; protected set; }
+        protected int health;
+        protected int expValue;
+        protected float speed;
+
         public Player PlayerOne { get; set; }
         public Player PlayerTwo { get; set; }
-        private PackedScene ExpOrb { get; set; }
-        private PackedScene Gold { get; set; }
         protected AnimatedSprite AnimatedSprite { get; set; }
-        private PackedScene DamageIndicator { get; set; }
-        public int spawnAfterMinute = 0;
-
-        protected Enemy() {
-            this.ExpOrb = ResourceLoader.Load<PackedScene>("res://ItemDrops/ExpOrbs/ExpOrb.tscn");
-            this.Gold = ResourceLoader.Load<PackedScene>("res://ItemDrops/Gold/Gold.tscn");
-            this.DamageIndicator = ResourceLoader.Load<PackedScene>("res://GUI/GUI/FloatingValue.tscn");
-        }
 
         public override void _Ready() {
             base._Ready();
@@ -60,81 +51,77 @@ namespace VampireSurvivorsLike {
                 : this.PlayerTwo.GlobalPosition;
         }
 
-        [Puppet]
-        protected void SetPuppetPosition(Vector2 globalPosition, int frame = 0) {
-            if (this.Health <= 0) {
-                return;
-            }
-            this.GlobalPosition = globalPosition;
-            this.AnimatedSprite.Frame = frame;
-        }
 
         protected void AnimationPlay(EnemyAnimationsEnum enemyAnimations) {
-            if (this.Health <= 0 && enemyAnimations != EnemyAnimationsEnum.Death) {
+            if (this.health <= 0 && enemyAnimations != EnemyAnimationsEnum.Death) {
                 return;
             }
             this.AnimatedSprite.Play(enemyAnimations.ToString());
         }
 
         public void OnDeath() {
-            if (this.AnimatedSprite.Animation == EnemyAnimationsEnum.Death.ToString()) {
-                this.QueueFree();
-                ItemDropManager.Instance.CreateExperienceOrb(this.ExpValue, this.GlobalPosition);
-                ItemDropManager.Instance.CreateGold(new Random().Next(1, 10), this.GlobalPosition);
+            if (this.AnimatedSprite.Animation != EnemyAnimationsEnum.Death.ToString()) {
+                return;
             }
+            this.QueueFree();
+            ItemDropManager.Instance.CreateExperienceOrb(this.expValue, this.GlobalPosition);
+            ItemDropManager.Instance.CreateGold(new Random().Next(1, 10), this.GlobalPosition);
         }
 
         /*
-         * When receiving damage reduce the Health by damage amount.
-         * If the Health is less than or equals 0 remove the enemy and add an
+         * When receiving damage reduce the health by damage amount.
+         * If the health is less than or equals 0 remove the enemy and add an
          * instance of an ExpOrb at its place.
          */
         public void OnHit(int damage, Weapon weapon) {
-            this.TakeDamage(damage);
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(this.RemoteOnHit), damage);
+                Rpc(nameof(this.SyncTakeDamage), damage);
+            } else {
+                this.SyncTakeDamage(damage);
             }
-            if (this.Health <= 0) {
-                if (weapon is Aura aura) {
-                    this.ExpValue += (int)(this.ExpValue * aura.BonusExperience);
-                }
-                this.CollisionMask = 0;
-                this.AnimationPlay(EnemyAnimationsEnum.Death);
-                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.RemoteOnDeath), this.ExpValue, this.GlobalPosition);
-                }
+            if (this.health > 0) {
+                return;
+            }
+            if (weapon is Aura aura) {
+                this.expValue += (int)(this.expValue * aura.BonusExperience);
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.Rpc(nameof(this.SyncOnDeath), this.expValue, this.GlobalPosition);
+            } else {
+                this.SyncOnDeath(this.expValue, this.GlobalPosition);
             }
         }
 
-        [Remote]
-        public void RemoteOnHit(int damage) {
-            this.TakeDamage(damage);
-        }
-
-        private void TakeDamage(int damage) {
-            if (this.Health <= 0) {
+        [RemoteSync]
+        private void SyncTakeDamage(int damage) {
+            if (this.health <= 0) {
                 return;
             }
             AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.EnemyHit);
-            this.ShowDamage(damage);
-            this.Health -= damage;
-        }
-
-        private void ShowDamage(int damage) {
             FloatingValue.CreateFloatingValue(this.GlobalPosition, new Color(0.96f, 0.24f, 0.24f), damage,
                 this.GetParent().GetParent());
+            this.health -= damage;
         }
 
-        [Remote]
-        public void RemoteOnDeath(int bonusExp, Vector2 position) {
-            this.Health = 0;
+        [RemoteSync]
+        public void SyncOnDeath(int experience, Vector2 position) {
+            this.CollisionMask = 0;
+            this.health = 0;
             this.GlobalPosition = position;
-            this.ExpValue = bonusExp;
+            this.expValue = experience;
             this.AnimationPlay(EnemyAnimationsEnum.Death);
         }
 
+        [Puppet]
+        protected void SetPuppetPosition(Vector2 globalPosition) {
+            if (this.health <= 0) {
+                return;
+            }
+            this.GlobalPosition = globalPosition;
+        }
+
         public void OnTimerTimeout() {
-            this.RpcUnreliable(nameof(this.SetPuppetPosition), this.GlobalPosition, this.AnimatedSprite.Frame);
+            this.RpcUnreliable(nameof(this.SetPuppetPosition), this.GlobalPosition);
         }
 
     }

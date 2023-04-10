@@ -6,25 +6,27 @@ namespace VampireSurvivorsLike {
 
     public class MobSpawner : Node2D {
 
-        private int SpawnCounter { get; set; }
         public Player PlayerOne { get; set; }
         public Player PlayerTwo { get; set; }
-        private List<PackedScene> enemies = new List<PackedScene>();
-        private YSort ySort;
+        private readonly List<PackedScene> enemies = new List<PackedScene>();
+        private YSort entities;
+        private int spawnCounter = 0;
+        private int counterResetBoundary = 1;
 
-        // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
             GD.Randomize();
-            this.SpawnCounter = 0;
-
             this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Slime/Slime.tscn"));
             this.enemies.Add(GD.Load<PackedScene>("res://Enemies/Skeleton/Skeleton.tscn"));
-            this.ySort = this.GetParent().GetNode<YSort>("World/Entities");
+            this.entities = this.GetParent().GetNode<YSort>("World/Entities");
+            foreach (PackedScene enemy in this.enemies) {
+                this.counterResetBoundary *= enemy.Instance<Enemy>().SpawnRate;
+            }
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            if ((!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) && PlayerOne != null) {
+            if ((!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) &&
+                this.PlayerOne != null) {
                 this.SpawnEnemy();
             }
         }
@@ -33,38 +35,38 @@ namespace VampireSurvivorsLike {
          * Spawns an enemy around the player in a circle every spawnRate time.
          */
         private void SpawnEnemy() {
-            this.SpawnCounter++;
+            this.spawnCounter++;
             Vector2 position = this.PlayerOne.Position;
             if (this.PlayerTwo != null) {
                 position = new Random().Next(0, 2) == 0 ? this.PlayerOne.GlobalPosition : this.PlayerTwo.GlobalPosition;
             }
             for (int i = 0; i < this.enemies.Count; i++) {
                 Enemy enemy = this.enemies[i].Instance<Enemy>();
-                if (this.SpawnCounter % enemy.SpawnRate != 0) {
+                if (this.spawnCounter % enemy.SpawnRate != 0) {
                     continue;
                 }
-                this.SpawnCounter = 0;
-                enemy.PlayerOne = this.PlayerOne;
-                enemy.PlayerTwo = this.PlayerTwo;
-                enemy.Name = enemy.GetClass() + Enemy.mobCount;
-                enemy.GlobalPosition = position +
-                                       new Vector2(enemy.SpawnDistance, 0).Rotated(
-                                           (float)GD.RandRange(0, Mathf.Tau));
-                this.ySort.AddChild(enemy, true);
+                position += new Vector2(enemy.SpawnDistance, 0).Rotated(
+                    (float)GD.RandRange(0, Mathf.Tau));
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.Rpc(nameof(this.SpawnPuppetEnemy), i, enemy.GlobalPosition, enemy.Name);
+                    this.Rpc(nameof(this.SyncSpawnEnemy), i, position, Enemy.MobCount++);
+                } else {
+                    this.SyncSpawnEnemy(i, position, Enemy.MobCount++);
                 }
+            }
+            if (this.spawnCounter == this.counterResetBoundary || this.spawnCounter == int.MaxValue) {
+                this.spawnCounter = 0;
             }
         }
 
-        [Puppet]
-        public void SpawnPuppetEnemy(int enemyIndex, Vector2 globalPosition, string name) {
+        [PuppetSync]
+        public void SyncSpawnEnemy(int enemyIndex, Vector2 globalPosition, int mobCount) {
             Enemy enemy = this.enemies[enemyIndex].Instance<Enemy>();
             enemy.PlayerOne = this.PlayerOne;
             enemy.PlayerTwo = this.PlayerTwo;
-            enemy.Name = name;
+            enemy.Name = enemy.GetClass() + mobCount;
             enemy.GlobalPosition = globalPosition;
-            this.ySort.AddChild(enemy, true);
+            this.entities.AddChild(enemy, true);
+            GD.Print(enemy.Name);
         }
 
     }
