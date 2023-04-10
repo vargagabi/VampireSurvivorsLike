@@ -1,27 +1,20 @@
 using Godot;
-using System;
 
 namespace VampireSurvivorsLike {
 
     public class GameFinishedScreen : CenterContainer {
 
-
-        public void GameFinished(bool isVictory, int gold = -1) {
+        public void GameFinished(bool isVictory, int gold) {
             this.Visible = true;
             if (isVictory) {
                 GetNode<Label>("VBoxContainer/Label").Text = "Congratulations!\nYou Win!";
-                if (gold >= 0) {
-                    SetGold(gold);
-                }
+                GetChild(1).GetNode<Label>("GoldContainer/GoldLabel").Text = gold.ToString();
             } else {
                 GetNode<Label>("VBoxContainer/Label").Text = "Game Over!";
                 GetNode<HBoxContainer>("VBoxContainer/GoldContainer").Visible = false;
             }
         }
 
-        private void SetGold(int value) {
-            GetChild(1).GetNode<Label>("GoldContainer/GoldLabel").Text = value.ToString();
-        }
 
         public void OnVisibilityChanged() {
             if (this.Visible) {
@@ -29,7 +22,7 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        public void OnButtonPressed() {
+        public void OnMainMenuButtonPressed() {
             GetTree().Paused = false;
             this.GetTree().Root.GetNode<Network>("Network").ConnectionClosed();
             this.GetTree().Root.GetNode("Main").QueueFree();

@@ -14,7 +14,7 @@ namespace VampireSurvivorsLike {
             this.hud = this.GetNode<HUD>("Control/HUD");
         }
 
-        public void GameFinished(bool isVictory, int gold = -1) {
+        public void GameFinished(bool isVictory, int gold) {
             this.GetNode<GameFinishedScreen>("Control/GameFinishedScreen").GameFinished(isVictory, gold);
             this.GetNode<LevelUpScreen>("Control/LevelUpScreen").Visible = false;
         }
@@ -23,10 +23,6 @@ namespace VampireSurvivorsLike {
             this.hud.SetItem(icon, level);
         }
 
-        /*
-         * Sets the current health when receiving the value.
-         * If the health is less than or equals 0 show the Game Over screen and pause the game
-         */
         public void SetCurrentHealth(int currentHealth) {
             this.hud.SetHealthLabel(currentHealth);
         }
@@ -45,6 +41,9 @@ namespace VampireSurvivorsLike {
 
         public void TogglePauseGame(bool isPaused) {
             this.GetNode<PauseScreen>("Control/PauseScreen").TogglePauseGame(isPaused);
+            if (!isPaused) {
+                this.GetNode<Settings>("Control/Settings").Visible = false;
+            }
         }
 
         public bool GetSettingsVisible() {

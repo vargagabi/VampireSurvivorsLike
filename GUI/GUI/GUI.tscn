@@ -643,7 +643,7 @@ margin_bottom = 153.0
 size_flags_horizontal = 3
 custom_constants/separation = 32
 
-[node name="Button" type="Button" parent="Control/GameFinishedScreen/VBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="Control/GameFinishedScreen/VBoxContainer"]
 margin_top = 157.0
 margin_right = 219.0
 margin_bottom = 180.0
@@ -657,4 +657,4 @@ visible = false
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/SettingsButton" to="Control/Settings" method="OnSettingsButtonPressed"]
 [connection signal="pressed" from="Control/PauseScreen/VBoxContainer/QuitButton" to="Control/PauseScreen" method="OnQuitButtonPressed"]
 [connection signal="visibility_changed" from="Control/GameFinishedScreen" to="Control/GameFinishedScreen" method="OnVisibilityChanged"]
-[connection signal="pressed" from="Control/GameFinishedScreen/VBoxContainer/Button" to="Control/GameFinishedScreen" method="OnButtonPressed"]
+[connection signal="pressed" from="Control/GameFinishedScreen/VBoxContainer/MainMenuButton" to="Control/GameFinishedScreen" method="OnMainMenuButtonPressed"]
