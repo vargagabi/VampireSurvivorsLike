@@ -63,7 +63,7 @@ namespace VampireSurvivorsLike {
             LevelUpManagerSingleton.Instance.Reset();
             GetTree().ChangeScene("res://Main/Main.tscn");
             this.lastButtonInFocus = this.mainMenu.GetChild(0).GetChild<Button>(0);
-            AudioPlayerSingleton.Instance.SwitchToAction(false);
+            AudioPlayerSingleton.Instance.SwitchMusicType(AudioTypeEnum.Action, false);
         }
 
         public void OnMultiplayerButtonPressed() {
@@ -94,7 +94,7 @@ namespace VampireSurvivorsLike {
         public void OnMainMenuVisibilityChanged() {
             if (this.mainMenu.Visible) {
                 this.lastButtonInFocus.GrabFocus();
-                AudioPlayerSingleton.Instance.SwitchToAmbient();
+                AudioPlayerSingleton.Instance.SwitchMusicType(AudioTypeEnum.Ambient);
                 GameStateManagerSingleton.Instance.GameState = GameStateEnum.Menu;
             }
         }

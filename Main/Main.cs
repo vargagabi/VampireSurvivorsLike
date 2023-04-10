@@ -205,7 +205,7 @@ namespace VampireSurvivorsLike {
         public void GameEnded(bool isVictory, int goldCount) {
             this.GetTree().Paused = true;
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameFinished;
-            AudioPlayerSingleton.Instance.SwitchToAmbient(false);
+            AudioPlayerSingleton.Instance.SwitchMusicType(AudioTypeEnum.Ambient,false);
             if (isVictory) {
                 AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.Victory);
                 AttributeManagerSingleton.Instance.Gold += goldCount;

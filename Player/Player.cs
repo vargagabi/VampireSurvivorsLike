@@ -11,7 +11,7 @@ namespace VampireSurvivorsLike {
         private int damageCounter = 0;
         private const int ImmunityTime = 25;
         private const int PassiveHealTime = 100;
-        private Vector2 Direction { get; set; }
+        private Vector2 Direction;
         private int takenDamageValue = 0;
 
         private AnimatedSprite animatedSprite;

@@ -7,15 +7,11 @@ namespace VampireSurvivorsLike {
 
     public class AudioPlayerSingleton : Node {
 
-        private static AudioPlayerSingleton instance;
-
-
-        private readonly Dictionary<string, List<string>> fileMap =
-            new Dictionary<string, List<string>> {
+        private readonly Dictionary<AudioTypeEnum, List<string>> fileMap =
+            new Dictionary<AudioTypeEnum, List<string>> {
                 {
-                    "Ambient", new List<string> {
+                    AudioTypeEnum.Ambient, new List<string> {
                         "Ambient_1.ogg",
-                        "Ambient_10.ogg",
                         "Ambient_2.ogg",
                         "Ambient_3.ogg",
                         "Ambient_4.ogg",
@@ -24,6 +20,7 @@ namespace VampireSurvivorsLike {
                         "Ambient_7.ogg",
                         "Ambient_8.ogg",
                         "Ambient_9.ogg",
+                        "Ambient_10.ogg",
                         "Light_Ambient_1.ogg",
                         "Light_Ambient_2.ogg",
                         "Light_Ambient_3.ogg",
@@ -36,7 +33,7 @@ namespace VampireSurvivorsLike {
                         "Night_Ambient_5.ogg",
                     }
                 }, {
-                    "Action", new List<string> {
+                    AudioTypeEnum.Action, new List<string> {
                         "Action_1.ogg",
                         "Action_2.ogg",
                         "Action_3.ogg",
@@ -44,7 +41,7 @@ namespace VampireSurvivorsLike {
                         "Action_5.ogg",
                     }
                 }, {
-                    "Effect", new List<string> {
+                    AudioTypeEnum.Effect, new List<string> {
                         "Complete.ogg",
                         "Death.ogg",
                         "EnemyDeath.ogg",
@@ -55,78 +52,64 @@ namespace VampireSurvivorsLike {
                     }
                 }
             };
-        private readonly Dictionary<string, AudioStreamPlayer> audioPlayers =
-            new Dictionary<string, AudioStreamPlayer>();
-        private readonly Dictionary<string, Tween> tweens =
-            new Dictionary<string, Tween>();
-        private readonly string[] directoryPaths = { "Ambient", "Action", "Effect" };
-        private string currentlyPlaying = "";
-        private int minVolumeDb = -40;
-        private int maxVolumeBd = 0;
+        private readonly Dictionary<AudioTypeEnum, AudioStreamPlayer> audioPlayers =
+            new Dictionary<AudioTypeEnum, AudioStreamPlayer>();
+        private readonly Dictionary<AudioTypeEnum, Tween> tweens =
+            new Dictionary<AudioTypeEnum, Tween>();
+        private readonly AudioTypeEnum[] directoryPaths =
+            { AudioTypeEnum.Ambient, AudioTypeEnum.Action, AudioTypeEnum.Effect };
+        private AudioTypeEnum currentlyPlaying = AudioTypeEnum.Ambient;
+        private const int MinVolumeDb = -40;
+        private const int MaxVolumeBd = 0;
 
-        public static AudioPlayerSingleton Instance {
-            get => instance;
-            set {
-                GD.Print("AudioPlayer ready...");
-                instance = value;
-            }
-        }
-
+        public static AudioPlayerSingleton Instance { get; private set; }
 
         private AudioPlayerSingleton() {
         }
 
-        static AudioPlayerSingleton() {
-        }
-
         public override void _Ready() {
             Instance = this;
-
-            foreach (string type in this.directoryPaths) {
-                this.audioPlayers.Add(type, GetNode<AudioStreamPlayer>($"{type}AudioPlayer"));
+            foreach (AudioTypeEnum type in this.directoryPaths) {
+                this.audioPlayers.Add(type, this.GetNode<AudioStreamPlayer>($"{type}AudioPlayer"));
                 this.tweens.Add(type, this.audioPlayers[type].GetChild<Tween>(0));
                 this.tweens[type].Connect("tween_completed", this, "OnTweenCompleted");
             }
-
-            this.audioPlayers["Ambient"].VolumeDb =
+            this.audioPlayers[AudioTypeEnum.Action].VolumeDb = this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb =
                 this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
-            this.audioPlayers["Action"].VolumeDb =
-                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
-            this.audioPlayers["Effect"].VolumeDb =
+            this.audioPlayers[AudioTypeEnum.Effect].VolumeDb =
                 this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Sound));
+            this.SwitchMusicType(AudioTypeEnum.Ambient, false);
         }
 
         public void SetVolume(int percent, string setting) {
-            float volume = this.minVolumeDb + (this.maxVolumeBd - this.minVolumeDb) * (percent * 0.01f);
-            if (volume <= this.minVolumeDb) {
-                volume = -80;
-            }
+            float volume = this.GetVolumeFromPercent(percent);
             if (setting.Equals(SettingsEnum.Music.ToString())) {
-                this.audioPlayers["Ambient"].VolumeDb = volume;
-                this.audioPlayers["Action"].VolumeDb = volume;
-                if (!this.currentlyPlaying.Empty()) {
-                    this.ContinueOrPlayRandomAudio(this.currentlyPlaying, true);
+                this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb = volume;
+                this.audioPlayers[AudioTypeEnum.Action].VolumeDb = volume;
+                if (volume <= MinVolumeDb) {
+                    this.audioPlayers[AudioTypeEnum.Ambient].StreamPaused = this.audioPlayers[AudioTypeEnum.Action].StreamPaused = true;
+                } else {
+                    this.audioPlayers[this.currentlyPlaying].StreamPaused = false;
                 }
             } else if (setting.Equals(SettingsEnum.Sound.ToString())) {
-                this.audioPlayers["Effect"].VolumeDb = volume;
+                this.audioPlayers[AudioTypeEnum.Effect].VolumeDb = volume;
             }
         }
 
         private int GetVolumeFromPercent(int percent) {
-            return (int)(this.minVolumeDb + (this.maxVolumeBd - this.minVolumeDb) * (percent * 0.01f));
+            return (int)(MinVolumeDb + (MaxVolumeBd - MinVolumeDb) * (percent * 0.01f));
         }
 
         /**
          * Continue playing track or start a new one from 'type' tracks.
          */
-        private void ContinueOrPlayRandomAudio(String type, bool continueLastStream) {
+        private void ContinueOrPlayRandomAudio(AudioTypeEnum type, bool continueLastStream) {
             if (!this.directoryPaths.Contains(type)) {
                 throw new ArgumentException($"Audio type {type} does not exist.");
             }
             if (continueLastStream && this.audioPlayers[type].Stream != null &&
                 this.audioPlayers[type].GetPlaybackPosition() <
                 this.audioPlayers[type].Stream.GetLength()) {
-                this.audioPlayers[type].StreamPaused = false;
                 return;
             }
             GD.Randomize();
@@ -136,13 +119,7 @@ namespace VampireSurvivorsLike {
             this.audioPlayers[type].Play();
         }
 
-        private void RemoveTweens() {
-            foreach (Tween tween in this.tweens.Values) {
-                tween.RemoveAll();
-            }
-        }
-
-        private void InterpolateVolume(string audioType, int finalVolume, float duration,
+        private void InterpolateVolume(AudioTypeEnum audioType, int finalVolume, float duration,
             Tween.TransitionType transition = Tween.TransitionType.Linear,
             Tween.EaseType easeType = Tween.EaseType.InOut) {
             this.tweens[audioType].InterpolateProperty(this.audioPlayers[audioType], "volume_db",
@@ -150,43 +127,32 @@ namespace VampireSurvivorsLike {
             this.tweens[audioType].Start();
         }
 
-        public void SwitchToAmbient(bool continueLastStream = true) {
-            GD.Print("Play ambient music");
-            this.RemoveTweens();
-            this.currentlyPlaying = "Ambient";
-
-            if (this.audioPlayers["Ambient"].StreamPaused) {
-                this.audioPlayers["Ambient"].StreamPaused = false;
+        public void SwitchMusicType(AudioTypeEnum type, bool continueLastStream = true) {
+            foreach (Tween tween in this.tweens.Values) {
+                tween.RemoveAll();
             }
-            this.InterpolateVolume("Action", -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
-            this.InterpolateVolume("Ambient",
-                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
-                Tween.TransitionType.Expo, Tween.EaseType.In);
-
-            this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
-        }
-
-        public void SwitchToAction(bool continueLastStream = true) {
-            GD.Print("Play action music");
-            this.RemoveTweens();
-            this.currentlyPlaying = "Action";
-
-            if (this.audioPlayers["Action"].StreamPaused) {
-                this.audioPlayers["Action"].StreamPaused = false;
+            this.currentlyPlaying = type;
+            if (this.audioPlayers[type].StreamPaused) {
+                return;
             }
-            this.InterpolateVolume("Ambient", -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
-            this.InterpolateVolume("Action",
-                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
-                Tween.TransitionType.Linear, Tween.EaseType.In);
-
+            if (type.Equals(AudioTypeEnum.Action)) {
+                this.InterpolateVolume(AudioTypeEnum.Ambient, -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
+                this.InterpolateVolume(AudioTypeEnum.Action,
+                    this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
+                    Tween.TransitionType.Linear, Tween.EaseType.In);
+            } else if (type.Equals(AudioTypeEnum.Ambient)) {
+                this.InterpolateVolume(AudioTypeEnum.Action, -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
+                this.InterpolateVolume(AudioTypeEnum.Ambient,
+                    this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
+                    Tween.TransitionType.Expo, Tween.EaseType.In);
+            }
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
         }
 
         public void PlayEffect(AudioEffectEnum effect) {
-            GD.Print($"Play {effect} effect");
-            this.audioPlayers["Effect"].Stream =
+            this.audioPlayers[AudioTypeEnum.Effect].Stream =
                 ResourceLoader.Load<AudioStream>($"res://Audio/Effect/{effect.ToString()}.ogg");
-            this.audioPlayers["Effect"].Play();
+            this.audioPlayers[AudioTypeEnum.Effect].Play();
         }
 
         public void OnAudioFinished() {
@@ -194,7 +160,7 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnTweenCompleted(Godot.Object obj, NodePath path) {
-            if (((AudioStreamPlayer)obj).VolumeDb <= this.minVolumeDb) {
+            if (((AudioStreamPlayer)obj).VolumeDb <= MinVolumeDb) {
                 ((AudioStreamPlayer)obj).StreamPaused = true;
             }
         }
