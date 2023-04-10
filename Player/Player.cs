@@ -99,12 +99,16 @@ namespace VampireSurvivorsLike {
             if (!Input.IsActionPressed("ui_hold") && !velocity.Equals(Vector2.Zero)) {
                 this.Direction = velocity;
             }
-            if (velocity.x == 0 && velocity.y != 0) {
-                animation = (velocity.y > 0 ? AnimationsEnum.Down : AnimationsEnum.Up);
-            } else if (velocity.x != 0) {
-                animation = (velocity.x > 0 ? AnimationsEnum.Right : AnimationsEnum.Left);
-            }
 
+            if (xInput != 0) {
+                animation = xInput < 0 ? AnimationsEnum.Left : AnimationsEnum.Right;
+            } else if (yInput != 0) {
+                animation = yInput < 0 ? AnimationsEnum.Up : AnimationsEnum.Down;
+            } else if (this.Direction.x != 0) {
+                animation = this.Direction.x < 0 ? AnimationsEnum.IdleLeft : AnimationsEnum.IdleRight;
+            } else if (this.Direction.y != 0) {
+                animation = this.Direction.y < 0 ? AnimationsEnum.IdleUp : AnimationsEnum.IdleDown;
+            }
             this.directionArrow.Rotation = this.Direction.Angle();
             this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
             this.animatedSprite.Play(animation.ToString());

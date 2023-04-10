@@ -121,15 +121,16 @@ namespace VampireSurvivorsLike {
             this.peer.SetBindIp(this.address.Text);
             Error err = this.peer.CreateServer((int)this.port.Value, MaxNumberOfPeers);
             int i = 0;
-            while (err != Error.Ok && ++i < 9000) {
+            while (err != Error.Ok && ++i < 50000) {
                 err = this.peer.CreateServer(DefaultPort + i, MaxNumberOfPeers);
+            }
+            if (err != Error.Ok) {
+                ShowStatus($"Error: {err}");
+                return;
             }
             if (i > 0) {
                 ShowStatus($"Failed to open server on port: {this.port.Value}\nNew port is: {DefaultPort + i}");
                 this.port.Value = DefaultPort + i;
-            }
-            if (err != Error.Ok) {
-                return;
             }
 
             this.GetTree().NetworkPeer = this.peer;

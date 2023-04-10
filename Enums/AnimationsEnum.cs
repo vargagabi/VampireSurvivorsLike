@@ -6,7 +6,11 @@
         Up,
         Down,
         Right,
-        Left
+        Left,
+        IdleUp,
+        IdleDown,
+        IdleRight,
+        IdleLeft,
 
     }
 
