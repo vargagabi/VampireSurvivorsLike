@@ -256,12 +256,12 @@ position = Vector2( 0, 12 )
 shape = SubResource( 22 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, -13 )
+position = Vector2( 0, -12 )
 frames = SubResource( 41 )
 animation = "IdleLeft"
 
 [node name="Arrow" type="Sprite" parent="."]
-position = Vector2( 0, -7.5 )
+position = Vector2( 0, -11.5 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 2 )
 
@@ -284,7 +284,7 @@ position = Vector2( 0, 4 )
 shape = SubResource( 21 )
 
 [node name="Node2D" type="Node2D" parent="."]
-position = Vector2( 0, -7.5 )
+position = Vector2( 0, -12 )
 z_index = 2
 
 [node name="HealthBar" type="TextureProgress" parent="Node2D"]

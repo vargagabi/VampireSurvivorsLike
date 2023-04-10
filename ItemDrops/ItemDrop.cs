@@ -75,7 +75,7 @@ namespace VampireSurvivorsLike.ItemDrops {
 
         [Remote]
         public void PuppetOnAreaEntered(string name) {
-            this.player = this.GetTree().Root.GetNode<Player>($"Main/Entities/{name}");
+            this.player = this.GetTree().Root.GetNode<Player>($"Main/World/Entities/{name}");
             this.isMoving = true;
         }
 

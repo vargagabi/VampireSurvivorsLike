@@ -1,7 +1,8 @@
 Issues:
-	-tree's placement on map is gridlike
 
+	-in multiplayer, pause game -> settings -> other player resumes game settings menu still visible
 Fixed:
+	-tree's placement on map is gridlike
 	-when an attribute in shop is maxed shows price
 	-Make singletons autoload
 	-Item level not showing correctly
