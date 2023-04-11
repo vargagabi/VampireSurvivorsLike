@@ -9,7 +9,7 @@ namespace VampireSurvivorsLike {
         public Vector2 Direction;
         public bool IsDead { get; private set; } = false;
         public ItemManager ItemManager { get; private set; }
-        
+
         private int currentHealth;
         private int healthCounter = 0;
         private int damageCounter = 0;
@@ -49,8 +49,10 @@ namespace VampireSurvivorsLike {
             this.directionArrow.Position = new Vector2(0, -8) + this.Direction * 20;
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.ItemManager.EquipOrUpgradeItem(1);
-                GetNode<Label>("Label").Text = "You";
+                this.ItemManager.EquipOrUpgradeItem(0);
+                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                    this.GetNode<Label>("Label").Text = "You";
+                }
 
                 //Set hud initial values
                 this.gui.SetCurrentHealth(this.currentHealth);

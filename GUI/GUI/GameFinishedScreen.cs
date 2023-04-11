@@ -4,15 +4,16 @@ namespace VampireSurvivorsLike {
 
     public class GameFinishedScreen : CenterContainer {
 
-        public void GameFinished(bool isVictory, int gold) {
+        public void GameFinished(bool isVictory, int gold, int score) {
             this.Visible = true;
             if (isVictory) {
-                GetNode<Label>("VBoxContainer/Label").Text = "Congratulations!\nYou Win!";
-                GetChild(1).GetNode<Label>("GoldContainer/GoldLabel").Text = gold.ToString();
+                this.GetNode<Label>("VBoxContainer/Label").Text = "Congratulations!\nYou Win!";
+                this.GetChild(1).GetNode<Label>("GoldContainer/GoldLabel").Text = gold.ToString();
             } else {
-                GetNode<Label>("VBoxContainer/Label").Text = "Game Over!";
-                GetNode<HBoxContainer>("VBoxContainer/GoldContainer").Visible = false;
+                this.GetNode<Label>("VBoxContainer/Label").Text = "Game Over!";
+                this.GetNode<HBoxContainer>("VBoxContainer/GoldContainer").Visible = false;
             }
+            this.GetNode<Label>("VBoxContainer/ScoreContainer/ScoreLabel").Text = score.ToString();
         }
 
 
@@ -23,10 +24,10 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnMainMenuButtonPressed() {
-            GetTree().Paused = false;
+            this.GetTree().Paused = false;
             this.GetTree().Root.GetNode<Network>("Network").ConnectionClosed();
             this.GetTree().Root.GetNode("Main").QueueFree();
-            GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
+            this.GetTree().ChangeScene("res://GUI/Menu/Menu.tscn");
         }
 
     }

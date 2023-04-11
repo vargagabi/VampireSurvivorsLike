@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using VampireSurvivorsLike.ItemDrops;
 
 namespace VampireSurvivorsLike {
 
@@ -12,12 +11,12 @@ namespace VampireSurvivorsLike {
         private Player playerTwo;
         private Map map;
         private MobSpawner mobSpawner;
-        public YSort entities;
         private int levelingCounter = 0;
 
         private int level = 0;
         private int experience = 0;
         private int gold = 0;
+        public int DefeatedEnemyPoints = 0;
 
         private bool isLevelingUp = false;
         private bool isConfigurationFinished = false;
@@ -25,10 +24,8 @@ namespace VampireSurvivorsLike {
         [Signal] public delegate void OnGameWin();
 
         public override void _Ready() {
-            GD.Print("Main ready...");
-            this.map = GetNode<Map>("World");
-            this.mobSpawner = GetNode<MobSpawner>("MobSpawner");
-            this.entities = GetNode<YSort>("World/Entities");
+            this.map = this.GetNode<Map>("World");
+            this.mobSpawner = this.GetNode<MobSpawner>("MobSpawner");
 
             //Create the player(s)
             this.playerOne = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
@@ -38,7 +35,6 @@ namespace VampireSurvivorsLike {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.GetTree().NetworkPeer != null) {
                 this.ConfigureMultiplayer();
             }
-            this.entities.AddChild(this.playerOne);
             this.map.AddPlayer(this.playerOne);
             this.mobSpawner.PlayerOne = this.playerOne;
             this.playerOne.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
@@ -47,7 +43,7 @@ namespace VampireSurvivorsLike {
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.Playing;
             this.isConfigurationFinished = true;
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
-                Rpc(nameof(this.ConfigurationFinished));
+                this.Rpc(nameof(this.ConfigurationFinished));
             }
         }
 
@@ -59,20 +55,20 @@ namespace VampireSurvivorsLike {
                 return;
             }
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(this.TogglePauseGame), !GameStateManagerSingleton.Instance.IsPaused());
-                return;
+                this.Rpc(nameof(this.TogglePauseGame), !GameStateManagerSingleton.Instance.IsPaused());
+            } else {
+                this.TogglePauseGame(!GameStateManagerSingleton.Instance.IsPaused());
             }
-            this.TogglePauseGame(!GameStateManagerSingleton.Instance.IsPaused());
         }
 
         public override void _Process(float delta) {
-            if (this.levelingCounter++ % 25 != 0) {
+            if (this.levelingCounter++ < 25) {
                 return;
             }
             this.levelingCounter = 0;
             if (ExpToLvl(this.experience) > this.level && !this.playerOne.IsDead) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(this.LevelUp));
+                    this.Rpc(nameof(this.LevelUp));
                 } else {
                     this.LevelUp();
                 }
@@ -160,7 +156,7 @@ namespace VampireSurvivorsLike {
         [Remote]
         public void ConfigurationFinished() {
             if (this.isConfigurationFinished && this.GetTree().IsNetworkServer()) {
-                Rpc(nameof(this.UnpauseGame));
+                this.Rpc(nameof(this.UnpauseGame));
             }
         }
 
@@ -173,21 +169,15 @@ namespace VampireSurvivorsLike {
             //Setup player two
             this.playerTwo = ResourceLoader.Load<PackedScene>("res://Player/Player.tscn").Instance<Player>();
 
-            this.SetNetworkMasters();
-
-            this.entities.AddChild(this.playerTwo);
-            this.map.AddPlayer(this.playerTwo);
-            this.mobSpawner.PlayerTwo = this.playerTwo;
-            this.playerTwo.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
-        }
-
-        private void SetNetworkMasters() {
             this.playerOne.SetNetworkMaster(this.GetTree().GetNetworkUniqueId());
             this.playerOne.Name = this.playerOne.GetNetworkMaster().ToString();
             this.playerTwo.SetNetworkMaster(this.GetTree().GetNetworkConnectedPeers()[0]);
             this.playerTwo.Name = this.playerTwo.GetNetworkMaster().ToString();
-        }
 
+            this.map.AddPlayer(this.playerTwo);
+            this.mobSpawner.PlayerTwo = this.playerTwo;
+            this.playerTwo.Connect(nameof(Player.OnPlayerDeath), this, nameof(OnPlayerDied));
+        }
 
         //Check if all players are dead, if true end game
         public void OnPlayerDied() {
@@ -195,23 +185,27 @@ namespace VampireSurvivorsLike {
                 return;
             }
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                this.Rpc(nameof(this.GameEnded), false, 0);
+                this.Rpc(nameof(this.GameEnded), false, 0, this.GetScore());
             } else {
-                this.GameEnded(false, 0);
+                this.GameEnded(false, 0, this.GetScore());
             }
         }
 
         [RemoteSync]
-        public void GameEnded(bool isVictory, int goldCount) {
+        public void GameEnded(bool isVictory, int goldCount, int score) {
             this.GetTree().Paused = true;
             GameStateManagerSingleton.Instance.GameState = GameStateEnum.GameFinished;
-            AudioPlayerSingleton.Instance.SwitchMusicType(AudioTypeEnum.Ambient,false);
+            AudioPlayerSingleton.Instance.SwitchMusicType(AudioTypeEnum.Ambient, false);
             if (isVictory) {
                 AudioPlayerSingleton.Instance.PlayEffect(AudioEffectEnum.Victory);
                 AttributeManagerSingleton.Instance.Gold += goldCount;
                 AttributeManagerSingleton.Instance.Save();
             }
-            this.playerOne.Gui.GameFinished(isVictory, goldCount);
+            this.playerOne.Gui.GameFinished(isVictory, goldCount, score);
+        }
+
+        private int GetScore() {
+            return this.minutesPassed * 50 + this.DefeatedEnemyPoints + this.level;
         }
 
         public void OnTimerTimeout() {
@@ -221,10 +215,11 @@ namespace VampireSurvivorsLike {
                 (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer())) {
                 return;
             }
+            int score = this.minutesPassed * 50;
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(this.GameEnded), true, this.gold);
+                this.Rpc(nameof(this.GameEnded), true, this.gold, this.GetScore());
             } else {
-                this.GameEnded(true, this.gold);
+                this.GameEnded(true, this.gold, this.GetScore());
             }
         }
 

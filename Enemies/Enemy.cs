@@ -23,7 +23,7 @@ namespace VampireSurvivorsLike {
             base._Ready();
             GD.Randomize();
             this.AnimatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
-            this.AnimatedSprite.Connect("animation_finished", this, nameof(this.OnDeath));
+            this.AnimatedSprite.Connect("animation_finished", this, nameof(this.OnAnimationFinished));
             this.AnimationPlay(EnemyAnimationsEnum.Walk);
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
                 Timer timer = new Timer();
@@ -59,7 +59,7 @@ namespace VampireSurvivorsLike {
             this.AnimatedSprite.Play(enemyAnimations.ToString());
         }
 
-        public void OnDeath() {
+        public void OnAnimationFinished() {
             if (this.AnimatedSprite.Animation != EnemyAnimationsEnum.Death.ToString()) {
                 return;
             }
@@ -75,7 +75,7 @@ namespace VampireSurvivorsLike {
          */
         public void OnHit(int damage, Weapon weapon) {
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                Rpc(nameof(this.SyncTakeDamage), damage);
+                this.Rpc(nameof(this.SyncTakeDamage), damage);
             } else {
                 this.SyncTakeDamage(damage);
             }
@@ -106,10 +106,16 @@ namespace VampireSurvivorsLike {
         [RemoteSync]
         public void SyncOnDeath(int experience, Vector2 position) {
             this.CollisionMask = 0;
+            this.CollisionLayer = 0;
             this.health = 0;
             this.GlobalPosition = position;
             this.expValue = experience;
             this.AnimationPlay(EnemyAnimationsEnum.Death);
+            if (this is Skeleton) {
+                this.GetTree().Root.GetNode<Main>("Main").DefeatedEnemyPoints += 2;
+            } else if (this is Slime) {
+                this.GetTree().Root.GetNode<Main>("Main").DefeatedEnemyPoints += 1;
+            }
         }
 
         [Puppet]

@@ -14,8 +14,8 @@ namespace VampireSurvivorsLike {
             this.hud = this.GetNode<HUD>("Control/HUD");
         }
 
-        public void GameFinished(bool isVictory, int gold) {
-            this.GetNode<GameFinishedScreen>("Control/GameFinishedScreen").GameFinished(isVictory, gold);
+        public void GameFinished(bool isVictory, int gold, int score) {
+            this.GetNode<GameFinishedScreen>("Control/GameFinishedScreen").GameFinished(isVictory, gold, score);
             this.GetNode<LevelUpScreen>("Control/LevelUpScreen").Visible = false;
         }
 
