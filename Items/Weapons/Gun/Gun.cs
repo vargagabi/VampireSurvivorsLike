@@ -9,13 +9,13 @@ namespace VampireSurvivorsLike {
         private int piercing = 1;
         private float bulletSpeed = 400;
         private uint bulletsShot = 0;
+        private Player player;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            this.SetIcon();
             this.Level = 0;
             this.MaxLevel = 8;
-            this.Counter = 0;
+            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/GunIcon.png") as Texture;
             this.AttackSpeed = 100;
             this.Damage = 5;
             this.NumberOfBullets = 1;
@@ -25,49 +25,35 @@ namespace VampireSurvivorsLike {
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.Counter++;
-                if (this.Counter % this.AttackSpeed == 0) {
-                    this.Shoot();
-                }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
+            }
+            if (this.Counter++ > this.AttackSpeed) {
+                this.Shoot();
+                this.Counter = 0;
             }
         }
 
         private void Shoot() {
             for (int i = 0; i < this.NumberOfBullets; i++) {
-                Bullet bulletInst = (Bullet)this.bullet.Instance();
-                bulletInst.SetNetworkMaster(this.GetParent().GetNetworkMaster());
-                bulletInst.Speed = this.bulletSpeed;
-                bulletInst.Name = this.GetParent().Name + this.bulletsShot++;
-                bulletInst.Piercing = this.piercing;
-                bulletInst.Damage = this.Damage;
-                bulletInst.Direction = ((Vector2)this.player.Get("Direction"))
+                string name = this.GetParent().Name + this.bulletsShot++;
+                Vector2 direction = this.player.Direction
                     .Rotated((i * Mathf.Pi / 12) - (Mathf.Pi / 12) * (this.NumberOfBullets - 1) / 2.0f).Normalized();
-                bulletInst.GlobalPosition =
-                    this.player.GlobalPosition + ((Vector2)this.player.Get("Direction")).Normalized() * 10;
-                bulletInst.Visible = true;
-                AddChild(bulletInst, true);
-                bulletInst.SetAsToplevel(true);
+                Vector2 position = this.player.GlobalPosition + new Vector2(0, -10) + this.player.Direction * 10;
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    Rpc(nameof(Gun.PuppetShoot), bulletInst.Direction, bulletInst.GlobalPosition, bulletInst.Name);
+                    this.Rpc(nameof(this.SyncShoot), direction, position, name);
+                } else {
+                    this.SyncShoot(direction, position, name);
                 }
             }
         }
 
-        [Puppet]
-        public void PuppetShoot(Vector2 direction, Vector2 position, string name) {
-            Bullet bulletInst = (Bullet)this.bullet.Instance();
+        [PuppetSync]
+        public void SyncShoot(Vector2 direction, Vector2 position, string name) {
+            Bullet bulletInst = this.bullet.Instance<Bullet>();
             bulletInst.SetNetworkMaster(this.GetParent().GetNetworkMaster());
-            bulletInst.Speed = this.bulletSpeed;
-            bulletInst.Modulate = new Color(0, 0, 1f);
-            bulletInst.Name = name;
-            bulletInst.Piercing = this.piercing;
-            bulletInst.Damage = this.Damage;
-            bulletInst.Direction = direction;
-            bulletInst.GlobalPosition = position;
-            bulletInst.Visible = true;
-            AddChild(bulletInst, true);
-            bulletInst.SetAsToplevel(true);
+            bulletInst.Init(direction,this.bulletSpeed,this.Damage,this.piercing,name,position);
+            this.AddChild(bulletInst, true);
         }
 
         public override void Upgrade() {
@@ -96,24 +82,6 @@ namespace VampireSurvivorsLike {
                     this.AttackSpeed -= 10;
                     break;
             }
-        }
-
-        public override string UpgradeMessage() {
-            switch (this.Level) {
-                case 0: return "Gun: a gun that at higher levels can shoot multiple bullets piercing multiple enemies";
-                case 1: return "Gun: Increase Attack Speed Of Gun";
-                case 2: return "Gun: Increase Number Of Bullets Of Gun By 1";
-                case 3: return "Gun: Increase Piercing Of Bullets By 1";
-                case 4: return "Gun: Increase Bullet Speed";
-                case 5: return "Gun: Increase Number Of Bullets By 1";
-                case 6: return "Gun: Increase Piercing Of Bullets By 1";
-                case 7: return "Gun: Increase Attack Speed And Number Of Bullets";
-                default: return "Gun: No more upgrades.";
-            }
-        }
-
-        public override void SetIcon() {
-            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/GunIcon.png") as Texture;
         }
 
         public override string ToString() {

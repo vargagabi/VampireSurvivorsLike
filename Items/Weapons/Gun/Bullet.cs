@@ -4,35 +4,46 @@ namespace VampireSurvivorsLike {
 
     public class Bullet : Node2D {
 
-        public Vector2 Direction { set; get; }
-        public float Speed { get; set; }
-        public int Damage { get; set; }
-        private int Counter { get; set; }
-        private int LifeSpan { get; set; }
-        public int Piercing { get; set; }
+        private Vector2 direction;
+        private float speed;
+        private int damage;
+        private int piercing;
+        private int counter;
+        private int lifeSpan;
+
+        public void Init(Vector2 direction, float speed, int damage, int piercing, string name,
+            Vector2 globalPosition) {
+            this.direction = direction;
+            this.speed = speed;
+            this.damage = damage;
+            this.piercing = piercing;
+            this.Name = name;
+            this.GlobalPosition = globalPosition;
+            this.Visible = true;
+            this.SetAsToplevel(true);
+        }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            this.Counter = 0;
-            this.LifeSpan = 5000; // original 500
+            this.counter = 0;
+            this.lifeSpan = 1000;
         }
 
-        //  // Called every frame. 'delta' is the elapsed time since the previous frame.
+        // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta) {
-            this.Counter++;
-            if (this.Counter % this.LifeSpan == 0) {
-                this.Counter = 0;
+            if (this.counter++ > this.lifeSpan) {
+                this.counter = 0;
                 if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
-                    Rpc(nameof(this.PuppetQueueFree));
+                    this.Rpc(nameof(this.SyncQueueFree));
+                } else {
+                    this.QueueFree();
                 }
-                QueueFree();
                 return;
             }
-            GlobalPosition += Direction * this.Speed * delta;
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster() && this.Counter % 100 == 0) {
-                RpcUnreliable(nameof(this.PuppetPosition),this.GlobalPosition);
+            this.GlobalPosition += this.direction * this.speed * delta;
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster() && this.counter % 100 == 0) {
+                this.RpcUnreliable(nameof(this.PuppetPosition), this.GlobalPosition);
             }
-            
         }
 
         [Puppet]
@@ -41,24 +52,25 @@ namespace VampireSurvivorsLike {
         }
 
 
-        [Puppet]
-        public void PuppetQueueFree() {
-            QueueFree();
+        [PuppetSync]
+        public void SyncQueueFree() {
+            this.QueueFree();
         }
 
-        //Signal connection
         public void OnBodyEntered(Node2D body) {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
                 return;
             }
-            if (body.HasMethod("OnHit") && body is Enemy enemy) {
-                enemy.OnHit(this.Damage, this.GetParent<Weapon>());
-                this.Piercing--;
+            if (body is Enemy enemy) {
+                enemy.OnHit(this.damage, this.GetParent<Weapon>());
+                this.piercing--;
             }
-            if (this.Piercing <= 0) {
-                if (GameStateManagerSingleton.Instance.IsMultiplayer) {
-                    this.Rpc(nameof(this.PuppetQueueFree));
-                }
+            if (this.piercing > 0) {
+                return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.Rpc(nameof(this.SyncQueueFree));
+            } else {
                 this.QueueFree();
             }
         }

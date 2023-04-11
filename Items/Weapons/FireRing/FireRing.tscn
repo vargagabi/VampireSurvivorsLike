@@ -61,3 +61,5 @@ process_material = SubResource( 7 )
 [node name="Sprite" type="Sprite" parent="FireBall"]
 scale = Vector2( 0.195312, 0.179687 )
 texture = ExtResource( 2 )
+
+[connection signal="body_entered" from="FireBall/Area2D" to="." method="OnBodyEntered"]

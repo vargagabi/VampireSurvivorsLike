@@ -18,7 +18,7 @@ namespace VampireSurvivorsLike {
 
         public void OnVisibilityChanged() {
             if (this.Visible) {
-                this.GetNode<Button>("VBoxContainer/Button").GrabFocus();
+                this.GetNode<Button>("VBoxContainer/MainMenuButton").GrabFocus();
             }
         }
 

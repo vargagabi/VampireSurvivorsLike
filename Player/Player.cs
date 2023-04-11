@@ -6,12 +6,15 @@ namespace VampireSurvivorsLike {
 
     public class Player : KinematicBody2D {
 
+        public Vector2 Direction;
+        public bool IsDead { get; private set; } = false;
+        public ItemManager ItemManager { get; private set; }
+        
         private int currentHealth;
         private int healthCounter = 0;
         private int damageCounter = 0;
         private const int ImmunityTime = 25;
         private const int PassiveHealTime = 100;
-        private Vector2 Direction;
         private int takenDamageValue = 0;
 
         private AnimatedSprite animatedSprite;
@@ -20,8 +23,6 @@ namespace VampireSurvivorsLike {
         private Sprite directionArrow;
         private GUI gui;
 
-        public bool IsDead { get; private set; } = false;
-        public ItemManager ItemManager { get; private set; }
 
         public GUI Gui {
             get => this.gui;
@@ -49,7 +50,6 @@ namespace VampireSurvivorsLike {
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
                 this.ItemManager.EquipOrUpgradeItem(1);
-                this.ItemManager.EquipOrUpgradeItem(0);
                 GetNode<Label>("Label").Text = "You";
 
                 //Set hud initial values

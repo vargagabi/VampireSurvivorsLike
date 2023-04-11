@@ -5,26 +5,34 @@ namespace VampireSurvivorsLike {
 
     public class Aura : Weapon {
 
-        private float RadiusIncreaseAmount { get; set; }
-        public float BonusExperience { get; set; }
-        private CircleShape2D CollisionShape { get; set; }
-        private Sprite AuraTexture { get; set; }
+        public float BonusExperience;
         private readonly List<Enemy> overlappingBodies = new List<Enemy>();
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            this.SetIcon();
-            this.Damage = 1;
-            this.Level = 0;
             this.MaxLevel = 7;
-            this.Counter = 0;
+            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon.png") as Texture;
             this.AttackSpeed = 50;
-            this.BonusExperience = 0f;
-            this.CollisionShape = this.GetNode<Area2D>("Area2D").GetChild<CollisionShape2D>(0).Shape as CircleShape2D;
-            this.AuraTexture = this.GetNode<Sprite>("AuraTexture");
-            if (this.CollisionShape != null) {
-                this.RadiusIncreaseAmount = this.CollisionShape.Radius * 0.1f;
+            this.Damage = 1;
+            this.BonusExperience = 0.1f;
+        }
+
+        // Called every frame. 'delta' is the elapsed time since the previous frame.
+        public override void _Process(float delta) {
+            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
+                return;
             }
+            if (++this.Counter > this.AttackSpeed) {
+                this.Counter = 0;
+                foreach (Enemy enemy in this.overlappingBodies) {
+                    enemy.OnHit(this.Damage, this);
+                }
+            }
+        }
+
+        private void IncreaseRadius() {
+            ((CircleShape2D)this.GetNode<Area2D>("Area2D").GetChild<CollisionShape2D>(0).Shape).Radius *= 1.1f;
+            this.GetNode<Sprite>("AuraTexture").Scale *= 1.1f;
         }
 
         public override void Upgrade() {
@@ -51,28 +59,17 @@ namespace VampireSurvivorsLike {
             }
         }
 
-
-        public override string UpgradeMessage() {
+        public override string ToString() {
             switch (this.Level) {
-                case 0: return "Aura: an ability to passively damage enemies around you.";
+                case 0: return "Aura: an ability to damage enemies around you.";
                 case 1: return "Aura: Increase Aura radius by 10%.";
-                case 2: return "Aura: Increase damage by 0.1.";
+                case 2: return "Aura: Increase damage by 1.";
                 case 3: return "Aura: Increase attack speed.";
                 case 4: return "Aura: Increase Aura radius by 10%.";
                 case 5: return "Aura: Increase experience dropped by enemies killed by Aura.";
                 case 6: return "Aura: Increase Aura radius by 10%";
             }
             return "No more upgrades for Aura";
-        }
-
-        public override void SetIcon() {
-            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon.png") as Texture;
-        }
-
-
-        private void IncreaseRadius() {
-            this.CollisionShape.Radius += this.RadiusIncreaseAmount;
-            this.AuraTexture.Scale *= 1.1f;
         }
 
         public void OnBodyEntered(Node2D body) {
@@ -91,32 +88,6 @@ namespace VampireSurvivorsLike {
             if (body is Enemy enemy) {
                 this.overlappingBodies.Remove(enemy);
             }
-        }
-
-        // Called every frame. 'delta' is the elapsed time since the previous frame.
-        public override void _Process(float delta) {
-            if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster()) {
-                return;
-            }
-            if (++this.Counter % this.AttackSpeed == 0) {
-                this.Counter = 0;
-                foreach (Enemy enemy in this.overlappingBodies) {
-                    enemy.OnHit(this.Damage, this);
-                }
-            }
-        }
-
-        public override string ToString() {
-            switch (this.Level) {
-                case 0: return "Aura: an ability to damage enemies around you.";
-                case 1: return "Aura: Increase Aura radius by 10%.";
-                case 2: return "Aura: Increase damage by 1.";
-                case 3: return "Aura: Increase attack speed.";
-                case 4: return "Aura: Increase Aura radius by 10%.";
-                case 5: return "Aura: Increase experience dropped by enemies killed by Aura.";
-                case 6: return "Aura: Increase Aura radius by 10%";
-            }
-            return "No more upgrades for Aura";
         }
 
     }
