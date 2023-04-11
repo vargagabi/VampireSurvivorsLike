@@ -196,6 +196,7 @@ height = 6.0
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 pause_mode = 1
+scale = Vector2( 1.5, 1.5 )
 z_index = 2
 z_as_relative = false
 collision_mask = 2
@@ -204,8 +205,9 @@ script = ExtResource( 2 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -18 )
 frames = SubResource( 29 )
-animation = "Death"
-frame = 12
+animation = "Attack"
+frame = 11
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -17 )
