@@ -7,8 +7,8 @@ namespace VampireSurvivorsLike {
     public class Player : KinematicBody2D {
 
         public Vector2 Direction;
-        public bool IsDead { get; private set; } = false;
-        public ItemManager ItemManager { get; private set; }
+        public bool IsDead = false;
+        public ItemManager ItemManager;
 
         private int currentHealth;
         private int healthCounter = 0;
@@ -35,14 +35,13 @@ namespace VampireSurvivorsLike {
         [Signal] public delegate void OnPlayerDeath();
 
         public override void _Ready() {
-            GD.Print("Player Ready...");
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
             this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
             this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
             this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
             this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
-            this.ItemManager = GetNode<ItemManager>("ItemManager");
+            this.ItemManager = this.GetNode<ItemManager>("ItemManager");
 
             this.currentHealth = AttributeManagerSingleton.Instance.MaxHealth.GetCurrentValue();
             this.Direction = Vector2.Right;
@@ -95,10 +94,12 @@ namespace VampireSurvivorsLike {
                 this.directionArrow.Position = new Vector2(0, -8) + this.Direction * 20;
             }
 
-            if (xInput != 0) {
-                animation = xInput < 0 ? AnimationsEnum.Left : AnimationsEnum.Right;
-            } else if (yInput != 0) {
-                animation = yInput < 0 ? AnimationsEnum.Up : AnimationsEnum.Down;
+            if (!velocity.Equals(Vector2.Zero)) {
+                if (this.Direction.x != 0) {
+                    animation = this.Direction.x < 0 ? AnimationsEnum.Left : AnimationsEnum.Right;
+                } else if (this.Direction.y != 0) {
+                    animation = this.Direction.y < 0 ? AnimationsEnum.Up : AnimationsEnum.Down;
+                }
             } else if (this.Direction.x != 0) {
                 animation = this.Direction.x < 0 ? AnimationsEnum.IdleLeft : AnimationsEnum.IdleRight;
             } else if (this.Direction.y != 0) {
@@ -191,7 +192,7 @@ namespace VampireSurvivorsLike {
             this.GetNode<Area2D>("Area2D").QueueFree();
             this.GetNode<Area2D>("PickupArea").QueueFree();
             this.GetNode("ItemManager").QueueFree();
-            EmitSignal(nameof(OnPlayerDeath));
+            this.EmitSignal(nameof(OnPlayerDeath));
         }
 
         [PuppetSync]

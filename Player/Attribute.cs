@@ -8,41 +8,41 @@ namespace VampireSurvivorsLike {
 
     public class AttributeSaveFormat {
 
-        public string name;
-        public string message;
-        public int initialValue;
-        public float bonusModifier;
-        public string iconName;
-        public int upgradeCost;
-        public int baseLevel;
-        public int maxBaseLevel;
+        public string Name;
+        public string Message;
+        public int InitialValue;
+        public float BonusModifier;
+        public string IconName;
+        public int UpgradeCost;
+        public int BaseLevel;
+        public int MaxBaseLevel;
 
         public AttributeSaveFormat(string name, string message, int initialValue, float bonusModifier, int baseLevel,
             int upgradeCost, string iconName, int maxBaseLevel) {
-            this.name = name;
-            this.message = message;
-            this.initialValue = initialValue;
-            this.bonusModifier = bonusModifier;
-            this.baseLevel = baseLevel;
-            this.upgradeCost = upgradeCost;
-            this.iconName = iconName;
-            this.maxBaseLevel = maxBaseLevel;
+            this.Name = name;
+            this.Message = message;
+            this.InitialValue = initialValue;
+            this.BonusModifier = bonusModifier;
+            this.BaseLevel = baseLevel;
+            this.UpgradeCost = upgradeCost;
+            this.IconName = iconName;
+            this.MaxBaseLevel = maxBaseLevel;
         }
 
     }
 
     public class Attribute {
 
-        public string Name { get; private set; }
-        private string Message { get; set; }
-        private int InitialValue { get; set; }
-        private float BonusModifier { get; set; }
+        public string Name { get; }
+        private string Message { get; }
+        private int InitialValue { get; }
+        private float BonusModifier { get; }
         public int BaseLevel { get; set; } //The saved level of attribute
-        private int InitialCost { get; set; }
-        public Texture Icon { get; private set; }
+        private int InitialCost { get; }
+        public Texture Icon { get; }
         private CircleShape2D shape;
         private int sessionLevel; //The level of attribute in a gameplay 
-        public int MaxBaseLevel { get; private set; }
+        public int MaxBaseLevel { get; }
 
         public CircleShape2D Shape {
             set {

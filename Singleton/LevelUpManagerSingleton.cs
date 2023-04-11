@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 
@@ -10,30 +8,23 @@ namespace VampireSurvivorsLike {
     public class LevelUpManagerSingleton {
 
         private static LevelUpManagerSingleton instance;
-        public LevelUpScreen LevelUpScreen { get; set; }
-        private int numberOfRewards = 4;
-        private List<object> GeneratedRewards { get; set; }
-        public bool IsRewardSelected { get; private set; } = false;
-        public Player Player { get; set; }
 
-        public static LevelUpManagerSingleton Instance {
-            get {
-                if (instance == null) {
-                    GD.Print("LevelUpManagerSingleton ready...");
-                    instance = new LevelUpManagerSingleton();
-                }
-                return instance;
-            }
-        }
+        private bool isRewardSelected = false;
+        public Player Player;
+        public LevelUpScreen LevelUpScreen;
+        private const int NumberOfRewards = 4;
+        private List<object> generatedRewards;
+
+        public static LevelUpManagerSingleton Instance => instance ?? (instance = new LevelUpManagerSingleton());
 
         public async Task OnPlayerLevelUp(int numberOfLevelUps) {
             if (GameStateManagerSingleton.Instance.GameState.Equals(GameStateEnum.GameFinished)) {
                 return;
             }
             for (int i = 0; i < numberOfLevelUps; i++) {
-                this.IsRewardSelected = false;
-                this.GeneratedRewards = this.GenerateRewards();
-                while (!this.IsRewardSelected) {
+                this.isRewardSelected = false;
+                this.generatedRewards = this.GenerateRewards();
+                while (!this.isRewardSelected) {
                     await Task.Delay(250);
                 }
             }
@@ -43,11 +34,11 @@ namespace VampireSurvivorsLike {
             List<object> possibleRewards = new List<object>();
 
             possibleRewards.AddRange(this.Player.ItemManager.ItemNodes
-                .Where(item => item.Level < item.MaxLevel).Select(item => item));
+                .Where(item => item.Level < item.MaxLevel || item.Level == 0).Select(item => item));
             possibleRewards.AddRange(AttributeManagerSingleton.Instance.GetAttributes());
 
             List<object> rewards = new List<object>();
-            for (int i = 0; i < this.numberOfRewards; i++) {
+            for (int i = 0; i < NumberOfRewards; i++) {
                 int index = (int)GD.RandRange(0, possibleRewards.Count);
                 rewards.Add(possibleRewards[index]);
                 possibleRewards.RemoveAt(index);
@@ -57,18 +48,13 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnRewardSelected(int index) {
-            object reward = this.GeneratedRewards[index];
+            object reward = this.generatedRewards[index];
             if (reward is Item item) {
-                this.Player.ItemManager.EquipOrUpgradeItem(
-                    this.Player.ItemManager.ItemNodes.FindIndex(val => val.Id == item.Id));
+                this.Player.ItemManager.EquipOrUpgradeItem(item.Id);
             } else if (reward is Attribute attribute) {
                 attribute.Increase();
             }
-            this.IsRewardSelected = true;
-        }
-
-        public void Reset() {
-            GD.Print("LevelUpManager reset...");
+            this.isRewardSelected = true;
         }
 
     }

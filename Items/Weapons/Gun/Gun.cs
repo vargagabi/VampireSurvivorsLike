@@ -11,8 +11,7 @@ namespace VampireSurvivorsLike {
         private uint bulletsShot = 0;
         private Player player;
 
-        // Called when the node enters the scene tree for the first time.
-        public override void _Ready() {
+        public Gun() {
             this.Level = 0;
             this.MaxLevel = 8;
             this.Icon = ResourceLoader.Load("res://MyPixelArts/images/GunIcon.png") as Texture;
@@ -52,7 +51,7 @@ namespace VampireSurvivorsLike {
         public void SyncShoot(Vector2 direction, Vector2 position, string name) {
             Bullet bulletInst = this.bullet.Instance<Bullet>();
             bulletInst.SetNetworkMaster(this.GetParent().GetNetworkMaster());
-            bulletInst.Init(direction,this.bulletSpeed,this.Damage,this.piercing,name,position);
+            bulletInst.Init(direction, this.bulletSpeed, this.Damage, this.piercing, name, position);
             this.AddChild(bulletInst, true);
         }
 

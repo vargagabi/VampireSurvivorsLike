@@ -8,15 +8,11 @@ namespace VampireSurvivorsLike {
     public class SettingsManager : Node {
 
         private static SettingsManager instance;
+        
         private Dictionary<string, object> settings = new Dictionary<string, object>();
-
         private const string savePath = "user://settings.cfg";
 
-
         private SettingsManager() {
-        }
-
-        static SettingsManager() {
         }
 
         public static SettingsManager Instance {

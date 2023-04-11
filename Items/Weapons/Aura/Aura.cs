@@ -8,8 +8,7 @@ namespace VampireSurvivorsLike {
         public float BonusExperience;
         private readonly List<Enemy> overlappingBodies = new List<Enemy>();
 
-        // Called when the node enters the scene tree for the first time.
-        public override void _Ready() {
+        public Aura() {
             this.MaxLevel = 7;
             this.Icon = ResourceLoader.Load("res://MyPixelArts/images/AuraIcon.png") as Texture;
             this.AttackSpeed = 50;

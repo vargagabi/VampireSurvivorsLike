@@ -5,16 +5,13 @@ namespace VampireSurvivorsLike {
 
     public class AttributeCard : TextureButton {
 
-        //Gui elements
+        private int maxLevel;
         private TextureRect Icon { get; set; }
         private Label NameLabel { get; set; }
         private Label CostLabel { get; set; }
         private TextureProgress LevelProgress { get; set; }
         private Sprite Outline { get; set; }
-
-        //Info, other elements
         private Shop Receiver { get; set; }
-        private int maxLevel;
 
 
         [Signal] public delegate void Purchase(string name);
@@ -28,7 +25,7 @@ namespace VampireSurvivorsLike {
             this.maxLevel = maxLevel;
             this.Disabled = this.LevelProgress.Value >= this.maxLevel;
             if (this.Receiver != null) {
-                Connect(nameof(Purchase), this.Receiver, nameof(this.Receiver.OnPurchase));
+                this.Connect(nameof(Purchase), this.Receiver, nameof(this.Receiver.OnPurchase));
             }
         }
 
@@ -47,12 +44,11 @@ namespace VampireSurvivorsLike {
         }
 
         public void OnButtonPressed() {
-            GD.Print("Purchase Button pressed");
             if (AttributeManagerSingleton.Instance.IncreaseBaseLevel(this.NameLabel.Text)) {
                 this.LevelProgress.Value =
                     AttributeManagerSingleton.Instance.GetAttributeBaseLevel(this.NameLabel.Text);
                 if (this.LevelProgress.Value >= this.maxLevel) {
-                    CostLabel.Text = "Max";
+                    this.CostLabel.Text = "Max";
                 } else {
                     this.CostLabel.Text = AttributeManagerSingleton.Instance.GetAttributeCost(this.NameLabel.Text)
                         .ToString();

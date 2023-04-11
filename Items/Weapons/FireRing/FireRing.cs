@@ -10,10 +10,9 @@ namespace VampireSurvivorsLike {
         private const float DistanceFromCenter = 100f;
         private const float DistanceBetweenRings = 50f;
 
-        public override void _Ready() {
+        public FireRing() {
             this.MaxLevel = 50;
             this.Icon = ResourceLoader.Load("res://MyPixelArts/images/PickupAreaIcon.png") as Texture;
-
             this.AttackSpeed = 50;
             this.Damage = 1;
         }

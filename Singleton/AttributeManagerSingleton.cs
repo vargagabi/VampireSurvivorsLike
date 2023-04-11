@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Godot;
-using Godot.Collections;
 
 namespace VampireSurvivorsLike {
 
@@ -46,7 +44,7 @@ namespace VampireSurvivorsLike {
             this.MaxHealth = new Attribute("MaxHealth", "Increase max health by", 200, 0.1f, "HealthIcon.png");
             this.HealthRegen = new Attribute("HealthRegen", "Increase health regeneration by", 2, 0.5f,
                 "HealthRegenIcon.png");
-            this.Speed = new Attribute("Speed", "Increase speed by", 200, 0.1f, "SpeedIcon.png");
+            this.Speed = new Attribute("Speed", "Increase speed by", 100, 0.1f, "SpeedIcon.png");
             this.PickupArea = new Attribute("PickupArea", "Increase the pickup range by", 25, 0.5f,
                 "PickupAreaIcon.png");
             this.Gold = 500;
@@ -84,7 +82,7 @@ namespace VampireSurvivorsLike {
             ConfigFile file = new ConfigFile();
             foreach (AttributeSaveFormat attr in this.GetAttributesForSave()) {
                 foreach (FieldInfo prop in attr.GetType().GetFields()) {
-                    file.SetValue(attr.name, prop.Name, prop.GetValue(attr));
+                    file.SetValue(attr.Name, prop.Name, prop.GetValue(attr));
                 }
             }
             file.SetValue("Gold", "value", this.Gold);
@@ -92,7 +90,7 @@ namespace VampireSurvivorsLike {
             file.Save(savePath);
         }
 
-        public void Load() {
+        private void Load() {
             ConfigFile file = new ConfigFile();
             if (file.Load(savePath) != Error.Ok) {
                 return;
@@ -146,15 +144,6 @@ namespace VampireSurvivorsLike {
             }
             return -1;
         }
-
-        // public int IncreaseBaseLevel(string attributeName) {
-        // PropertyInfo prop = this.GetType().GetProperty(attributeName);
-        // Attribute attribute = (prop.GetValue(this) as Attribute);
-        // if (attribute != null && attribute.BaseLevel + 1 >= this.levelRange.x && attribute.BaseLevel + 1 <= this.levelRange.y) {
-        // attribute.BaseLevel += 1;
-        // }
-        // return attribute.BaseLevel;
-        // }
 
         public int GetCurrentCost(string attributeName) {
             PropertyInfo prop = this.GetType().GetProperty(attributeName);

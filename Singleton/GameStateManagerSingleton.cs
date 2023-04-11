@@ -1,33 +1,18 @@
-using Godot;
 
 namespace VampireSurvivorsLike {
 
     public class GameStateManagerSingleton {
 
         private static GameStateManagerSingleton instance;
-        private GameStateEnum gameState;
-        public bool IsMultiplayer { get; set; } = false;
-
-        private int Gold { get; set; } = 0;
-        private int DefeatedEnemies { get; set; } = 0;
+        public bool IsMultiplayer = false;
 
         private GameStateManagerSingleton() {
         }
 
-        static GameStateManagerSingleton() {
-        }
 
-        public static GameStateManagerSingleton Instance {
-            get => instance ?? (instance = new GameStateManagerSingleton());
-        }
+        public static GameStateManagerSingleton Instance => instance ?? (instance = new GameStateManagerSingleton());
 
-        public GameStateEnum GameState {
-            get => this.gameState;
-            set {
-                this.gameState = value;
-                GD.Print($"-----Game state: {this.gameState}----");
-            }
-        }
+        public GameStateEnum GameState { get; set; }
 
         public bool IsPaused() {
             return this.GameState.Equals(GameStateEnum.Paused);
