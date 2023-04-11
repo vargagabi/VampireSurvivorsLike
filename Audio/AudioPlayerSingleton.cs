@@ -75,19 +75,20 @@ namespace VampireSurvivorsLike {
                 this.tweens[type].Connect("tween_completed", this, "OnTweenCompleted");
             }
             this.audioPlayers[AudioTypeEnum.Action].VolumeDb = this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb =
-                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
+                GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
             this.audioPlayers[AudioTypeEnum.Effect].VolumeDb =
-                this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Sound));
+                GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Sound));
             this.SwitchMusicType(AudioTypeEnum.Ambient, false);
         }
 
         public void SetVolume(int percent, string setting) {
-            float volume = this.GetVolumeFromPercent(percent);
+            float volume = GetVolumeFromPercent(percent);
             if (setting.Equals(SettingsEnum.Music.ToString())) {
                 this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb = volume;
                 this.audioPlayers[AudioTypeEnum.Action].VolumeDb = volume;
                 if (volume <= MinVolumeDb) {
-                    this.audioPlayers[AudioTypeEnum.Ambient].StreamPaused = this.audioPlayers[AudioTypeEnum.Action].StreamPaused = true;
+                    this.audioPlayers[AudioTypeEnum.Ambient].StreamPaused =
+                        this.audioPlayers[AudioTypeEnum.Action].StreamPaused = true;
                 } else {
                     this.audioPlayers[this.currentlyPlaying].StreamPaused = false;
                 }
@@ -96,7 +97,7 @@ namespace VampireSurvivorsLike {
             }
         }
 
-        private int GetVolumeFromPercent(int percent) {
+        private static int GetVolumeFromPercent(int percent) {
             return (int)(MinVolumeDb + (MaxVolumeBd - MinVolumeDb) * (percent * 0.01f));
         }
 
@@ -138,18 +139,21 @@ namespace VampireSurvivorsLike {
             if (type.Equals(AudioTypeEnum.Action)) {
                 this.InterpolateVolume(AudioTypeEnum.Ambient, -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
                 this.InterpolateVolume(AudioTypeEnum.Action,
-                    this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
+                    GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
                     Tween.TransitionType.Linear, Tween.EaseType.In);
             } else if (type.Equals(AudioTypeEnum.Ambient)) {
                 this.InterpolateVolume(AudioTypeEnum.Action, -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
                 this.InterpolateVolume(AudioTypeEnum.Ambient,
-                    this.GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
+                    GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
                     Tween.TransitionType.Expo, Tween.EaseType.In);
             }
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, continueLastStream);
         }
 
         public void PlayEffect(AudioEffectEnum effect) {
+            if (this.audioPlayers[AudioTypeEnum.Effect].VolumeDb <= MinVolumeDb) {
+                return;
+            }
             this.audioPlayers[AudioTypeEnum.Effect].Stream =
                 ResourceLoader.Load<AudioStream>($"res://Audio/Effect/{effect.ToString()}.ogg");
             this.audioPlayers[AudioTypeEnum.Effect].Play();

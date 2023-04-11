@@ -19,6 +19,9 @@ namespace VampireSurvivorsLike {
             this.Damage = 5;
             this.NumberOfBullets = 1;
             this.bullet = (PackedScene)ResourceLoader.Load("res://Items/Weapons/Gun/Bullet.tscn");
+        }
+
+        public override void _Ready() {
             this.player = this.GetParent().GetParent<Player>();
         }
 
