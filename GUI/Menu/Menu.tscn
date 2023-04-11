@@ -195,7 +195,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="Shop/ScrollContainer"]
+margin_left = 640.0
 margin_top = 237.0
+margin_right = 640.0
 margin_bottom = 237.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
@@ -287,6 +289,21 @@ size_flags_vertical = 3
 
 [node name="Settings" parent="." instance=ExtResource( 8 )]
 visible = false
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -576.0
+margin_top = -175.0
+text = "Music/Effects: alkakrab.itch.io
+Background images: lornn.itch.io
+Character:immunitys.itch.io /  @Immunity451
+Skeleton: astrobob.itch.io
+Slime: game-endeavor.itch.io
+Tiles: cainos.itch.io"
+valign = 1
 
 [connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]

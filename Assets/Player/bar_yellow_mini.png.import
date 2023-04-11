@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/RpgCharacterShadow.png-c512dfba36c1b19023a528bd75d3eb61.stex"
+path="res://.import/bar_yellow_mini.png-9d1bac3f7e021bed0d8d680d6f57349d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/AnimationPlayerTutorialSprites/RpgCharacterShadow.png"
-dest_files=[ "res://.import/RpgCharacterShadow.png-c512dfba36c1b19023a528bd75d3eb61.stex" ]
+source_file="res://Assets/Player/bar_yellow_mini.png"
+dest_files=[ "res://.import/bar_yellow_mini.png-9d1bac3f7e021bed0d8d680d6f57349d.stex" ]
 
 [params]
 

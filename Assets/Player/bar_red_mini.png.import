@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TX Tileset Grass.png-4ebb629e8a57cc91082bb4874b5294f6.stex"
+path="res://.import/bar_red_mini.png-92ce1083e1335d47ca82e2062bfa3b84.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Texture/TX Tileset Grass.png"
-dest_files=[ "res://.import/TX Tileset Grass.png-4ebb629e8a57cc91082bb4874b5294f6.stex" ]
+source_file="res://Assets/Player/bar_red_mini.png"
+dest_files=[ "res://.import/bar_red_mini.png-92ce1083e1335d47ca82e2062bfa3b84.stex" ]
 
 [params]
 

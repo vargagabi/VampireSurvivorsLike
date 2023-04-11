@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TX Plant.png-bffcf373d59a5e7bb66e4180ffcbfee5.stex"
+path="res://.import/bar_green_mini.png-7b872659db8f53c2faa89e440e4613b7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Texture/TX Plant.png"
-dest_files=[ "res://.import/TX Plant.png-bffcf373d59a5e7bb66e4180ffcbfee5.stex" ]
+source_file="res://Assets/Player/bar_green_mini.png"
+dest_files=[ "res://.import/bar_green_mini.png-7b872659db8f53c2faa89e440e4613b7.stex" ]
 
 [params]
 

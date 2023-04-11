@@ -1,6 +1,6 @@
 [gd_scene load_steps=46 format=2]
 
-[ext_resource path="res://Textures/SkeletonTextures/Skeleton enemy.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Enemies/Skeleton enemy.png" type="Texture" id=1]
 [ext_resource path="res://Enemies/Skeleton/Skeleton.cs" type="Script" id=2]
 
 [sub_resource type="AtlasTexture" id=31]

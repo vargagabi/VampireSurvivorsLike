@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TX Tileset Grass.png-230385952db5e8e32831b2efa4133a5b.stex"
+path="res://.import/TX Shadow Plant.png-00f7dc58565b1172606b29fdfc18a9f6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/sprites/characters/Texture/TX Tileset Grass.png"
-dest_files=[ "res://.import/TX Tileset Grass.png-230385952db5e8e32831b2efa4133a5b.stex" ]
+source_file="res://Assets/Tiles/TX Shadow Plant.png"
+dest_files=[ "res://.import/TX Shadow Plant.png-00f7dc58565b1172606b29fdfc18a9f6.stex" ]
 
 [params]
 

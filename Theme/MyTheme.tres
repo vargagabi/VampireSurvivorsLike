@@ -1,8 +1,8 @@
 [gd_resource type="Theme" load_steps=21 format=2]
 
 [ext_resource path="res://Fonts/MyFont.tres" type="DynamicFont" id=1]
-[ext_resource path="res://Textures/Wood Texture 1.png" type="Texture" id=2]
-[ext_resource path="res://Textures/Wood Texture 2.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Other/Wood Texture 1.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Other/Wood Texture 2.png" type="Texture" id=3]
 
 [sub_resource type="StyleBoxTexture" id=4]
 texture = ExtResource( 2 )

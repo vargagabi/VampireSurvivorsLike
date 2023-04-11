@@ -37,9 +37,9 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             this.animatedSprite = this.GetNode<AnimatedSprite>("AnimatedSprite");
             this.healthBar = this.GetNode<TextureProgress>("Node2D/HealthBar");
-            this.textures[0] = ResourceLoader.Load("res://Textures/bar_green_mini.png") as Texture;
-            this.textures[1] = ResourceLoader.Load("res://Textures/bar_yellow_mini.png") as Texture;
-            this.textures[2] = ResourceLoader.Load("res://Textures/bar_red_mini.png") as Texture;
+            this.textures[0] = ResourceLoader.Load("res://Assets/Player/bar_green_mini.png") as Texture;
+            this.textures[1] = ResourceLoader.Load("res://Assets/Player/bar_yellow_mini.png") as Texture;
+            this.textures[2] = ResourceLoader.Load("res://Assets/Player/bar_red_mini.png") as Texture;
             this.directionArrow = this.GetNode<Sprite>("Arrow");
             this.ItemManager = this.GetNode<ItemManager>("ItemManager");
 

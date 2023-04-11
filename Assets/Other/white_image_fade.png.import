@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TX Struct.png-1a6a005fcc5592d32e914ee121cb14d8.stex"
+path="res://.import/white_image_fade.png-7912f72796ade26b9deed1c816e31fd5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Texture/TX Struct.png"
-dest_files=[ "res://.import/TX Struct.png-1a6a005fcc5592d32e914ee121cb14d8.stex" ]
+source_file="res://Assets/Other/white_image_fade.png"
+dest_files=[ "res://.import/white_image_fade.png-7912f72796ade26b9deed1c816e31fd5.stex" ]
 
 [params]
 
