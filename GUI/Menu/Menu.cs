@@ -101,6 +101,26 @@ namespace VampireSurvivorsLike {
             this.mainMenu.Visible = true;
         }
 
+        public void OnInfoButtonFocusEntered() {
+            this.GetNode<MarginContainer>("InfoContainer").Visible = true;
+            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.Gray;
+        }
+
+        public void OnInfoButtonFocusExited() {
+            this.GetNode<MarginContainer>("InfoContainer").Visible = false;
+            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.White;
+        }
+
+        public void OnInfoButtonMouseEntered() {
+            this.GetNode<MarginContainer>("InfoContainer").Visible = true;
+            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.Gray;
+        }
+
+        public void OnInfoButtonMouseExited() {
+            this.GetNode<MarginContainer>("InfoContainer").Visible = false;
+            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.White;
+        }
+
     }
 
 }

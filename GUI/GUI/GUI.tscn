@@ -19,7 +19,9 @@
 font_path = "res://Fonts/ALGER.TTF"
 
 [sub_resource type="DynamicFont" id=2]
-size = 27
+size = 70
+outline_size = 3
+outline_color = Color( 0, 0, 0, 1 )
 font_data = SubResource( 1 )
 
 [sub_resource type="DynamicFontData" id=3]
@@ -75,18 +77,20 @@ anchor_bottom = 1.0
 margin_top = -64.0
 margin_right = 384.0
 custom_constants/separation = 0
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Item1" type="Control" parent="Control/HUD/ItemControl"]
 margin_right = 64.0
 margin_bottom = 64.0
-size_flags_horizontal = 3
+rect_min_size = Vector2( 64, 64 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item1"]
 margin_right = 64.0
 margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+size_flags_horizontal = 6
+size_flags_vertical = 6
 texture = ExtResource( 9 )
 
 [node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item1"]
@@ -98,6 +102,8 @@ margin_left = -32.0
 margin_top = -32.0
 margin_right = 32.0
 margin_bottom = 32.0
+size_flags_horizontal = 6
+size_flags_vertical = 7
 
 [node name="Level" type="Label" parent="Control/HUD/ItemControl/Item1"]
 anchor_left = 1.0
@@ -106,184 +112,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -32.0
 margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = SubResource( 2 )
-align = 1
-valign = 1
-
-[node name="Item2" type="Control" parent="Control/HUD/ItemControl"]
-margin_left = 64.0
-margin_right = 128.0
-margin_bottom = 64.0
-size_flags_horizontal = 3
-
-[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item2"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item2"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-
-[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item2"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = SubResource( 2 )
-align = 1
-valign = 1
-
-[node name="Item3" type="Control" parent="Control/HUD/ItemControl"]
-margin_left = 128.0
-margin_right = 192.0
-margin_bottom = 64.0
-size_flags_horizontal = 3
-
-[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item3"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item3"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-
-[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item3"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = SubResource( 2 )
-align = 1
-valign = 1
-
-[node name="Item4" type="Control" parent="Control/HUD/ItemControl"]
-margin_left = 192.0
-margin_right = 256.0
-margin_bottom = 64.0
-size_flags_horizontal = 3
-
-[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item4"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item4"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-
-[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item4"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = SubResource( 2 )
-align = 1
-valign = 1
-
-[node name="Item5" type="Control" parent="Control/HUD/ItemControl"]
-margin_left = 256.0
-margin_right = 320.0
-margin_bottom = 64.0
-size_flags_horizontal = 3
-
-[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item5"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item5"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-
-[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item5"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = SubResource( 2 )
-align = 1
-valign = 1
-
-[node name="Item6" type="Control" parent="Control/HUD/ItemControl"]
-margin_left = 320.0
-margin_right = 384.0
-margin_bottom = 64.0
-size_flags_horizontal = 3
-
-[node name="ItemFrame" type="TextureRect" parent="Control/HUD/ItemControl/Item6"]
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 9 )
-
-[node name="Icon" type="TextureRect" parent="Control/HUD/ItemControl/Item6"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-
-[node name="Level" type="Label" parent="Control/HUD/ItemControl/Item6"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_scale = Vector2( 0.5, 0.5 )
+margin_right = 96.0
+margin_bottom = 96.0
+rect_scale = Vector2( 0.25, 0.25 )
 custom_fonts/font = SubResource( 2 )
 align = 1
 valign = 1

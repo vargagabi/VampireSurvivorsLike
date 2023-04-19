@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://GUI/Menu/Menu.cs" type="Script" id=1]
 [ext_resource path="res://Theme/MyTheme.tres" type="Theme" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://Assets/MainMenu/path1_pixelated.png" type="Texture" id=6]
 [ext_resource path="res://Shop/Shop.cs" type="Script" id=7]
 [ext_resource path="res://GUI/Menu/Settings.tscn" type="PackedScene" id=8]
+[ext_resource path="res://MyPixelArts/images/InformationIcon.png" type="Texture" id=9]
+[ext_resource path="res://Fonts/ALGER.TTF" type="DynamicFontData" id=10]
 
 [sub_resource type="Animation" id=3]
 resource_name = "Fade"
@@ -52,6 +54,15 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
+
+[sub_resource type="DynamicFont" id=4]
+size = 46
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+use_filter = true
+extra_spacing_char = 2
+extra_spacing_space = 10
+font_data = ExtResource( 10 )
 
 [node name="Menu" type="Control"]
 pause_mode = 2
@@ -141,6 +152,7 @@ alignment = 1
 [node name="StartButton" type="Button" parent="MainMenu/VBoxContainer"]
 margin_right = 200.0
 margin_bottom = 36.0
+focus_neighbour_right = NodePath("../../../InfoButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Start"
@@ -149,6 +161,7 @@ text = "Start"
 margin_top = 40.0
 margin_right = 200.0
 margin_bottom = 77.0
+focus_neighbour_right = NodePath("../../../InfoButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Multiplayer"
@@ -157,6 +170,7 @@ text = "Multiplayer"
 margin_top = 81.0
 margin_right = 200.0
 margin_bottom = 118.0
+focus_neighbour_right = NodePath("../../../InfoButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Shop"
@@ -165,6 +179,7 @@ text = "Shop"
 margin_top = 122.0
 margin_right = 200.0
 margin_bottom = 159.0
+focus_neighbour_right = NodePath("../../../InfoButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Settings"
@@ -173,6 +188,7 @@ text = "Settings"
 margin_top = 163.0
 margin_right = 200.0
 margin_bottom = 200.0
+focus_neighbour_right = NodePath("../../../InfoButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Quit"
@@ -290,20 +306,56 @@ size_flags_vertical = 3
 [node name="Settings" parent="." instance=ExtResource( 8 )]
 visible = false
 
-[node name="Label" type="Label" parent="."]
+[node name="InfoContainer" type="MarginContainer" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -576.0
-margin_top = -175.0
+margin_left = -688.0
+margin_top = -344.0
+margin_right = 642.0
+margin_bottom = 47.0
+rect_scale = Vector2( 0.5, 0.5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="ColorRect" type="ColorRect" parent="InfoContainer"]
+show_behind_parent = true
+margin_right = 1330.0
+margin_bottom = 391.0
+color = Color( 0.407843, 0.32549, 0.27451, 0.937255 )
+
+[node name="Label" type="Label" parent="InfoContainer"]
+margin_left = 64.0
+margin_top = 32.0
+margin_right = 1266.0
+margin_bottom = 359.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+custom_fonts/font = SubResource( 4 )
 text = "Music/Effects: alkakrab.itch.io
 Background images: lornn.itch.io
-Character:immunitys.itch.io /  @Immunity451
+Character: immunitys.itch.io /  @Immunity451
 Skeleton: astrobob.itch.io
 Slime: game-endeavor.itch.io
 Tiles: cainos.itch.io"
 valign = 1
+
+[node name="InfoButton" type="TextureButton" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -136.0
+margin_top = -112.0
+margin_right = -72.0
+margin_bottom = -48.0
+focus_neighbour_left = NodePath("../MainMenu/VBoxContainer/StartButton")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 9 )
 
 [connection signal="visibility_changed" from="MainMenu" to="." method="OnMainMenuVisibilityChanged"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
@@ -316,3 +368,7 @@ valign = 1
 [connection signal="pressed" from="Shop/HBoxContainer/BackButton" to="." method="OnBackButtonPressed"]
 [connection signal="pressed" from="Shop/HBoxContainer/BackButton" to="Shop" method="OnBackButtonPressed"]
 [connection signal="BackButtonPress" from="Settings" to="." method="OnBackButtonPressed"]
+[connection signal="focus_entered" from="InfoButton" to="." method="OnInfoButtonFocusEntered"]
+[connection signal="focus_exited" from="InfoButton" to="." method="OnInfoButtonFocusExited"]
+[connection signal="mouse_entered" from="InfoButton" to="." method="OnInfoButtonMouseEntered"]
+[connection signal="mouse_exited" from="InfoButton" to="." method="OnInfoButtonMouseExited"]

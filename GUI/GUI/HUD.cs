@@ -15,6 +15,7 @@ namespace VampireSurvivorsLike {
             this.elapsedTime = 0;
             this.itemControl = GetNode<HBoxContainer>("ItemControl");
             GetNode<Label>("GoldContainer/Label").Text = "0";
+            this.CreateItemFrames();
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -22,6 +23,18 @@ namespace VampireSurvivorsLike {
             this.elapsedTime += delta;
             GetNode<Label>("TimerControl/TimeLabel").Text =
                 TimeSpan.FromSeconds(this.elapsedTime).ToString("hh':'mm':'ss");
+        }
+
+        private void CreateItemFrames() {
+            for (int i = 1; i < ItemManager.MaximumItemCount; i++) {
+                Control node = this.itemControl.GetChild<Control>(0).Duplicate() as Control;
+                if (node == null) {
+                    continue;
+                }
+                node.Name = $"Item{i}";
+                node.RectPosition = new Vector2(i * 64, 0);
+                this.itemControl.AddChild(node);
+            }
         }
 
         public void SetItem(Texture icon, int level) {

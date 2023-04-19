@@ -12,7 +12,7 @@ namespace VampireSurvivorsLike {
 
         public FireRing() {
             this.MaxLevel = 50;
-            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/PickupAreaIcon.png") as Texture;
+            this.Icon = ResourceLoader.Load("res://MyPixelArts/images/FireRingIcon.png") as Texture;
             this.AttackSpeed = 50;
             this.Damage = 1;
         }
@@ -64,7 +64,7 @@ namespace VampireSurvivorsLike {
 
         public override string ToString() {
             switch (this.Level) {
-                case 0: return "A weapon with fireballs circling the player, add more fireballs when leveled.";
+                case 0: return "Spawns fireballs around you.";
                 case 1: return "Increase damage by 1";
                 default: return "Add 1 fireball";
             }

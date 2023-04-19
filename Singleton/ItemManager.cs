@@ -11,7 +11,7 @@ namespace VampireSurvivorsLike {
             ResourceLoader.Load<PackedScene>("res://Items/Weapons/Aura/Aura.tscn"),
             ResourceLoader.Load<PackedScene>("res://Items/Weapons/FireRing/FireRing.tscn")
         };
-        private const int MaximumItemCount = 6;
+        public const int MaximumItemCount = 6;
         private int EquippedItemCount { get; set; }
 
         public override void _Ready() {
@@ -24,14 +24,13 @@ namespace VampireSurvivorsLike {
         }
 
         public void EquipOrUpgradeItem(int itemIndex) {
-            this.GetParent<Player>().Gui
-                .SetItemOnHud(this.ItemNodes[itemIndex].Icon, this.ItemNodes[itemIndex].Level);
-
             if (GameStateManagerSingleton.Instance.IsMultiplayer && this.IsNetworkMaster()) {
                 Rpc(nameof(this.SyncEquipOrUpgradeItem), itemIndex);
             } else {
                 this.SyncEquipOrUpgradeItem(itemIndex);
             }
+            this.GetParent<Player>().Gui
+                .SetItemOnHud(this.ItemNodes[itemIndex].Icon, this.ItemNodes[itemIndex].Level);
         }
 
         [PuppetSync]

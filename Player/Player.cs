@@ -48,7 +48,7 @@ namespace VampireSurvivorsLike {
             this.directionArrow.Position = new Vector2(0, -8) + this.Direction * 20;
 
             if (!GameStateManagerSingleton.Instance.IsMultiplayer || this.IsNetworkMaster()) {
-                this.ItemManager.EquipOrUpgradeItem(0);
+                this.ItemManager.EquipOrUpgradeItem(2);
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     this.GetNode<Label>("Label").Text = "You";
                 }
