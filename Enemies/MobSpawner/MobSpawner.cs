@@ -42,7 +42,7 @@ namespace VampireSurvivorsLike {
             }
             for (int i = 0; i < this.enemies.Count; i++) {
                 Enemy enemy = this.enemies[i].Instance<Enemy>();
-                if (this.spawnCounter % enemy.SpawnRate != 0) {
+                if (this.spawnCounter % enemy.SpawnRate != 0 || enemy.SpawnTime.x > Main.MinutesPassed || enemy.SpawnTime.y < Main.MinutesPassed) {
                     continue;
                 }
                 position += new Vector2(enemy.SpawnDistance, 0).Rotated(

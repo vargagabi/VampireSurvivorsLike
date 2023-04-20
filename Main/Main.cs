@@ -6,7 +6,7 @@ namespace VampireSurvivorsLike {
     public class Main : Node2D {
 
         private const int GameTimeInMinutes = 10;
-        private int minutesPassed = 0;
+        public static int MinutesPassed = 0;
         private Player playerOne;
         private Player playerTwo;
         private Map map;
@@ -205,17 +205,17 @@ namespace VampireSurvivorsLike {
         }
 
         private int GetScore() {
-            return this.minutesPassed * 50 + this.DefeatedEnemyPoints + this.level;
+            return MinutesPassed * 50 + this.DefeatedEnemyPoints + this.level;
         }
 
         public void OnTimerTimeout() {
-            this.minutesPassed++;
+            MinutesPassed++;
 
-            if (this.minutesPassed < GameTimeInMinutes ||
+            if (MinutesPassed < GameTimeInMinutes ||
                 (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer())) {
                 return;
             }
-            int score = this.minutesPassed * 50;
+            int score = MinutesPassed * 50;
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                 this.Rpc(nameof(this.GameEnded), true, this.gold, this.GetScore());
             } else {

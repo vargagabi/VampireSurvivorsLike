@@ -4,7 +4,7 @@ namespace VampireSurvivorsLike {
 
     public class Menu : Control {
 
-        private CenterContainer mainMenu;
+        private Control mainMenu;
         private Shop shop;
         private Button lastButtonInFocus;
         private Control network;
@@ -13,7 +13,7 @@ namespace VampireSurvivorsLike {
         public override void _Ready() {
             AnimationPlayer animationPlayer = this.GetNode<AnimationPlayer>("AnimationPlayer");
             Control images = this.GetNode<Control>("Images");
-            this.mainMenu = this.GetNode<CenterContainer>("MainMenu");
+            this.mainMenu = this.GetNode<Control>("MainMenu");
             this.shop = this.GetNode<Shop>("Shop");
             this.network = this.GetTree().Root.GetNode<Control>("Network/Control");
             this.settings = this.GetNode<Settings>("Settings");
@@ -113,12 +113,12 @@ namespace VampireSurvivorsLike {
 
         public void OnInfoButtonMouseEntered() {
             this.GetNode<MarginContainer>("InfoContainer").Visible = true;
-            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.Gray;
+            this.GetNode<TextureButton>("MainMenu/InfoButton").SelfModulate = Colors.Gray;
         }
 
         public void OnInfoButtonMouseExited() {
             this.GetNode<MarginContainer>("InfoContainer").Visible = false;
-            this.GetNode<TextureButton>("InfoButton").SelfModulate = Colors.White;
+            this.GetNode<TextureButton>("MainMenu/InfoButton").SelfModulate = Colors.White;
         }
 
     }

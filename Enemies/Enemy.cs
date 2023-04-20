@@ -9,7 +9,7 @@ namespace VampireSurvivorsLike {
         public static int MobCount = 0;
         public int SpawnRate { get; protected set; }
         public float SpawnDistance { get; protected set; }
-        public int Strength { get; protected set; }
+        public int Strength { get; set; }
         public Vector2 SpawnTime { get; protected set; }
         protected int health;
         protected int expValue;

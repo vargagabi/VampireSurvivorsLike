@@ -5,13 +5,13 @@ namespace VampireSurvivorsLike {
     public class Skeleton : Enemy {
 
         public Skeleton() {
-            this.health = 20;
-            this.Strength = 10;
-            this.expValue = 5;
-            this.speed = 50;
+            this.SpawnTime = new Vector2(2f, 20f);
+            this.health = 25 + (int)(Main.MinutesPassed - this.SpawnTime.x) * 2;
+            this.Strength = 20 + (int)(Main.MinutesPassed - this.SpawnTime.x);
+            this.expValue = 3;
+            this.speed = 80 + (int)(Main.MinutesPassed - this.SpawnTime.x) * 4;
             this.SpawnRate = 250;
             this.SpawnDistance = 600;
-            this.SpawnTime = new Vector2(60f, 300f);
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.

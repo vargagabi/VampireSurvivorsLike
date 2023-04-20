@@ -36,9 +36,10 @@ custom_constants/separation = 12
 
 [node name="AddressLineEdit" type="LineEdit" parent="Control/VBoxContainer"]
 margin_right = 500.0
-margin_bottom = 33.0
+margin_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 2
+rect_min_size = Vector2( 0, 36 )
 size_flags_horizontal = 3
 text = "127.0.0.1"
 align = 1
@@ -48,7 +49,7 @@ context_menu_enabled = false
 caret_blink = true
 
 [node name="PortContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
-margin_top = 45.0
+margin_top = 48.0
 margin_right = 500.0
 margin_bottom = 78.0
 grow_horizontal = 2
@@ -58,32 +59,34 @@ size_flags_vertical = 7
 alignment = 1
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/PortContainer"]
-margin_left = 144.0
-margin_top = 5.0
-margin_right = 217.0
-margin_bottom = 28.0
+margin_left = 139.0
+margin_top = 3.0
+margin_right = 212.0
+margin_bottom = 26.0
 text = "Port: "
 align = 1
 
 [node name="SpinBox" type="SpinBox" parent="Control/VBoxContainer/PortContainer"]
-margin_left = 221.0
-margin_right = 355.0
-margin_bottom = 33.0
+margin_left = 216.0
+margin_right = 360.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
 max_value = 50000.0
-value = 1234.0
+value = 12345.0
 rounded = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer"]
 margin_top = 90.0
 margin_right = 500.0
-margin_bottom = 113.0
+margin_bottom = 136.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
 custom_constants/separation = 20
 
 [node name="HostButton" type="Button" parent="Control/VBoxContainer/HBoxContainer"]
 margin_right = 240.0
-margin_bottom = 23.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 0, 46 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Host"
@@ -91,7 +94,8 @@ text = "Host"
 [node name="JoinButton" type="Button" parent="Control/VBoxContainer/HBoxContainer"]
 margin_left = 260.0
 margin_right = 500.0
-margin_bottom = 23.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 0, 46 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Join"

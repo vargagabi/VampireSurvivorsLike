@@ -330,7 +330,7 @@ z_index = 1
 
 [node name="Timer" type="Timer" parent="."]
 pause_mode = 1
-wait_time = 10.0
+wait_time = 60.0
 autostart = true
 
 [node name="World" type="Node2D" parent="."]

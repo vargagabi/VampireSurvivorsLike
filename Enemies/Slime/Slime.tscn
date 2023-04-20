@@ -86,7 +86,7 @@ animations = [ {
 } ]
 
 [sub_resource type="CircleShape2D" id=13]
-radius = 7.33333
+radius = 8.58495
 
 [node name="Enemy1" type="KinematicBody2D"]
 pause_mode = 1
@@ -100,7 +100,8 @@ script = ExtResource( 2 )
 position = Vector2( 0, -6.66667 )
 frames = SubResource( 12 )
 animation = "Attack"
+frame = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -4 )
+position = Vector2( 0.0833333, -5.91667 )
 shape = SubResource( 13 )

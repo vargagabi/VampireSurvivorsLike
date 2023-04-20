@@ -113,7 +113,7 @@ namespace VampireSurvivorsLike {
         public void MovePuppet(Vector2 globalPosition, Vector2 direction) {
             this.Direction = direction;
             this.directionArrow.Rotation = this.Direction.Angle();
-            this.directionArrow.Position = new Vector2(0f, -6f) + this.Direction * 15;
+            this.directionArrow.Position = new Vector2(0f, -8f) + this.Direction * 20;
 
             AnimationsEnum animation = AnimationsEnum.Idle;
             if (this.Direction.x != 0) {
@@ -261,6 +261,11 @@ namespace VampireSurvivorsLike {
             if (!(body is Enemy enemy) ||
                 (GameStateManagerSingleton.Instance.IsMultiplayer && !this.IsNetworkMaster())) {
                 return;
+            }
+            if (GameStateManagerSingleton.Instance.IsMultiplayer) {
+                this.Rpc(nameof(this.SyncTakeDamage), enemy.Strength);
+            } else {
+                this.SyncTakeDamage(enemy.Strength);
             }
             this.takenDamageValue += enemy.Strength;
         }
