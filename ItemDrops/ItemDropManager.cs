@@ -20,7 +20,6 @@ namespace VampireSurvivorsLike.ItemDrops {
         private uint goldCount = 0;
 
         public override void _Ready() {
-            GD.Print("ItemDropManager ready...");
             Instance = this;
         }
 

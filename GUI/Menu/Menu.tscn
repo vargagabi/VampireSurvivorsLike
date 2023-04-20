@@ -307,6 +307,7 @@ size_flags_vertical = 3
 visible = false
 
 [node name="InfoContainer" type="MarginContainer" parent="."]
+visible = false
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -316,9 +317,6 @@ margin_top = -344.0
 margin_right = 642.0
 margin_bottom = 47.0
 rect_scale = Vector2( 0.5, 0.5 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="ColorRect" type="ColorRect" parent="InfoContainer"]
 show_behind_parent = true

@@ -25,7 +25,6 @@ namespace VampireSurvivorsLike {
         }
 
         public override void _Ready() {
-            GD.Print("AttributeManagerSingleton ready...");
             Instance = this;
         }
 

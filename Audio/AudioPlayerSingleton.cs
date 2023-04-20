@@ -72,7 +72,6 @@ namespace VampireSurvivorsLike {
             foreach (AudioTypeEnum type in this.directoryPaths) {
                 this.audioPlayers.Add(type, this.GetNode<AudioStreamPlayer>($"{type}AudioPlayer"));
                 this.tweens.Add(type, this.audioPlayers[type].GetChild<Tween>(0));
-                this.tweens[type].Connect("tween_completed", this, "OnTweenCompleted");
             }
             this.audioPlayers[AudioTypeEnum.Action].VolumeDb = this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb =
                 GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
@@ -161,12 +160,6 @@ namespace VampireSurvivorsLike {
 
         public void OnAudioFinished() {
             this.ContinueOrPlayRandomAudio(this.currentlyPlaying, false);
-        }
-
-        public void OnTweenCompleted(Godot.Object obj, NodePath path) {
-            if (((AudioStreamPlayer)obj).VolumeDb <= MinVolumeDb) {
-                ((AudioStreamPlayer)obj).StreamPaused = true;
-            }
         }
 
     }

@@ -66,7 +66,6 @@ namespace VampireSurvivorsLike {
             enemy.Name = enemy.GetClass() + mobCount;
             enemy.GlobalPosition = globalPosition;
             this.entities.AddChild(enemy, true);
-            GD.Print(enemy.Name);
         }
 
     }

@@ -11,7 +11,6 @@ namespace VampireSurvivorsLike {
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready() {
-            GD.Print("HUD Ready...");
             this.elapsedTime = 0;
             this.itemControl = GetNode<HBoxContainer>("ItemControl");
             GetNode<Label>("GoldContainer/Label").Text = "0";
