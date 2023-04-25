@@ -88,7 +88,7 @@ animations = [ {
 [sub_resource type="CircleShape2D" id=13]
 radius = 8.58495
 
-[node name="Enemy1" type="KinematicBody2D"]
+[node name="Slime" type="KinematicBody2D"]
 pause_mode = 1
 scale = Vector2( 1.5, 1.5 )
 z_index = 2

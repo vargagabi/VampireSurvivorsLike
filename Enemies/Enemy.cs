@@ -64,8 +64,12 @@ namespace VampireSurvivorsLike {
                 return;
             }
             this.QueueFree();
-            ItemDropManager.Instance.CreateExperienceOrb(this.expValue, this.GlobalPosition);
-            ItemDropManager.Instance.CreateGold(new Random().Next(1, 10), this.GlobalPosition);
+            if (new Random().Next(0, 4) == 0) {
+                ItemDropManager.Instance.CreateExperienceOrb(this.expValue, this.GlobalPosition);
+            }
+            if (new Random().Next(0, 5) == 0) {
+                ItemDropManager.Instance.CreateGold(new Random().Next(1, 10), this.GlobalPosition);
+            }
         }
 
         /*

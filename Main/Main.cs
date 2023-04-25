@@ -215,7 +215,6 @@ namespace VampireSurvivorsLike {
                 (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer())) {
                 return;
             }
-            int score = MinutesPassed * 50;
             if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                 this.Rpc(nameof(this.GameEnded), true, this.gold, this.GetScore());
             } else {
