@@ -9,6 +9,7 @@ namespace VampireSurvivorsLike {
     public class AttributeSaveFormat {
 
         public string Name;
+        public string NameText;
         public string Message;
         public int InitialValue;
         public float BonusModifier;
@@ -17,9 +18,10 @@ namespace VampireSurvivorsLike {
         public int BaseLevel;
         public int MaxBaseLevel;
 
-        public AttributeSaveFormat(string name, string message, int initialValue, float bonusModifier, int baseLevel,
+        public AttributeSaveFormat(string name, string nameText, string message, int initialValue, float bonusModifier, int baseLevel,
             int upgradeCost, string iconName, int maxBaseLevel) {
             this.Name = name;
+            this.NameText = nameText;
             this.Message = message;
             this.InitialValue = initialValue;
             this.BonusModifier = bonusModifier;
@@ -34,6 +36,7 @@ namespace VampireSurvivorsLike {
     public class Attribute {
 
         public string Name { get; }
+        public string NameText {get;}
         private string Message { get; }
         private int InitialValue { get; }
         private float BonusModifier { get; }
@@ -52,9 +55,10 @@ namespace VampireSurvivorsLike {
             get => this.shape;
         }
 
-        public Attribute(string name, string message, int initialValue, float bonusInPercent, string iconName,
+        public Attribute(string name, string nameText, string message, int initialValue, float bonusInPercent, string iconName,
             int initialCost = 100, int baseLevel = 0, int maxBaseLevel = 8) {
             this.Name = name;
+            this.NameText = nameText;
             this.Message = message;
             this.InitialValue = initialValue;
             this.BonusModifier = bonusInPercent;
@@ -89,7 +93,7 @@ namespace VampireSurvivorsLike {
         }
 
         public AttributeSaveFormat ToSaveFormat() {
-            return new AttributeSaveFormat(this.Name, this.Message, this.InitialValue, this.BonusModifier,
+            return new AttributeSaveFormat(this.Name, this.NameText, this.Message, this.InitialValue, this.BonusModifier,
                 this.BaseLevel, this.InitialCost, this.Icon.ResourcePath.Split('/').Last(), this.MaxBaseLevel);
         }
 

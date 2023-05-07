@@ -11,7 +11,7 @@ namespace VampireSurvivorsLike {
         private const float DistanceBetweenRings = 50f;
 
         public FireRing() {
-            this.MaxLevel = 50;
+            this.MaxLevel = 60;
             this.Icon = ResourceLoader.Load("res://MyPixelArts/images/FireRingIcon.png") as Texture;
             this.AttackSpeed = 50;
             this.Damage = 1;
@@ -36,7 +36,7 @@ namespace VampireSurvivorsLike {
                 if (electronTilNextShell > this.GetChildCount()) {
                     distanceBetweenBullets = Mathf.Tau / (this.GetChildCount() - electronsOnLowerShells);
                 }
-                float value = (this.counter * Speed + distanceBetweenBullets * (i + 1));
+                float value = (this.counter * this.Speed + distanceBetweenBullets * (i + 1));
                 if (currentShell % 2 == 0) {
                     value *= -1;
                 }

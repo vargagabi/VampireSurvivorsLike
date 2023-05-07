@@ -71,8 +71,9 @@ namespace VampireSurvivorsLike {
             Instance = this;
             foreach (AudioTypeEnum type in this.directoryPaths) {
                 this.audioPlayers.Add(type, this.GetNode<AudioStreamPlayer>($"{type}AudioPlayer"));
-                this.tweens.Add(type, this.audioPlayers[type].GetChild<Tween>(0));
             }
+            this.tweens.Add(AudioTypeEnum.Ambient, this.audioPlayers[AudioTypeEnum.Ambient].GetChild<Tween>(0));
+            this.tweens.Add(AudioTypeEnum.Action, this.audioPlayers[AudioTypeEnum.Action].GetChild<Tween>(0));
             this.audioPlayers[AudioTypeEnum.Action].VolumeDb = this.audioPlayers[AudioTypeEnum.Ambient].VolumeDb =
                 GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music));
             this.audioPlayers[AudioTypeEnum.Effect].VolumeDb =
@@ -114,9 +115,13 @@ namespace VampireSurvivorsLike {
             }
             GD.Randomize();
             int track = (int)GD.RandRange(0, this.fileMap[type].Count);
-            this.audioPlayers[type].Stream =
-                ResourceLoader.Load<AudioStream>($"res://Audio/{type}/{this.fileMap[type][track]}");
-            this.audioPlayers[type].Play();
+            try {
+                this.audioPlayers[type].Stream =
+                    ResourceLoader.Load<AudioStream>($"res://Audio/{type}/{this.fileMap[type][track]}");
+                this.audioPlayers[type].Play();
+            } catch (Exception e) {
+                GD.Print(e.Message);
+            }
         }
 
         private void InterpolateVolume(AudioTypeEnum audioType, int finalVolume, float duration,
@@ -136,12 +141,12 @@ namespace VampireSurvivorsLike {
                 return;
             }
             if (type.Equals(AudioTypeEnum.Action)) {
-                this.InterpolateVolume(AudioTypeEnum.Ambient, -40, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
+                this.InterpolateVolume(AudioTypeEnum.Ambient, -80, 1.5f, Tween.TransitionType.Expo, Tween.EaseType.Out);
                 this.InterpolateVolume(AudioTypeEnum.Action,
                     GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 1,
                     Tween.TransitionType.Linear, Tween.EaseType.In);
             } else if (type.Equals(AudioTypeEnum.Ambient)) {
-                this.InterpolateVolume(AudioTypeEnum.Action, -40, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
+                this.InterpolateVolume(AudioTypeEnum.Action, -80, 3, Tween.TransitionType.Linear, Tween.EaseType.Out);
                 this.InterpolateVolume(AudioTypeEnum.Ambient,
                     GetVolumeFromPercent((int)SettingsManager.Instance.GetValue(SettingsEnum.Music)), 3,
                     Tween.TransitionType.Expo, Tween.EaseType.In);
@@ -153,9 +158,13 @@ namespace VampireSurvivorsLike {
             if (this.audioPlayers[AudioTypeEnum.Effect].VolumeDb <= MinVolumeDb) {
                 return;
             }
-            this.audioPlayers[AudioTypeEnum.Effect].Stream =
-                ResourceLoader.Load<AudioStream>($"res://Audio/Effect/{effect.ToString()}.ogg");
-            this.audioPlayers[AudioTypeEnum.Effect].Play();
+            try {
+                this.audioPlayers[AudioTypeEnum.Effect].Stream =
+                    ResourceLoader.Load<AudioStream>($"res://Audio/Effect/{effect.ToString()}.ogg");
+                this.audioPlayers[AudioTypeEnum.Effect].Play();
+            } catch (Exception e) {
+                GD.Print(e.Message);
+            }
         }
 
         public void OnAudioFinished() {

@@ -234,17 +234,17 @@ namespace VampireSurvivorsLike {
         /**
          * Connected from ItemDrop.cs
          */
-        public void OnPickedUp(int value, ItemDropsEnum type) {
+        public void OnPickedUp(int value, ItemDropEnum type) {
             if (GameStateManagerSingleton.Instance.IsMultiplayer && !this.GetTree().IsNetworkServer()) {
                 return;
             }
-            if (type.Equals(ItemDropsEnum.ExperienceOrb)) {
+            if (type.Equals(ItemDropEnum.ExperienceOrb)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     this.GetTree().Root.GetNode<Main>("Main").Rpc(nameof(Main.IncreaseExperience), value);
                 } else {
                     this.GetTree().Root.GetNode<Main>("Main").IncreaseExperience(value);
                 }
-            } else if (type.Equals(ItemDropsEnum.Gold)) {
+            } else if (type.Equals(ItemDropEnum.Gold)) {
                 if (GameStateManagerSingleton.Instance.IsMultiplayer) {
                     this.GetTree().Root.GetNode<Main>("Main").Rpc(nameof(Main.AddGold), value);
                 } else {

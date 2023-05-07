@@ -10,13 +10,13 @@ namespace VampireSurvivorsLike.ItemDrops {
         private int speed;
         private bool isMoving = false;
         private int value;
-        private ItemDropsEnum type;
+        private ItemDropEnum type;
 
         private Tween tween;
         private AnimationPlayer animationPlayer;
         private Player player;
 
-        [Signal] public delegate void OnPickUp(int value, ItemDropsEnum type);
+        [Signal] public delegate void OnPickUp(int value, ItemDropEnum type);
 
         public override void _Ready() {
             this.animationPlayer = this.GetNode<AnimationPlayer>("AnimationPlayer");
@@ -46,7 +46,7 @@ namespace VampireSurvivorsLike.ItemDrops {
             }
         }
 
-        public void Init(Vector2 globalPosition, int value, int dropDirection, int dropDistance, ItemDropsEnum type,
+        public void Init(Vector2 globalPosition, int value, int dropDirection, int dropDistance, ItemDropEnum type,
             int speed = 100) {
             this.GlobalPosition = globalPosition;
             this.value = value;

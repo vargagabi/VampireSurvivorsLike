@@ -8,7 +8,7 @@ namespace VampireSurvivorsLike {
     public class SettingsManager : Node {
 
         private static SettingsManager instance;
-        
+
         private Dictionary<string, object> settings = new Dictionary<string, object>();
         private const string savePath = "user://settings.cfg";
 
@@ -39,15 +39,9 @@ namespace VampireSurvivorsLike {
             foreach (string key in file.GetSectionKeys("Controls")) {
                 if (file.GetValue("Controls", key) is int intValue) {
                     this.settings.Add(key, intValue);
-                    if (intValue < 0) {
-                        InputEventMouseButton mouse = new InputEventMouseButton();
-                        mouse.ButtonIndex = Math.Abs(intValue);
-                        this.SetActionKey(key, mouse);
-                    } else {
-                        InputEventKey eventKey = new InputEventKey();
-                        eventKey.Scancode = (uint)intValue;
-                        this.SetActionKey(key, eventKey);
-                    }
+                    InputEventKey eventKey = new InputEventKey();
+                    eventKey.Scancode = (uint)intValue;
+                    this.SetActionKey(key, eventKey);
                 }
             }
             foreach (string key in file.GetSectionKeys("Audio")) {

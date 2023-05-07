@@ -55,6 +55,8 @@ namespace VampireSurvivorsLike {
         public override void _Input(InputEvent @event) {
             if (@event.IsActionPressed("ui_cancel") && this.Visible) {
                 if (this.keySetPopupPanel.Visible) {
+                    this.actionToSet = null;
+                    this.keySetPopupPanel.Visible = false;
                     this.GetTree().SetInputAsHandled();
                 } else {
                     SettingsManager.Instance.Save();

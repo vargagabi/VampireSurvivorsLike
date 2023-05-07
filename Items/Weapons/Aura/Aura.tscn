@@ -19,18 +19,10 @@ uniform float timeDivider = 3.f;
 void fragment(){
 	vec2 gridUv = round(UV * resolution)/resolution;	
 	vec4 tx = texture(TEXTURE, gridUv);
-	vec4 gradTx = texture(grad,gridUv);
-	//float timeValue = timeAdder+sin(TIME * timeMultiplier)/timeDivider;
 	float timeValue = timeAdder+sin(TIME * timeMultiplier)/timeDivider;
-	vec4 noise1 = texture(n, gridUv*timeValue - timeValue/2.f);
-	//vec4 noise1 = texture(n, UV + sin(TIME) / (-4.0f+speed));
-	//vec4 noise2 = texture(n2, vec2(UV.x, UV.y + sin(TIME/(9.0f))));
-	//COLOR = texture(grad, vec2(noise1.xy*noise2.xy));
-	COLOR = texture(grad ,vec2(tx.xy*noise1.xy));
-	
-//	COLOR.a = clamp(tx.r * noise1.r * intensity, 1.0f, 0.0f);
+	vec4 newValue = texture(n, gridUv*timeValue - timeValue/2.f);
+	COLOR = texture(grad ,vec2(tx.xy*newValue.xy));
 	COLOR.a = pow(COLOR.a, 10.0f);
-
 }"
 
 [sub_resource type="Gradient" id=8]
@@ -96,6 +88,7 @@ scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 
 [node name="AuraShape" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )

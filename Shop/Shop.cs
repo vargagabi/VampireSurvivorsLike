@@ -22,7 +22,8 @@ namespace VampireSurvivorsLike {
                 }
                 AttributeCard card = cardScene.Instance<AttributeCard>();
                 container.AddChild(card);
-                card.init(attribute.Name, attribute.BaseLevel, attribute.MaxBaseLevel, attribute.Icon,
+                card.init(attribute.Name, attribute.NameText, attribute.BaseLevel, attribute.MaxBaseLevel,
+                    attribute.Icon,
                     attribute.GetCurrentCost(), this);
             }
         }

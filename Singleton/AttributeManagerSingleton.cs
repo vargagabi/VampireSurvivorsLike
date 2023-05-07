@@ -14,7 +14,7 @@ namespace VampireSurvivorsLike {
         public Attribute PickupArea { get; private set; }
         public int Gold { get; set; }
         private int goldSpentOnAttributes = 0;
-        private const string savePath = "user://attributes.cfg";
+        private const string SavePath = "user://attributes.cfg";
 
         public static AttributeManagerSingleton Instance {
             get => instance;
@@ -30,7 +30,7 @@ namespace VampireSurvivorsLike {
 
         private static void Init() {
             File file = new File();
-            if (!file.FileExists(savePath) || file.Open(savePath, File.ModeFlags.Read) != Error.Ok ||
+            if (!file.FileExists(SavePath) || file.Open(SavePath, File.ModeFlags.Read) != Error.Ok ||
                 file.GetLen() == 0) {
                 Instance.Reset();
                 Instance.Save();
@@ -40,12 +40,12 @@ namespace VampireSurvivorsLike {
         }
 
         private void Reset() {
-            this.MaxHealth = new Attribute("MaxHealth", "Increase max health by", 200, 0.1f, "HealthIcon.png");
-            this.HealthRegen = new Attribute("HealthRegen", "Increase health regeneration by", 2, 0.5f,
-                "HealthRegenIcon.png");
-            this.Speed = new Attribute("Speed", "Increase speed by", 100, 0.05f, "SpeedIcon.png");
-            this.PickupArea = new Attribute("PickupArea", "Increase the pickup range by", 25, 0.5f,
-                "PickupAreaIcon.png");
+            this.MaxHealth = new Attribute("MaxHealth", "Health", "Increase max health by", 200, 0.1f, "HealthIcon.png", 50);
+            this.HealthRegen = new Attribute("HealthRegen", "Regeneration", "Increase health regeneration by", 2, 0.5f,
+                "HealthRegenIcon.png", 80);
+            this.Speed = new Attribute("Speed","Speed", "Increase speed by", 100, 0.05f, "SpeedIcon.png", 100);
+            this.PickupArea = new Attribute("PickupArea", "Pickup Area", "Increase the pickup range by", 25, 0.5f,
+                "PickupAreaIcon.png", 150);
             this.Gold = 500;
             this.goldSpentOnAttributes = 0;
         }
@@ -86,12 +86,12 @@ namespace VampireSurvivorsLike {
             }
             file.SetValue("Gold", "value", this.Gold);
             file.SetValue("GoldSpentOnAttributes", "value", this.goldSpentOnAttributes);
-            file.Save(savePath);
+            file.Save(SavePath);
         }
 
         private void Load() {
             ConfigFile file = new ConfigFile();
-            if (file.Load(savePath) != Error.Ok) {
+            if (file.Load(SavePath) != Error.Ok) {
                 return;
             }
             foreach (string section in file.GetSections()) {
@@ -107,11 +107,12 @@ namespace VampireSurvivorsLike {
                 this.GetType().GetProperty(section)?.SetValue(this, new Attribute(
                     (string)file.GetValue(section, keys[0]),
                     (string)file.GetValue(section, keys[1]),
-                    (int)file.GetValue(section, keys[2]),
-                    (float)file.GetValue(section, keys[3]),
-                    (string)file.GetValue(section, keys[4]),
-                    (int)file.GetValue(section, keys[5]),
-                    (int)file.GetValue(section, keys[6])
+                    (string)file.GetValue(section, keys[2]),
+                    (int)file.GetValue(section, keys[3]),
+                    (float)file.GetValue(section, keys[4]),
+                    (string)file.GetValue(section, keys[5]),
+                    (int)file.GetValue(section, keys[6]),
+                    (int)file.GetValue(section, keys[7])
                 ));
             }
         }

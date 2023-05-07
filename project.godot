@@ -18,7 +18,6 @@ run/main_scene="res://GUI/Menu/Menu.tscn"
 AttributeManager="*res://Singleton/AttributeManagerSingleton.cs"
 SettingsManager="*res://Singleton/SettingsManager.cs"
 AudioPlayer="*res://Audio/AudioPlayer.tscn"
-ItemDropManager="*res://ItemDrops/ItemDropManager.cs"
 Network="*res://Networking/Network.tscn"
 
 [debug]

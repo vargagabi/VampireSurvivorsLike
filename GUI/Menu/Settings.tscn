@@ -41,7 +41,7 @@ size_flags_vertical = 3
 custom_constants/separation = 20
 alignment = 1
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 500.0
 margin_bottom = 4.0
@@ -173,7 +173,7 @@ text = "100"
 align = 2
 valign = 1
 
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer"]
 modulate = Color( 1, 1, 1, 0 )
 margin_top = 346.0
 margin_right = 500.0

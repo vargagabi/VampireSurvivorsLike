@@ -20,7 +20,7 @@ namespace VampireSurvivorsLike {
             this.port = this.GetNode<SpinBox>("Control/VBoxContainer/PortContainer/SpinBox");
             this.hostButton = this.GetNode<Button>("Control/VBoxContainer/HBoxContainer/HostButton");
             this.joinButton = this.GetNode<Button>("Control/VBoxContainer/HBoxContainer/JoinButton");
-            this.address.Text = this.GetIpAddress();
+            this.address.Text = GetIpAddress();
 
             this.GetTree().Connect("network_peer_connected", this, nameof(PlayerConnected));
             this.GetTree().Connect("network_peer_disconnected", this, nameof(PlayerDisconnected));
@@ -34,7 +34,7 @@ namespace VampireSurvivorsLike {
             this.GetNode<Control>("Status").Visible = true;
         }
 
-        private string GetIpAddress() {
+        private static string GetIpAddress() {
             foreach (string addr in IP.GetLocalAddresses()) {
                 if (addr.BeginsWith("192.168.")) {
                     return addr;
@@ -48,6 +48,7 @@ namespace VampireSurvivorsLike {
             this.GetTree().Paused = true;
             this.GetTree().ChangeScene("res://Main/Main.tscn");
             this.GetNode<Control>("Control").Visible = false;
+            this.GetNode<Control>("Status").Visible = false;
             this.hostButton.Disabled = this.joinButton.Disabled = false;
         }
 
@@ -63,6 +64,7 @@ namespace VampireSurvivorsLike {
         private void ConnectedOk() {
             this.GetTree().Paused = true;
             this.GetNode<Control>("Control").Visible = false;
+            this.GetNode<Control>("Status").Visible = false;
         }
 
         private void ConnectedFail() {
