@@ -2,7 +2,7 @@
 .godot/
 
 # Godot-specific ignores
-.import/
+# .import/ .import is needed, because the theme can't import the textures properly :/
 export.cfg
 export_presets.cfg
 
